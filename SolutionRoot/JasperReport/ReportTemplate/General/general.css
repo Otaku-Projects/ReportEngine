@@ -1,0 +1,11 @@
+body {
+	margin: 0em;
+	padding: 30px;
+	border: 0px;
+	color: #000;
+	background-color: #fff;
+}
+
+body {
+  background-image: none !important;
+}

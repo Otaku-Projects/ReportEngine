@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="HitRateData" targetNamespace="http://tempuri.org/HitRateData.xsd" xmlns:mstns="http://tempuri.org/HitRateData.xsd" xmlns="http://tempuri.org/HitRateData.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="HitRateData" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="HitRateData" msprop:Generator_UserDSName="HitRateData">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="GeneralView" msprop:Generator_TableClassName="GeneralViewDataTable" msprop:Generator_TableVarName="tableGeneralView" msprop:Generator_TablePropName="GeneralView" msprop:Generator_RowDeletingName="GeneralViewRowDeleting" msprop:Generator_RowChangingName="GeneralViewRowChanging" msprop:Generator_RowEvHandlerName="GeneralViewRowChangeEventHandler" msprop:Generator_RowDeletedName="GeneralViewRowDeleted" msprop:Generator_UserTableName="GeneralView" msprop:Generator_RowChangedName="GeneralViewRowChanged" msprop:Generator_RowEvArgName="GeneralViewRowChangeEvent" msprop:Generator_RowClassName="GeneralViewRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="id" msprop:Generator_ColumnVarNameInTable="columnid" msprop:Generator_ColumnPropNameInRow="id" msprop:Generator_ColumnPropNameInTable="idColumn" msprop:Generator_UserColumnName="id" type="xs:string" minOccurs="0" />
+              <xs:element name="office" msprop:Generator_ColumnVarNameInTable="columnoffice" msprop:Generator_ColumnPropNameInRow="office" msprop:Generator_ColumnPropNameInTable="officeColumn" msprop:Generator_UserColumnName="office" type="xs:string" minOccurs="0" />
+              <xs:element name="product" msprop:Generator_ColumnVarNameInTable="columnproduct" msprop:Generator_ColumnPropNameInRow="product" msprop:Generator_ColumnPropNameInTable="productColumn" msprop:Generator_UserColumnName="product" type="xs:string" minOccurs="0" />
+              <xs:element name="city" msprop:Generator_ColumnVarNameInTable="columncity" msprop:Generator_ColumnPropNameInRow="city" msprop:Generator_ColumnPropNameInTable="cityColumn" msprop:Generator_UserColumnName="city" type="xs:string" minOccurs="0" />
+              <xs:element name="numOfDesign" msprop:Generator_ColumnVarNameInTable="columnnumOfDesign" msprop:Generator_ColumnPropNameInRow="numOfDesign" msprop:Generator_ColumnPropNameInTable="numOfDesignColumn" msprop:Generator_UserColumnName="numOfDesign" type="xs:int" minOccurs="0" />
+              <xs:element name="numOfContracted" msprop:Generator_ColumnVarNameInTable="columnnumOfContracted" msprop:Generator_ColumnPropNameInRow="numOfContracted" msprop:Generator_ColumnPropNameInTable="numOfContractedColumn" msprop:Generator_UserColumnName="numOfContracted" type="xs:int" minOccurs="0" />
+              <xs:element name="designHitRate" msprop:Generator_ColumnVarNameInTable="columndesignHitRate" msprop:Generator_ColumnPropNameInRow="designHitRate" msprop:Generator_ColumnPropNameInTable="designHitRateColumn" msprop:Generator_UserColumnName="designHitRate" type="xs:decimal" minOccurs="0" />
+              <xs:element name="numOfColoWays" msprop:Generator_ColumnVarNameInTable="columnnumOfColoWays" msprop:Generator_ColumnPropNameInRow="numOfColoWays" msprop:Generator_ColumnPropNameInTable="numOfColoWaysColumn" msprop:Generator_UserColumnName="numOfColoWays" type="xs:int" minOccurs="0" />
+              <xs:element name="numOfItems" msprop:Generator_ColumnVarNameInTable="columnnumOfItems" msprop:Generator_ColumnPropNameInRow="numOfItems" msprop:Generator_ColumnPropNameInTable="numOfItemsColumn" msprop:Generator_UserColumnName="numOfItems" type="xs:int" minOccurs="0" />
+              <xs:element name="colorwayHitRate" msprop:Generator_ColumnVarNameInTable="columncolorwayHitRate" msprop:Generator_ColumnPropNameInRow="colorwayHitRate" msprop:Generator_ColumnPropNameInTable="colorwayHitRateColumn" msprop:Generator_UserColumnName="colorwayHitRate" type="xs:decimal" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
