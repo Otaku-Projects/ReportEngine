@@ -57,3 +57,8 @@ https://jsreport.net/learn/dotnet-client
 ### Example and Tutorial
 GitHub jsreport/jsreport-dotnet
 https://github.com/jsreport/jsreport-dotnet
+
+#### Page header, footer, page number
+https://playground.jsreport.net/w/admin/ihh7laK2
+
+https://playground.jsreport.net/w/admin/kMI4FBmw
