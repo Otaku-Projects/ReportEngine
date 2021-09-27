@@ -12,6 +12,7 @@ using jsreport.Binary;
 using jsreport.Local;
 using jsreport.Shared;
 using jsreport.Types;
+using static JasperReport.ReportEntity.BaseReportEntity;
 
 namespace CoreReport.JasperReport
 {
@@ -157,7 +158,7 @@ namespace CoreReport.JasperReport
             }
         }
 
-        public virtual void SavePdf(string _templateFile, string _fileName = "")
+        public virtual void SavePdf(string _templateFile="", string _fileName = "")
         {
             this.RefreshPrintDate();
 
@@ -170,27 +171,15 @@ namespace CoreReport.JasperReport
             {
                 DataSet _dataSet = this.dataSet;
                 object _reportData = this.ConvertDataSetToObject(_dataSet);
-                //var report = rs.RenderAsync(RenderRequest_1_helloWorld).Result;
-                //report.Content.CopyTo(File.OpenWrite(_fileName +".pdf"));
 
-                //var invoiceReport = rs.RenderByNameAsync("Invoice", _dataSet).Result;
-                //invoiceReport.Content.CopyTo(File.OpenWrite(_fileName + ".pdf"));
+                RenderRequest _renderRequest = this.CreatePdfRenderRequest();
 
-                string _fileContent = File.ReadAllText(_templateFile);
-                string _scriptFile = File.ReadAllText(Path.Combine(this.reportEntity.GetTemplateFileDirectory(), "helper.js"));
-                RenderRequest _renderRequest = this.CreateEmptyRenderRequest(_templateFile);
-                _renderRequest.Template.Content = _fileContent;
-                _renderRequest.Template.Helpers = _scriptFile;
-                _renderRequest.Template.Engine = Engine.Handlebars;
-                _renderRequest.Template.Recipe = Recipe.ChromePdf;
-                _renderRequest.Data = this.dataSetObj;
                 var report = rs.RenderAsync(_renderRequest).Result;
                 report.Content.CopyTo(File.OpenWrite(
                     Path.Combine(
                         this.jasperReportRenderFolder
                         , _fileName + ".pdf")
                 ));
-                
             }
             catch (Exception ex)
             {
@@ -198,7 +187,7 @@ namespace CoreReport.JasperReport
             }
         }
 
-        protected RenderRequest CreateEmptyRenderRequest(string _templateFile="")
+        protected RenderRequest CreateEmptyRenderRequest(string _templateFile = "")
         {
             RenderRequest _renderRequest = new RenderRequest();
             //string _fileContent = File.ReadAllText(_templateFile);
@@ -209,6 +198,186 @@ namespace CoreReport.JasperReport
                 Recipe = Recipe.ChromePdf
             };
             _renderRequest.Data = new object();
+
+            return _renderRequest;
+        }
+
+        protected RenderRequest CreatePdfRenderRequest(string _templateFile = "")
+        {
+            RenderRequest _renderRequest = new RenderRequest();
+
+            _renderRequest = this.CreateEmptyRenderRequest();
+            _renderRequest = this.AddMarginToRenderRequest(_renderRequest);
+
+            string _htmlFileContent = string.Empty;
+            string _scriptFileContent = string.Empty;
+
+            string _htmlFilePath = string.Empty;
+            string _scriptFilePath = string.Empty;
+            _scriptFilePath = Path.Combine(this.reportEntity.GetTemplateFileDirectory(), "helper.js");
+
+            _htmlFilePath = this.reportEntity.GetPageComponent(PageNature.MainContent).GetHtmlFilePath();
+            _scriptFilePath = this.reportEntity.GetPageComponent(PageNature.MainContent).GetScriptFilePath();
+
+            if (!string.IsNullOrEmpty(_templateFile) && File.Exists(_templateFile))
+            {
+                _htmlFileContent = File.ReadAllText(_templateFile);
+            }
+
+            if(!string.IsNullOrEmpty(_htmlFilePath) && File.Exists(_htmlFilePath))
+            {
+                _htmlFileContent = File.ReadAllText(_htmlFilePath);
+            }
+            if (!string.IsNullOrEmpty(_scriptFilePath) && File.Exists(_scriptFilePath))
+            {
+                _scriptFileContent = File.ReadAllText(_scriptFilePath);
+            }
+
+            _renderRequest.Template.Content = _htmlFileContent;
+            _renderRequest.Template.Helpers = _scriptFileContent;
+            _renderRequest.Template.Engine = Engine.Handlebars;
+            _renderRequest.Template.Recipe = Recipe.ChromePdf;
+
+            #region Header and Footer
+            string _headerFileContent = string.Empty;
+            string _footerFileContent = string.Empty;
+
+            string _headerFilePath = this.reportEntity.GetTemplateHeaderPath();
+            string _footerFilePath = this.reportEntity.GetTemplateFooterPath();
+
+            if (!string.IsNullOrEmpty(_headerFilePath) && File.Exists(_headerFilePath))
+            {
+                _headerFileContent = File.ReadAllText(_headerFilePath);
+            }
+
+            if (!string.IsNullOrEmpty(_footerFilePath) && File.Exists(_footerFilePath))
+            {
+                _footerFileContent = File.ReadAllText(_footerFilePath);
+            }
+            #endregion
+
+            _renderRequest = this.AddPdfutilsToRenderRequest(_renderRequest);
+
+            _renderRequest.Data = this.dataSetObj;
+
+            //_renderRequest.Template.Chrome.MarginTop = "1cm";
+            //_renderRequest.Template.Chrome.MarginLeft = "1cm";
+            //_renderRequest.Template.Chrome.MarginBottom = "1cm";
+            //_renderRequest.Template.Chrome.MarginRight = "1cm";
+
+            return _renderRequest;
+        }
+
+        protected RenderRequest AddMarginToRenderRequest(RenderRequest _renderRequest)
+        {
+            _renderRequest.Template.Chrome = new Chrome()
+            {
+                MarginTop = "2.54cm",
+                MarginLeft = "2.54cm",
+                MarginBottom = "2.54cm",
+                MarginRight = "2.54cm"
+            };
+
+            return _renderRequest;
+        }
+
+        protected RenderRequest AddPdfutilsToRenderRequest(RenderRequest _renderRequest)
+        {
+            HeaderFooterOptions hfOption = this.reportEntity.GetHeaderFooterOption();
+            Dictionary<PageNature, PageComponent> pageComponents = this.reportEntity.GetPageComponents();
+
+            string htmlFileContent = string.Empty;
+            string scriptContent = string.Empty;
+
+            #region Header and Footer
+            string _headerFileContent = string.Empty;
+            string _footerFileContent = string.Empty;
+            string _headerFooterFileContent = string.Empty;
+
+            string _headerFilePath = string.Empty;
+            string _footerFilePath = string.Empty;
+
+            _headerFilePath = this.reportEntity.GetTemplateHeaderPath();
+            _footerFilePath = this.reportEntity.GetTemplateFooterPath();
+
+            _headerFilePath = this.reportEntity.GetPageComponent(PageNature.Header).GetHtmlFilePath();
+            _footerFilePath = this.reportEntity.GetPageComponent(PageNature.Footer).GetHtmlFilePath();
+
+            if (!string.IsNullOrEmpty(_headerFilePath) && File.Exists(_headerFilePath))
+            {
+                _headerFileContent = File.ReadAllText(_headerFilePath);
+            }
+
+            if (!string.IsNullOrEmpty(_footerFilePath) && File.Exists(_footerFilePath))
+            {
+                _footerFileContent = File.ReadAllText(_footerFilePath);
+            }
+
+            #endregion
+            List<PdfOperation> _pdfOperationList = new List<PdfOperation>();
+            foreach (KeyValuePair<PageNature, PageComponent> _pageKV in pageComponents)
+            {
+                if(_pageKV.Key == PageNature.MainContent) continue;
+
+                htmlFileContent = File.ReadAllText(_pageKV.Value.GetHtmlFilePath());
+                scriptContent = File.ReadAllText(_pageKV.Value.GetScriptFilePath());
+
+                PdfOperation _pdfOperation = new PdfOperation()
+                {
+                    Type = PdfOperationType.Merge,
+                    Template = new Template
+                    {
+                        Content = htmlFileContent,
+                        Helpers = scriptContent,
+                        Engine = Engine.Handlebars,
+                        Recipe = Recipe.ChromePdf
+                    }
+                };
+                _pdfOperationList.Add(_pdfOperation);
+            }
+            _renderRequest.Template.PdfOperations = _pdfOperationList;
+
+            //string _headerScriptFileContent = string.Empty;
+            //string _footerScriptFileContent = string.Empty;
+            //string _headerScriptFilePath = string.Empty;
+            //string _footerScriptFilePath = string.Empty;
+
+            //_headerScriptFilePath = Path.Combine(this.reportEntity.GetTemplateFileDirectory(), "header.js");
+            //_footerScriptFilePath = Path.Combine(this.reportEntity.GetTemplateFileDirectory(), "footer.js");
+
+            //if (hfOption == HeaderFooterOptions.HeaderFooterInSingleFile)
+            //{
+            //    _headerScriptFilePath = Path.Combine(this.reportEntity.GetTemplateFileDirectory(), "header-footer.js");
+            //}
+
+            //if (!string.IsNullOrEmpty(_headerScriptFilePath) && File.Exists(_headerScriptFilePath))
+            //{
+            //    _headerScriptFileContent = File.ReadAllText(_headerScriptFilePath);
+            //}
+            //if (!string.IsNullOrEmpty(_footerScriptFilePath) && File.Exists(_footerScriptFilePath))
+            //{
+            //    _footerScriptFileContent = File.ReadAllText(_footerScriptFilePath);
+            //}
+
+            //#region PdfOperations
+            //if (hfOption == HeaderFooterOptions.HeaderFooterInSingleFile)
+            //{
+            //    _renderRequest.Template.PdfOperations = new List<PdfOperation>()
+            //    {
+            //        new PdfOperation()
+            //        {
+            //            Type = PdfOperationType.Merge,
+            //            Template = new Template
+            //            {
+            //                Content = _headerFileContent,
+            //                Helpers = _headerScriptFileContent,
+            //                Engine = Engine.Handlebars,
+            //                Recipe = Recipe.ChromePdf
+            //            }
+            //        }
+            //    };
+            //}
+            //#endregion
 
             return _renderRequest;
         }

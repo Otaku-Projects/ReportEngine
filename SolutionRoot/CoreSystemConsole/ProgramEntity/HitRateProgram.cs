@@ -31,7 +31,7 @@ namespace CoreSystemConsole.ProgramEntity
             //JasperReportEntity jasperReportEntity = new JasperReportEntity(rs);
             JasperReportEntity jasperReportEntity = new JasperReportEntity(hitRateReport);
             string templateFilePath = hitRateReport.GetTemplateFilePath();
-            jasperReportEntity.SavePdf(templateFilePath);
+            jasperReportEntity.SavePdf();
 
             //var rs = new LocalReporting()
             //    .UseBinary(JsReportBinary.GetBinary())

@@ -1,6 +1,10 @@
-body table .information {
+body table .information * {
     color: red;
     background-color: yellow;
+}
+
+.main {
+    padding: 0px;
 }
 
 .invoice-box {

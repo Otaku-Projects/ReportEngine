@@ -1,0 +1,45 @@
+<!--footer template content--><html>
+<head>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin-top: 0cm;
+            margin-right: 0cm;
+            margin-bottom: 0cm;
+            margin-left: 0cm;
+            padding: 0px;
+        }
+
+        .main {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            width: 100%;
+            height: 100%;
+        }
+
+        .footer {
+            width: 100%;
+            padding-bottom: 20px;
+            position: sticky;
+            bottom: 0px;
+        }
+    </style>
+
+</head>
+<body>
+    {{#each $pdf.pages}}
+    {{#if @index}}
+    <div style="page-break-before: always;"></div>
+    {{/if}}
+    <footer class="footer">
+        <span>Page {{getPageNumber @index}} of {{getTotalPages ../$pdf.pages}}</span>
+        <span>Page {{getPageNumber @index}} of {{getTotalPages @root.$pdf.pages}}</span>
+    </footer>
+    {{/each}}
+
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!--header template content-->
+<html>
+<head>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin-top: 0cm;
+            margin-right: 0cm;
+            margin-bottom: 0cm;
+            margin-left: 0cm;
+            padding: 0px;
+        }
+
+        .main {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 100%;
+            height: 100%;
+        }
+
+        .header {
+            width: 100%;
+            padding-top: 20px;
+            border-bottom: 1px solid black;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+
+        .footer {
+            width: 100%;
+            padding-bottom: 20px;
+            border-top: 1px solid black;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+    {{#each $pdf.pages}}
+    {{#if @index}}
+    <div style="page-break-before: always;"></div>
+    {{/if}}
+    <main class="main">
+        <header class="header">
+            <div>LOGO</div>
+            <div>Header from header-footer.html</div>
+            <div>Peint Date {{@root.ReportMetaData.DateTime}}</div>
+        </header>
+        <footer class="footer">
+            <div>
+                <span>Page {{getPageNumber @index}} of {{getTotalPages ../$pdf.pages}}</span>
+                <span>Page {{getPageNumber @index}} of {{getTotalPages @root.$pdf.pages}}</span>
+            </div>
+            <div>footer from header-footer.html</div>
+            <div>(c) 2021 All rights reserved</div>
+        </footer>
+    </main>
+    {{/each}}
+</body>
+</html>

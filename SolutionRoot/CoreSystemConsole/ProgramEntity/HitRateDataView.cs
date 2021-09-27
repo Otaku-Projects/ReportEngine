@@ -132,6 +132,7 @@ namespace CoreSystemConsole.ProgramEntity
             this.dataSetObj = new ExpandoObject() as IDictionary<string, object>;
 
             this.dataSetObj.Add("number", "0123456789~!@#$%^&*()_+");
+            this.dataSetObj.Add("staffname", "Peter Pan (sys0999)");
 
             this.CreateDummyDataGeneralView1();
             this.CreateDummyDataSeller();
@@ -143,8 +144,9 @@ namespace CoreSystemConsole.ProgramEntity
             this.dataSetObj = new ExpandoObject() as IDictionary<string, object>;
 
             this.dataSetObj.Add("number", "0123456789~!@#$%^&*()_+");
+            this.dataSetObj.Add("staffname", "Peter Pan (sys0999)");
 
-            this.CreateDummyDataGeneralView1();
+            this.CreateDummyDataGeneralView2();
             this.CreateDummyDataSeller();
             this.CreateDummyDataBuyer();
         }
