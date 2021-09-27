@@ -26,6 +26,9 @@
             width: 100%;
             padding-top: 20px;
             border-bottom: 1px solid black;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
         }
     </style>
 </head>
@@ -36,7 +39,9 @@
     {{/if}}
     <main class="main">
         <header class="header">
-            Header from header.html
+            <div>LOGO</div>
+            <div>Header from header.html</div>
+            <div>Print Date {{@root.ReportMetaData.DateTime}}</div>
         </header>
     </main>
     {{/each}}

@@ -32,15 +32,6 @@ namespace CoreReport.JasperReport
 
         public JasperReportEntity()
         {
-            //var _rs = new LocalReporting()
-            //    .RunInDirectory(Path.Combine(Directory.GetCurrentDirectory(), "./ReportTemplate"))
-            //    .KillRunningJsReportProcesses()
-            //    .UseBinary(JsReportBinary.GetBinary())
-            //    .Configure(cfg => cfg.AllowedLocalFilesAccess().FileSystemStore().BaseUrlAsWorkingDirectory())
-            //    .AsUtility()
-            //    .Create();
-
-            //this.rs = _rs;
             this.jasperReportRenderFolder = this.tempRenderFolder;
         }
         public JasperReportEntity(BaseReportEntity _reportEntity, string _filename = "")
@@ -62,25 +53,6 @@ namespace CoreReport.JasperReport
             this.createdBy = "CoreSystem";
             this.createdDate = new DateTime();
         }
-
-        /*
-        public JasperReportEntity(IRenderService _rs, string _filename = "")
-        {
-            if (string.IsNullOrEmpty(_filename))
-            {
-                Guid obj = Guid.NewGuid();
-                _filename = obj.ToString();
-            }
-
-            this.rs = _rs;
-            this.jasperReportRenderFolder = this.tempRenderFolder;
-
-            this.filename = _filename;
-
-            this.createdBy = "CoreSystem";
-            this.createdDate = new DateTime();
-        }
-        */
 
         public void RefreshPrintDate()
         {
@@ -169,8 +141,8 @@ namespace CoreReport.JasperReport
 
             try
             {
-                DataSet _dataSet = this.dataSet;
-                object _reportData = this.ConvertDataSetToObject(_dataSet);
+                //DataSet _dataSet = this.dataSet;
+                //object _reportData = this.ConvertDataSetToObject(_dataSet);
 
                 RenderRequest _renderRequest = this.CreatePdfRenderRequest();
 
@@ -238,24 +210,6 @@ namespace CoreReport.JasperReport
             _renderRequest.Template.Engine = Engine.Handlebars;
             _renderRequest.Template.Recipe = Recipe.ChromePdf;
 
-            #region Header and Footer
-            string _headerFileContent = string.Empty;
-            string _footerFileContent = string.Empty;
-
-            string _headerFilePath = this.reportEntity.GetTemplateHeaderPath();
-            string _footerFilePath = this.reportEntity.GetTemplateFooterPath();
-
-            if (!string.IsNullOrEmpty(_headerFilePath) && File.Exists(_headerFilePath))
-            {
-                _headerFileContent = File.ReadAllText(_headerFilePath);
-            }
-
-            if (!string.IsNullOrEmpty(_footerFilePath) && File.Exists(_footerFilePath))
-            {
-                _footerFileContent = File.ReadAllText(_footerFilePath);
-            }
-            #endregion
-
             _renderRequest = this.AddPdfutilsToRenderRequest(_renderRequest);
 
             _renderRequest.Data = this.dataSetObj;
@@ -297,8 +251,8 @@ namespace CoreReport.JasperReport
             string _headerFilePath = string.Empty;
             string _footerFilePath = string.Empty;
 
-            _headerFilePath = this.reportEntity.GetTemplateHeaderPath();
-            _footerFilePath = this.reportEntity.GetTemplateFooterPath();
+            //_headerFilePath = this.reportEntity.GetTemplateHeaderPath();
+            //_footerFilePath = this.reportEntity.GetTemplateFooterPath();
 
             _headerFilePath = this.reportEntity.GetPageComponent(PageNature.Header).GetHtmlFilePath();
             _footerFilePath = this.reportEntity.GetPageComponent(PageNature.Footer).GetHtmlFilePath();
@@ -318,9 +272,14 @@ namespace CoreReport.JasperReport
             foreach (KeyValuePair<PageNature, PageComponent> _pageKV in pageComponents)
             {
                 if(_pageKV.Key == PageNature.MainContent) continue;
+                htmlFileContent = string.Empty;
+                scriptContent = string.Empty;
 
                 htmlFileContent = File.ReadAllText(_pageKV.Value.GetHtmlFilePath());
-                scriptContent = File.ReadAllText(_pageKV.Value.GetScriptFilePath());
+
+                // read script if exists, allows render html without script file
+                if(File.Exists(_pageKV.Value.GetScriptFilePath()))
+                    scriptContent = File.ReadAllText(_pageKV.Value.GetScriptFilePath());
 
                 PdfOperation _pdfOperation = new PdfOperation()
                 {
@@ -384,31 +343,15 @@ namespace CoreReport.JasperReport
 
         protected object ConvertDataSetToObject(DataSet _dataSet)
         {
-            /*
-                dynamic x = new ExpandoObject();
-                x.NewProp = string.Empty;
-            //or
-                var x = new ExpandoObject() as IDictionary<string, Object>;
-                x.Add("NewProp", string.Empty);
-             */
-        //dynamic _obj = new ExpandoObject();
         var _obj = new ExpandoObject() as IDictionary<string, object>;
             if (_dataSet == null || _dataSet.Tables.Count == 0) return _obj;
 
             foreach (DataTable _table in _dataSet.Tables)
             {
-                //var tableObj = new ExpandoObject() as IDictionary<string, object>;
                 List<dynamic> rowList = new List<dynamic>();
                 _obj.Add(_table.TableName, rowList);
-                //_obj.Add(_table.TableName, new dynamic[_table.Rows.Count]);
-
-                //Array _array = new Array() { };
-                //_obj.Add(_table.TableName, _array);
-
-                //dynamic packet = new ExpandoObject();
                 foreach (DataRow _row in _table.Rows)
                 {
-                    //_obj[_table.TableName][_rowCount] = new ExpandoObject();
                     var expandoDict = new ExpandoObject() as IDictionary<String, Object>;
                     foreach (DataColumn col in _table.Columns)
                     {
@@ -416,35 +359,10 @@ namespace CoreReport.JasperReport
                         expandoDict.Add(col.ColumnName, _row[col.ColumnName]);
                     }
                     rowList.Add(expandoDict);
-
-                    //foreach (object item in _row.ItemArray)
-                    //{
-                    //    // read item
-                    //    expandoDict.Add(item.ToString(), item);
-                    //}
                 }
             }
 
             return _obj;
-
-            /*
-             
-
-            DataTable _dt = _dataSet.Tables[0];
-
-            var dynamicDt = new List<dynamic>();
-            foreach (DataRow row in _dt.Rows)
-            {
-                dynamic dyn = new ExpandoObject();
-                dynamicDt.Add(dyn);
-                foreach (DataColumn column in _dt.Columns)
-                {
-                    var dic = (IDictionary<string, object>)dyn;
-                    dic[column.ColumnName] = row[column];
-                }
-            }
-            return dynamicDt;
-             */
         }
     }
 }

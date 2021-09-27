@@ -69,32 +69,7 @@ namespace CoreSystemConsole.ProgramEntity
                 _dataColumn1 = this.CreateDataColumn(propertyInfo.Name, propertyInfo.PropertyType);
                 _dataColumnList.Add(_dataColumn1);
             }
-            /*
-            _dataColumn1 = this.CreateDataColumn("id", typeof(int));
-            _dataColumnList.Add(_dataColumn1);
 
-            _dataColumn1 = this.CreateDataColumn("office", typeof(string));
-            _dataColumnList.Add(new DataColumn(_dataColumn1.ColumnName, _dataColumn1.DataType));
-
-            _dataColumn1 = this.CreateDataColumn("product", typeof(string));
-            _dataColumnList.Add(new DataColumn(_dataColumn1.ColumnName, _dataColumn1.DataType));
-
-            _dataColumn1 = this.CreateDataColumn("city", typeof(string));
-            _dataColumnList.Add(new DataColumn(_dataColumn1.ColumnName, _dataColumn1.DataType));
-
-            _dataColumn1 = this.CreateDataColumn("numOfDesign", typeof(int));
-            _dataColumnList.Add(new DataColumn(_dataColumn1.ColumnName, _dataColumn1.DataType));
-            _dataColumn1 = this.CreateDataColumn("numOfContracted", typeof(int));
-            _dataColumnList.Add(new DataColumn(_dataColumn1.ColumnName, _dataColumn1.DataType));
-            _dataColumn1 = this.CreateDataColumn("designHitRate", typeof(Decimal));
-            _dataColumnList.Add(new DataColumn(_dataColumn1.ColumnName, _dataColumn1.DataType));
-            _dataColumn1 = this.CreateDataColumn("numOfColorWays", typeof(int));
-            _dataColumnList.Add(new DataColumn(_dataColumn1.ColumnName, _dataColumn1.DataType));
-            _dataColumn1 = this.CreateDataColumn("numOfItems", typeof(int));
-            _dataColumnList.Add(new DataColumn(_dataColumn1.ColumnName, _dataColumn1.DataType));
-            _dataColumn1 = this.CreateDataColumn("colorwayHitRate", typeof(Decimal));
-            _dataColumnList.Add(new DataColumn(_dataColumn1.ColumnName, _dataColumn1.DataType));
-            */
             foreach (var _col in _dataColumnList)
             {
                 _dataTable.Columns.Add(_col);
@@ -107,25 +82,6 @@ namespace CoreSystemConsole.ProgramEntity
             DataColumn _dataCol = new DataColumn(_columnName, _dataType);
             return _dataCol;
         }
-
-        /*
-        public void CreateDummyData1(string _tableName)
-        {
-            if (string.IsNullOrEmpty(_tableName))
-            {
-                Guid obj = Guid.NewGuid();
-                _tableName = obj.ToString();
-            }
-            DataTable _table = new DataTable(_tableName);
-            //_table = this.AddRowToHitRateDataTable(_table.Copy(), 100);
-            this.AddDataColumnToDataTable(_table);
-            this.AddRowToHitRateDataTable(_table, 100);
-
-            this.dataSet.Tables.Add(_table);
-
-            //return _table;
-        }
-        */
 
         public void CreateDummyData1()
         {
@@ -167,26 +123,16 @@ namespace CoreSystemConsole.ProgramEntity
 
         public void CreateDummyDataGeneralView2(string _tableName = "GeneralView")
         {
-            var _obj = new ExpandoObject() as IDictionary<string, object>;
-            var tbRowList = new List<dynamic>();
-
-            DataTable _table = new DataTable(_tableName);
-            //_table = this.AddRowToHitRateDataTable(_table.Copy(), 100);
-            this.AddDataColumnToDataTable(_table);
-            this.AddRowToHitRateDataTable(_table, 100);
-
-            foreach (DataRow _row in _table.Rows)
+            List<dynamic> _obj = new List<dynamic>();
+            for (int i = 0; i < 100; i++)
             {
-                dynamic dyn = new ExpandoObject();
-                tbRowList.Add(dyn);
-                foreach (DataColumn column in _table.Columns)
+                _obj.Add(new 
                 {
-                    var dic = (IDictionary<string, object>)dyn;
-                    dic[column.ColumnName] = _row[column];
-                }
+                    name= Faker.Company.Name(),
+                    price= Faker.RandomNumber.Next(100, 1000000),
+                });
             }
-
-            this.dataSetObj.Add(_tableName, tbRowList);
+            this.dataSetObj.Add(_tableName, _obj);
         }
 
         public void CreateDummyDataSeller(string _tableName = "seller")

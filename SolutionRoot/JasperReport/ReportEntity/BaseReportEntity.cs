@@ -110,9 +110,9 @@ namespace JasperReport.ReportEntity
 
         protected string templateBaseDirectory;
         protected string templateReportFileDirectory;
-        protected string templateReportFileLocation;
-        protected string templateReportHeaderLocation;
-        protected string templateReportFooterLocation;
+        //protected string templateReportFileLocation;
+        //protected string templateReportHeaderLocation;
+        //protected string templateReportFooterLocation;
 
         protected Dictionary<PageNature, PageComponent> pageComponents;
 
@@ -131,12 +131,6 @@ namespace JasperReport.ReportEntity
 
             this.pageComponents = new Dictionary<PageNature, PageComponent>();
 
-            /*
-            this.rs = new LocalReporting()
-                .UseBinary(JsReportBinary.GetBinary())
-                .AsUtility()
-                .Create();
-            */
             this.rs = new LocalReporting()
                 .RunInDirectory(Path.Combine(Directory.GetCurrentDirectory(), "ReportTemplate"))
                 .KillRunningJsReportProcesses()
@@ -284,20 +278,20 @@ namespace JasperReport.ReportEntity
             return this.dataSetObj;
         }
 
-        public string GetTemplateFilePath()
-        {
-            return this.templateReportFileLocation;
-        }
+        //public string GetTemplateFilePath()
+        //{
+        //    return this.templateReportFileLocation;
+        //}
 
-        public string GetTemplateHeaderPath()
-        {
-            return this.templateReportHeaderLocation;
-        }
+        //public string GetTemplateHeaderPath()
+        //{
+        //    return this.templateReportHeaderLocation;
+        //}
 
-        public string GetTemplateFooterPath()
-        {
-            return this.templateReportFooterLocation;
-        }
+        //public string GetTemplateFooterPath()
+        //{
+        //    return this.templateReportFooterLocation;
+        //}
 
         public string GetTemplateFileDirectory()
         {

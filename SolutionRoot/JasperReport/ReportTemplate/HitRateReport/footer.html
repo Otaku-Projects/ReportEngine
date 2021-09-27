@@ -24,8 +24,10 @@
         .footer {
             width: 100%;
             padding-bottom: 20px;
-            position: sticky;
-            bottom: 0px;
+            border-top: 1px solid black;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
         }
     </style>
 
@@ -35,10 +37,16 @@
     {{#if @index}}
     <div style="page-break-before: always;"></div>
     {{/if}}
-    <footer class="footer">
-        <span>Page {{getPageNumber @index}} of {{getTotalPages ../$pdf.pages}}</span>
-        <span>Page {{getPageNumber @index}} of {{getTotalPages @root.$pdf.pages}}</span>
-    </footer>
+    <main class="main">
+        <footer class="footer">
+            <div>
+                <span>Page {{getPageNumber @index}} of {{getTotalPages ../$pdf.pages}}</span>
+                <span>Page {{getPageNumber @index}} of {{getTotalPages @root.$pdf.pages}}</span>
+            </div>
+            <div>footer from footer.html</div>
+            <div>(c) 2021 All rights reserved</div>
+        </footer>
+    </main>
     {{/each}}
 
 </body>
