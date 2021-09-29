@@ -20,6 +20,19 @@ Change the startup project to "CoreSystemConsoleInNet"
 - Jasper Report
 Change the startup project to "CoreSystemConsole"
 
+## Program Structure
+I use "Design Pattern - Decorator" to separate the coding files by reporting enginer.
+>Let's said a system contains many functions, a report function represented by a menu item in navigation menu.
+>
+>In general, a report function provides the selection criteria, user select the criteria 
+>
+>Then, click "Export Xlsx" or "Export Pdf" button to generate report file in xlsx, pdf as they want.
+
+"Decorator" Design Pattern gives a report program easy to switch the report enginer, also allows different reports use various engines in a single system
+
+https://www.dofactory.com/net/decorator-design-pattern#realworld
+
+
 ## Crystal Report
 ### Pre-installation
 Crystal Reports, Developer for Visual Studio Downloads
