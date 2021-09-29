@@ -59,6 +59,14 @@ GitHub jsreport/jsreport-dotnet
 https://github.com/jsreport/jsreport-dotnet
 
 #### Page header, footer, page number
+Merge dynamic header with items
+ 
 https://playground.jsreport.net/w/admin/ihh7laK2
 
+Merge header and footer with page numbers
+
 https://playground.jsreport.net/w/admin/kMI4FBmw
+
+Merge with render for every page enabled
+
+https://playground.jsreport.net/w/admin/1A7l_UG_
