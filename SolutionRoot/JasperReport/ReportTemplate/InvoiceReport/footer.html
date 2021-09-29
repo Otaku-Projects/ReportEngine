@@ -40,8 +40,8 @@
     <main class="main">
         <footer class="footer">
             <div>
-                <span>Page {{getPageNumber @index}} of {{getTotalPages ../$pdf.pages}}</span>
-                <span>Page {{getPageNumber @index}} of {{getTotalPages @root.$pdf.pages}}</span>
+                <!--<span>Page {{getPageNumber @index}} of {{getTotalPages ../$pdf.pages}}</span>-->
+                <span>Page {{getPageNumber @root.$pdf.pageNumber}} of {{getTotalPages @root.$pdf.pages}}</span>
             </div>
             <div>footer from footer.html</div>
             <div>(c) 2021 All rights reserved</div>

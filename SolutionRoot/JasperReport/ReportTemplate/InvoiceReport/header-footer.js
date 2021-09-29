@@ -23,3 +23,18 @@ function getTotalPages(pages) {
 
 	return pages.length
 }
+
+function showIfOnFirstPage(pageNumber, options) {
+	//var pageNumber = parseInt(pageIndex) + 1;
+
+	//if (pageIndex === null)
+	//	return options.inverse(this);
+
+	if (pageNumber > 1) {
+		return options.fn(this);
+	} else {
+		return options.inverse(this);
+	}
+
+	//return pageNumber;
+}

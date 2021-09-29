@@ -112,10 +112,10 @@ namespace CoreSystemConsole.ProgramEntity
             dynamic _obj = new ExpandoObject();
             _obj = new[]
             {
-                new { name = "NextCore System", price = 100 },
-                new { name = "Implementation (3 man-days)", price = 200 },
-                new { name = "Annual Support (24 man-hours)", price = 300 },
-                new { name = "Volume License", price = 400 }
+                new { name = "NextCore System", price = 100000 },
+                new { name = "Implementation (3 man-days)", price = 20000 },
+                new { name = "Annual Support (24 man-hours)", price = 30000 },
+                new { name = "Volume License", price = 4000 }
             };
 
             this.dataSetObj.Add(_tableName, _obj);

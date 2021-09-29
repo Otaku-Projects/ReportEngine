@@ -14,11 +14,11 @@ using System.Threading.Tasks;
 
 namespace CoreSystemConsole.ProgramEntity
 {
-    public class HitRateProgram
+    public class InvoiceProgram
     {
-        public HitRateProgram()
+        public InvoiceProgram()
         {
-            Console.WriteLine("Said \"Hello World!\" from HitRateProgram");
+            Console.WriteLine("Said \"Hello World!\" from InvoiceProgram");
 
             HitRateDataView hitRateDataView1 = new HitRateDataView();
             HitRateDataView hitRateDataView2 = new HitRateDataView();
@@ -29,14 +29,15 @@ namespace CoreSystemConsole.ProgramEntity
             hitRateDataView2.CreateDummyData2();
             IDictionary<string, object> dataSetObj2 = hitRateDataView2.GetDataSetObj();
 
-            HitRateReport1 hitRateReport1 = new HitRateReport1(dataSetObj1);
-            //InvoiceReport2 hitRateReport2 = new InvoiceReport2(dataSetObj2);
+            JasperReportEntity jasperReportEntity = null;
 
-            JasperReportEntity jasperReportEntity = new JasperReportEntity(hitRateReport1);
-            jasperReportEntity.SaveXlsx();
+            InvoiceReport1 hitRateReport1 = new InvoiceReport1(dataSetObj1);
+            jasperReportEntity = new JasperReportEntity(hitRateReport1);
+            jasperReportEntity.SavePdf();
 
-            //jasperReportEntity = new JasperReportEntity(hitRateReport2);
-            //jasperReportEntity.SaveXlsx();
+            InvoiceReport2 hitRateReport2 = new InvoiceReport2(dataSetObj2);
+            jasperReportEntity = new JasperReportEntity(hitRateReport2);
+            jasperReportEntity.SavePdf();
         }
     }
 }

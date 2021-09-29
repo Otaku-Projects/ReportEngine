@@ -107,9 +107,18 @@ namespace CoreReport.JasperReport
 
             try
             {
+                RenderRequest _renderRequest = this.CreateXlsxRenderRequest();
+
+                var report = rs.RenderAsync(_renderRequest).Result;
+                report.Content.CopyTo(File.OpenWrite(
+                    Path.Combine(
+                        this.jasperReportRenderFolder
+                        , _fileName + ".xlsx")
+                ));
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.ToString());
             }
         }
 
@@ -174,7 +183,40 @@ namespace CoreReport.JasperReport
             return _renderRequest;
         }
 
-        protected RenderRequest CreatePdfRenderRequest(string _templateFile = "")
+        protected RenderRequest CreateXlsxRenderRequest(string _templateFile = "")
+        {
+            RenderRequest _renderRequest = new RenderRequest();
+
+            _renderRequest = this.CreateEmptyRenderRequest();
+
+            string _htmlFileContent = string.Empty;
+            string _scriptFileContent = string.Empty;
+
+            string _htmlFilePath = string.Empty;
+            string _scriptFilePath = string.Empty;
+            _htmlFilePath = this.reportEntity.GetPageComponent(PageNature.MainContent).GetHtmlFilePath();
+            _scriptFilePath = this.reportEntity.GetPageComponent(PageNature.MainContent).GetScriptFilePath();
+
+            if (!string.IsNullOrEmpty(_htmlFilePath) && File.Exists(_htmlFilePath))
+            {
+                _htmlFileContent = File.ReadAllText(_htmlFilePath);
+            }
+            if (!string.IsNullOrEmpty(_scriptFilePath) && File.Exists(_scriptFilePath))
+            {
+                _scriptFileContent = File.ReadAllText(_scriptFilePath);
+            }
+
+            _renderRequest.Template.Content = _htmlFileContent;
+            _renderRequest.Template.Helpers = _scriptFileContent;
+            _renderRequest.Template.Engine = Engine.Handlebars;
+            _renderRequest.Template.Recipe = Recipe.HtmlToXlsx;
+
+            _renderRequest.Data = this.dataSetObj;
+
+            return _renderRequest;
+        }
+
+        protected RenderRequest CreatePdfRenderRequest()
         {
             RenderRequest _renderRequest = new RenderRequest();
 
@@ -186,15 +228,10 @@ namespace CoreReport.JasperReport
 
             string _htmlFilePath = string.Empty;
             string _scriptFilePath = string.Empty;
-            _scriptFilePath = Path.Combine(this.reportEntity.GetTemplateFileDirectory(), "helper.js");
+            //_scriptFilePath = Path.Combine(this.reportEntity.GetTemplateFileDirectory(), "helper.js");
 
             _htmlFilePath = this.reportEntity.GetPageComponent(PageNature.MainContent).GetHtmlFilePath();
             _scriptFilePath = this.reportEntity.GetPageComponent(PageNature.MainContent).GetScriptFilePath();
-
-            if (!string.IsNullOrEmpty(_templateFile) && File.Exists(_templateFile))
-            {
-                _htmlFileContent = File.ReadAllText(_templateFile);
-            }
 
             if(!string.IsNullOrEmpty(_htmlFilePath) && File.Exists(_htmlFilePath))
             {
@@ -284,6 +321,7 @@ namespace CoreReport.JasperReport
                 PdfOperation _pdfOperation = new PdfOperation()
                 {
                     Type = PdfOperationType.Merge,
+                    RenderForEveryPage = true,
                     Template = new Template
                     {
                         Content = htmlFileContent,

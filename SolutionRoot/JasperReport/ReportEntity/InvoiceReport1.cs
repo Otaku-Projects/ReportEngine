@@ -14,13 +14,13 @@ using jsreport.Types;
 
 namespace JasperReport.ReportEntity
 {
-    public class HitRateReport2 : BaseReportEntity
+    public class InvoiceReport1 : BaseReportEntity
     {
-        public HitRateReport2(DataSet _dataSet) { }
+        public InvoiceReport1(DataSet _dataSet) { }
 
-        public HitRateReport2(IDictionary<string, object> _dataSetObj)
+        public InvoiceReport1(IDictionary<string, object> _dataSetObj)
         {
-            Console.WriteLine("Said \"Hello World!\" from HitRateReport2");
+            Console.WriteLine("Said \"Hello World!\" from InvoiceReport1");
             //this.dataSet = _dataSet;
             this.dataSetObj = _dataSetObj;
         }
@@ -32,7 +32,7 @@ namespace JasperReport.ReportEntity
             string _templateDirectory = string.Empty;
             string _contentFilePath = string.Empty;
             string _templateScriptLocation = string.Empty;
-            _templateDirectory = Path.Combine(this.templateBaseDirectory, @"HitRateReport");
+            _templateDirectory = Path.Combine(this.templateBaseDirectory, @"InvoiceReport");
 
             if (File.Exists(Path.Combine(_templateDirectory, @"index.html")))
             {
@@ -57,7 +57,6 @@ namespace JasperReport.ReportEntity
 
             this.AddPageContent(_pageMainContent);
         }
-
         public override void InitializateHeaderFooter()
         {
             string _templateDirectory = this.templateReportFileDirectory;
@@ -107,9 +106,9 @@ namespace JasperReport.ReportEntity
             _pageHeaderFooter.SetHtmlPath(_headerFooterFilePath);
             _pageHeaderFooter.SetScriptPath(Path.Combine(_templateDirectory, @"header-footer.js"));
 
-            //this.AddPageHeader(_pageHeader);
-            //this.AddPageFooter(_pageFooter);
-            this.AddPageFooter(_pageHeaderFooter);
+            this.AddPageHeader(_pageHeader);
+            this.AddPageFooter(_pageFooter);
+            //this.AddPageFooter(_pageHeaderFooter);
         }
 
     }

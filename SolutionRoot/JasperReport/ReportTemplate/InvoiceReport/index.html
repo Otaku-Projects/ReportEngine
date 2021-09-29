@@ -1,0 +1,110 @@
+﻿<!--
+Invoice dynamically rendered into html using handlebars and converted into pdf
+using phantom-pdf recipe. The styles are extracted into separate asset for
+better readability and later reuse.
+
+Data to this sample are mocked at the design time and should be filled on the
+incoming API request.
+!-->
+{#asset General/import_general_css.html}
+<style>
+    {#asset InvoiceReport/content.css @encoding=utf8}
+</style>
+<style>
+</style>
+<main>
+    <div class="invoice-box">
+        <table cellpadding="0" cellspacing="0">
+            <thead>
+                <tr class="top">
+                    <td class="title">
+                        <img src="{#asset ./InvoiceReport/content.png @encoding=dataURI}" style="width:100%; max-width:300px;" />
+                        <!--<img src="content.png" style="width:100%; max-width:300px;" />-->
+                    </td>
+                    <td>
+                        Invoice #: {{number}}
+                        <br> Created: {{now}}
+                        <br> Due: {{nowPlus20Days}}
+                    </td>
+                </tr>
+                <tr class="fit">
+                    <td colspan="2" style="text-align: center;">
+                        <div>Hit Rate Report align center</div>
+                    </td>
+                </tr>
+                <tr class="fit">
+                    <td colspan="2" style="text-align: left;">
+                        <div>
+                            English, hello<br>
+                            Chinese, 你好! (Nǐ hǎo)<br>
+                            Japanese, 今日は (Konnichiwa)<br>
+                            Korean, 안녕하세요 (Anyeonghaseyo)<br>
+                            Cantonese, 嗨
+                        </div>
+                    </td>
+                </tr>
+                <tr class="fit">
+                    <td colspan="2" style="text-align: left; text-decoration: underline;">
+                        <div>Hit Rate Report align left with underline</div>
+                    </td>
+                </tr>
+                <tr class="fit">
+                    <td colspan="2" style="text-align: right; font-style: italic;">
+                        <div>Hit Rate Report align right with italic</div>
+                    </td>
+                </tr>
+                <tr class="fit">
+                    <td colspan="2" style="text-align: right; text-decoration: line-through;">
+                        <div>Hit Rate Report align right with line-through</div>
+                    </td>
+                </tr>
+                <tr class="information">
+                    <td colspan="2 ">
+                        <table>
+                            <tr>
+                                <td>
+                                    {{seller.name}}<br>
+                                    {{seller.road}}<br>
+                                    {{seller.country}}
+                                </td>
+                                <td>
+                                    {{buyer.name}}<br>
+                                    {{buyer.road}}<br>
+                                    {{buyer.country}}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr class="heading">
+                    <td>
+                        Item
+                    </td>
+                    <td>
+                        Price
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each GeneralView}}
+                <tr class="item">
+                    <td>
+                        {{name}}
+                    </td>
+                    <td>
+                        $ {{price}}
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+            <tfoot>
+                <tr class="total">
+                    <td></td>
+                    <td>
+                        Total: ${{total GeneralView}}
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</main>

@@ -11,8 +11,10 @@ namespace CoreSystemConsole
         {
             Console.WriteLine("Said \"Hello World!\" from CoreSystemConsole");
 
-            // Create Crystl Report entity
-            HitRateProgram hitRateProgram = new HitRateProgram();
+            // Tick-off the Report Entity Program
+            InvoiceProgram invoiceProgram = new InvoiceProgram();
+
+            //HitRateProgram hitRateProgram = new HitRateProgram();
         }
     }
 }
