@@ -334,48 +334,6 @@ namespace CoreReport.JasperReport
             }
             _renderRequest.Template.PdfOperations = _pdfOperationList;
 
-            //string _headerScriptFileContent = string.Empty;
-            //string _footerScriptFileContent = string.Empty;
-            //string _headerScriptFilePath = string.Empty;
-            //string _footerScriptFilePath = string.Empty;
-
-            //_headerScriptFilePath = Path.Combine(this.reportEntity.GetTemplateFileDirectory(), "header.js");
-            //_footerScriptFilePath = Path.Combine(this.reportEntity.GetTemplateFileDirectory(), "footer.js");
-
-            //if (hfOption == HeaderFooterOptions.HeaderFooterInSingleFile)
-            //{
-            //    _headerScriptFilePath = Path.Combine(this.reportEntity.GetTemplateFileDirectory(), "header-footer.js");
-            //}
-
-            //if (!string.IsNullOrEmpty(_headerScriptFilePath) && File.Exists(_headerScriptFilePath))
-            //{
-            //    _headerScriptFileContent = File.ReadAllText(_headerScriptFilePath);
-            //}
-            //if (!string.IsNullOrEmpty(_footerScriptFilePath) && File.Exists(_footerScriptFilePath))
-            //{
-            //    _footerScriptFileContent = File.ReadAllText(_footerScriptFilePath);
-            //}
-
-            //#region PdfOperations
-            //if (hfOption == HeaderFooterOptions.HeaderFooterInSingleFile)
-            //{
-            //    _renderRequest.Template.PdfOperations = new List<PdfOperation>()
-            //    {
-            //        new PdfOperation()
-            //        {
-            //            Type = PdfOperationType.Merge,
-            //            Template = new Template
-            //            {
-            //                Content = _headerFileContent,
-            //                Helpers = _headerScriptFileContent,
-            //                Engine = Engine.Handlebars,
-            //                Recipe = Recipe.ChromePdf
-            //            }
-            //        }
-            //    };
-            //}
-            //#endregion
-
             return _renderRequest;
         }
 

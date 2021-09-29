@@ -29,14 +29,15 @@ namespace CoreSystemConsole.ProgramEntity
             hitRateDataView2.CreateDummyData2();
             IDictionary<string, object> dataSetObj2 = hitRateDataView2.GetDataSetObj();
 
-            HitRateReport1 hitRateReport1 = new HitRateReport1(dataSetObj1);
-            //InvoiceReport2 hitRateReport2 = new InvoiceReport2(dataSetObj2);
+            JasperReportEntity jasperReportEntity = null;
 
-            JasperReportEntity jasperReportEntity = new JasperReportEntity(hitRateReport1);
+            HitRateReport1 hitRateReport1 = new HitRateReport1(dataSetObj1);
+            jasperReportEntity = new JasperReportEntity(hitRateReport1);
             jasperReportEntity.SaveXlsx();
 
-            //jasperReportEntity = new JasperReportEntity(hitRateReport2);
-            //jasperReportEntity.SaveXlsx();
+            HitRateReport2 hitRateReport2 = new HitRateReport2(dataSetObj2);
+            jasperReportEntity = new JasperReportEntity(hitRateReport2);
+            jasperReportEntity.SaveXlsx();
         }
     }
 }

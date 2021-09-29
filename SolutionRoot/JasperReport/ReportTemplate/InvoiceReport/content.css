@@ -26,7 +26,7 @@ body table .information * {
 .invoice-box table td {
     padding: 5px;
     vertical-align: top;
-    overflow: scroll;
+    overflow: auto;
 }
 .invoice-box table tr td:nth-child(2) {
     text-align: right;

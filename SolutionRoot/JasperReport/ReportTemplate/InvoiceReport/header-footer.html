@@ -52,11 +52,11 @@
             display: block;
             flex: none;
         }
-            .invoice-box table td {
-                padding: 5px;
-                vertical-align: top;
-                overflow: auto;
-            }
+        .invoice-box table td {
+            padding: 5px;
+            vertical-align: top;
+            overflow: auto;
+        }
         .table_header {
             width: 100%;
             line-height: inherit;
@@ -125,13 +125,13 @@
         </div>
         {{/showIfOnFirstPage}}
     </div>
-        <footer class="footer">
-            <div>
-                <span>Page {{@root.$pdf.pageNumber}} of {{getTotalPages @root.$pdf.pages}}</span>
-            </div>
-            <div>footer from header-footer.html</div>
-            <div>(c) 2021 All rights reserved</div>
-        </footer>
+    <footer class="footer">
+        <div>
+            <span>Page {{@root.$pdf.pageNumber}} of {{getTotalPages @root.$pdf.pages}}</span>
+        </div>
+        <div>footer from header-footer.html</div>
+        <div>(c) 2021 All rights reserved</div>
+    </footer>
 </main>
     {{/each}}
 </body>
