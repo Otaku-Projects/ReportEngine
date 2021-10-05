@@ -49,7 +49,7 @@
     <Compile Include="ReportEntity\BaseReportEntity.cs" />
     <Compile Include="ReportEntity\HitRateReport2.cs" />
     <Compile Include="ReportEntity\HitRateReport.cs" />
-    <Compile Include="ReportMain\CrystalReportEntity.cs" />
+    <Compile Include="ReportMain\CrystalReportDecorator.cs" />
     <Compile Include="ReportTemplate\HitRateData.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

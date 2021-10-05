@@ -16,7 +16,7 @@ using static JasperReport.ReportEntity.BaseReportEntity;
 
 namespace CoreReport.JasperReport
 {
-    public class JasperReportEntity : VisualizationEntity
+    public class JasperReportDecorator : VisualizationDecorator
     {
         private string createdBy;
         private DateTime createdDate;
@@ -30,11 +30,11 @@ namespace CoreReport.JasperReport
         private IDictionary<string, object> dataSetObj;
         private string jasperReportRenderFolder;
 
-        public JasperReportEntity()
+        public JasperReportDecorator()
         {
             this.jasperReportRenderFolder = this.tempRenderFolder;
         }
-        public JasperReportEntity(BaseReportEntity _reportEntity, string _filename = "")
+        public JasperReportDecorator(BaseReportEntity _reportEntity, string _filename = "")
         {
             if (string.IsNullOrEmpty(_filename))
             {
@@ -75,9 +75,14 @@ namespace CoreReport.JasperReport
 
         }
 
-        public virtual void SaveExcel(string _fileName="")
+        public virtual void SaveExcel(string _fileName = "")
         {
             this.SaveXlsx(_fileName);
+        }
+
+        public virtual void SaveExcelByHTML(string _fileName = "")
+        {
+            this.SaveXlsxByHTML(_fileName);
         }
 
         public virtual void SaveRtf(string _fileName="")
@@ -108,6 +113,32 @@ namespace CoreReport.JasperReport
             try
             {
                 RenderRequest _renderRequest = this.CreateXlsxRenderRequest();
+
+                var report = rs.RenderAsync(_renderRequest).Result;
+                report.Content.CopyTo(File.OpenWrite(
+                    Path.Combine(
+                        this.jasperReportRenderFolder
+                        , _fileName + ".xlsx")
+                ));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+        }
+
+        public virtual void SaveXlsxByHTML(string _fileName = "")
+        {
+            this.RefreshPrintDate();
+
+            if (string.IsNullOrEmpty(_fileName))
+            {
+                _fileName = this.filename;
+            }
+
+            try
+            {
+                RenderRequest _renderRequest = this.CreateXlsxRenderByHTMLRequest();
 
                 var report = rs.RenderAsync(_renderRequest).Result;
                 report.Content.CopyTo(File.OpenWrite(
@@ -183,7 +214,18 @@ namespace CoreReport.JasperReport
             return _renderRequest;
         }
 
-        protected RenderRequest CreateXlsxRenderRequest(string _templateFile = "")
+        protected RenderRequest CreateXlsxRenderRequest()
+        {
+            RenderRequest _renderRequest = new RenderRequest();
+
+            _renderRequest = this.CreateXlsxRenderByHTMLRequest();
+            _renderRequest.Template.Engine = Engine.Handlebars;
+            _renderRequest.Template.Recipe = Recipe.Xlsx;
+
+            return _renderRequest;
+        }
+
+        protected RenderRequest CreateXlsxRenderByHTMLRequest()
         {
             RenderRequest _renderRequest = new RenderRequest();
 

@@ -7,13 +7,12 @@
 
   <ItemGroup>
     <PackageReference Include="Faker.Net" Version="1.5.148" />
-    <PackageReference Include="jsreport.Binary" Version="2.11.0" />
-    <PackageReference Include="jsreport.Local" Version="2.3.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\CoreReport\CoreReport.csproj" />
     <ProjectReference Include="..\CrystalReport\CrystalReport.csproj" />
+    <ProjectReference Include="..\EPPlus5\EPPlus5.csproj" />
     <ProjectReference Include="..\JasperReport\JasperReport.csproj" />
   </ItemGroup>
 
@@ -21,6 +20,21 @@
     <Reference Include="CrystalDecisions.CrystalReports.Engine">
       <HintPath>C:\Program Files (x86)\SAP BusinessObjects\Crystal Reports for .NET Framework 4.0\Common\SAP BusinessObjects Enterprise XI 4.0\win32_x86\dotnet\CrystalDecisions.CrystalReports.Engine.dll</HintPath>
     </Reference>
+    <Reference Include="OfficeToPDF">
+      <HintPath>..\OfficeToPDF\OfficeToPDF-1.9.0.2.exe</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="ReportTemplate\**\*.*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="..\OfficeToPDF-1.9.0.2\OfficeToPDF.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

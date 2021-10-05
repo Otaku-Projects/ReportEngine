@@ -12,7 +12,7 @@ namespace CoreSystemConsoleInNet.ProgramEntity
 {
     public class HitRateProgram
     {
-        private CrystalReportEntity crystalReportEntity;
+        private CrystalReportDecorator crystalReportEntity;
         private ReportDocument hitRate;
 
         public HitRateProgram()
@@ -30,9 +30,9 @@ namespace CoreSystemConsoleInNet.ProgramEntity
 
             HitRateReport2 hitRateReport2 = new HitRateReport2(dataSet);
             ReportDocument hitRate2 = hitRateReport2.GetReportDocument();
-            CrystalReportEntity crystalReportEntity2 = new CrystalReportEntity(hitRate2);
+            CrystalReportDecorator crystalReportEntity2 = new CrystalReportDecorator(hitRate2);
 
-            this.crystalReportEntity = new CrystalReportEntity(this.hitRate);
+            this.crystalReportEntity = new CrystalReportDecorator(this.hitRate);
 
             this.crystalReportEntity.SavePdf();
             this.crystalReportEntity.SaveXlsx();

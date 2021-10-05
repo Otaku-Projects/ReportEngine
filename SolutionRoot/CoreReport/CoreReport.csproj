@@ -41,7 +41,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CrystalReportDecorator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VisualizationDecorator.cs" />
     <Compile Include="VisualizationEntity.cs" />

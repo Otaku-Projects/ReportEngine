@@ -10,7 +10,7 @@ using CrystalDecisions.Shared;
 
 namespace CoreReport.CrystalReport
 {
-    public class CrystalReportEntity : VisualizationEntity
+    public class CrystalReportDecorator : VisualizationEntity
     {
         private string createdBy;
         private DateTime createdDate;
@@ -26,7 +26,7 @@ namespace CoreReport.CrystalReport
         protected DiskFileDestinationOptions CrDiskFileDestinationOptions;
         protected PdfRtfWordFormatOptions CrFormatTypeOptions;
 
-        public CrystalReportEntity(ReportDocument _rptDoc, string _filename = "")
+        public CrystalReportDecorator(ReportDocument _rptDoc, string _filename = "")
         {
             if (string.IsNullOrEmpty(_filename))
             {
@@ -46,7 +46,7 @@ namespace CoreReport.CrystalReport
             this.CrFormatTypeOptions = new PdfRtfWordFormatOptions();
         }
 
-        public CrystalReportEntity(ReportDocument _rptDoc, DataSet _dataSet, string _filename = "")
+        public CrystalReportDecorator(ReportDocument _rptDoc, DataSet _dataSet, string _filename = "")
         {
             if (string.IsNullOrEmpty(_filename))
             {

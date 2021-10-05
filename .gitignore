@@ -3,6 +3,12 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# Ignore Archive 7z
+Archive/
+
+# ignore dependency source
+SolutionRoot/OfficeToPDF/OfficeToPDF-1.9.0.2/
+
 # User-specific files
 *.rsuser
 *.suo
@@ -30,9 +36,6 @@ bld/
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
-
-# Ignore Archive 7z
-Archive/
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/

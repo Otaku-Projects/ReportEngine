@@ -23,16 +23,10 @@ namespace CrystalReport.ReportEntity
             _rptPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"HitRateReport");
             _rptPath = Path.Combine(this.rptFilesFolder, "HitRateReport.rpt");
 
-            //this.rptDocument = new ReportDocument();
             this.rptDocument = new HitRateTemplate();
             this.rptDocument.Load(_rptPath);
-            //this.hitRate.Load(ReportTemplate)
 
-            //hitRate.Database.Tables["GeneralView"].SetDataSource(_dataSet);
             this.rptDocument.SetDataSource(_dataSet);
-
-            // Create Crystl Report entity
-            //this.crystalReportEntity = new CrystalReportEntity(this.rptDocument, _dataSet);
         }
 
     }

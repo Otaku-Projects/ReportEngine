@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace CoreReport
 {
-    public class VisualizationDecorator : VisualizationEntity
+    public abstract class VisualizationDecorator : VisualizationEntity
     {
         protected VisualizationEntity visualizationEntity;
-
         public VisualizationDecorator()
         {
         }

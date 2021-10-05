@@ -12,9 +12,13 @@ namespace CoreSystemConsole
             Console.WriteLine("Said \"Hello World!\" from CoreSystemConsole");
 
             // Tick-off the Report Entity Program
-            InvoiceProgram invoiceProgram = new InvoiceProgram();
+            //InvoiceProgram invoiceProgram = new InvoiceProgram();
 
-            //HitRateProgram hitRateProgram = new HitRateProgram();
+            //HitRateHTMLProgram hitRateHTMLProgram = new HitRateHTMLProgram();
+
+            //HitRateXMLProgram hitRateXMLProgram = new HitRateXMLProgram();
+
+            EPPlus5XlsxTemplateProgram ePPlus5XlsxTemplateProgram = new EPPlus5XlsxTemplateProgram();
         }
     }
 }

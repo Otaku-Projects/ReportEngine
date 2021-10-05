@@ -15,11 +15,11 @@ using System.Threading.Tasks;
 
 namespace CoreSystemConsole.ProgramEntity
 {
-    public class InvoiceProgram
+    public class HitRateXMLProgram
     {
-        public InvoiceProgram()
+        public HitRateXMLProgram()
         {
-            Console.WriteLine("Said \"Hello World!\" from InvoiceProgram");
+            Console.WriteLine("Said \"Hello World!\" from HitRateXMLProgram");
 
             HitRateDataView hitRateDataView1 = new HitRateDataView();
             HitRateDataView hitRateDataView2 = new HitRateDataView();
@@ -32,13 +32,17 @@ namespace CoreSystemConsole.ProgramEntity
 
             JasperReportDecorator jasperReportDecorator = null;
 
-            InvoiceReport1 hitRateReport1 = new InvoiceReport1(dataSetObj1);
-            jasperReportDecorator = new JasperReportDecorator(hitRateReport1);
-            jasperReportDecorator.SavePdf();
+            //HitRateReport1 hitRateReport1 = new HitRateReport1(dataSetObj1);
+            //jasperReportEntity = new JasperReportDecorator(hitRateReport1);
+            //jasperReportEntity.SaveXlsxByHTML();
 
-            InvoiceReport2 hitRateReport2 = new InvoiceReport2(dataSetObj2);
-            jasperReportDecorator = new JasperReportDecorator(hitRateReport2);
-            jasperReportDecorator.SavePdf();
+            //HitRateReport2 hitRateReport2 = new HitRateReport2(dataSetObj2);
+            //jasperReportEntity = new JasperReportDecorator(hitRateReport2);
+            //jasperReportEntity.SaveXlsxByHTML();
+
+            HitRateReport3 hitRateReport3 = new HitRateReport3(dataSetObj2);
+            jasperReportDecorator = new JasperReportDecorator(hitRateReport3);
+            jasperReportDecorator.SaveXlsx();
         }
     }
 }

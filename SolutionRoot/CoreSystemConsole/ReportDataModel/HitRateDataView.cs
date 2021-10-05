@@ -8,9 +8,8 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-using JasperReport.ReportDataModel;
 
-namespace CoreSystemConsole.ProgramEntity
+namespace CoreSystemConsole.ReportDataModel
 {
     class HitRateDataView
     {
@@ -106,6 +105,18 @@ namespace CoreSystemConsole.ProgramEntity
             this.CreateDummyDataSeller();
             this.CreateDummyDataBuyer();
         }
+        public void CreateDummyData3()
+        {
+            this.dataSetObj = new ExpandoObject() as IDictionary<string, object>;
+
+            this.dataSetObj.Add("number", "0123456789~!@#$%^&*()_+");
+            this.dataSetObj.Add("staffname", "Peter Pan (sys0999)");
+
+            this.CreateDummy3_HitRateData();
+            this.CreateDummy3_StaffProfile();
+            this.CreateDummyDataSeller();
+            this.CreateDummyDataBuyer();
+        }
 
         public void CreateDummyDataGeneralView1(string _tableName = "GeneralView")
         {
@@ -126,10 +137,67 @@ namespace CoreSystemConsole.ProgramEntity
             List<dynamic> _obj = new List<dynamic>();
             for (int i = 0; i < 100; i++)
             {
-                _obj.Add(new 
+                _obj.Add(new
                 {
-                    name= Faker.Company.Name(),
-                    price= Faker.RandomNumber.Next(100, 1000000),
+                    name = Faker.Company.Name(),
+                    price = Faker.RandomNumber.Next(100, 1000000),
+                });
+            }
+            this.dataSetObj.Add(_tableName, _obj);
+        }
+
+        public void CreateDummy3_HitRateData()
+        {
+            List<dynamic> _obj = new List<dynamic>();
+            string _tableName = "GeneralView";
+            for (int i = 0; i < 3; i++)
+            {
+                _obj.Add(new
+                {
+                    OfficeName = Faker.Address.Country(),
+                    Department = Faker.Company.Name(),
+                    ProductTeam = Faker.Internet.DomainWord(),
+                    City = Faker.Address.City(),
+                    NumOfDesign = Faker.RandomNumber.Next(1, 100),
+                    NumOfDesignContracted = Faker.RandomNumber.Next(0, 100),
+                    DesignHitRate = Faker.RandomNumber.Next(0, 100),
+                    NumOfColorways = Faker.RandomNumber.Next(1, 100),
+                    NumOfItem = Faker.RandomNumber.Next(0, 100),
+                    ColorwayHitRate = Faker.RandomNumber.Next(0, 100),
+                });
+            }
+            this.dataSetObj.Add(_tableName, _obj);
+        }
+
+        public void CreateDummy3_StaffProfile()
+        {
+            List<dynamic> _obj = new List<dynamic>();
+            string _tableName = "StaffView";
+            for (int i = 0; i < 100; i++)
+            {
+                Random gen = new Random();
+                DateTime dateOfBirth = new DateTime(1960, 1, 1);
+                int lifeDay = (DateTime.Today - dateOfBirth).Days;
+                dateOfBirth = dateOfBirth.AddDays(gen.Next(lifeDay));
+
+                DateTime employmentDate = new DateTime(1990, 1, 1);
+                int hiringDays = (DateTime.Today - employmentDate).Days;
+                employmentDate = employmentDate.AddDays(gen.Next(hiringDays));
+
+                Random random = new Random();
+                var genderNumber = random.Next(0, 2);
+
+                _obj.Add(new
+                {
+                    UUIID = Faker.RandomNumber.Next(10001, 99999),
+                    StaffID = (i+1),
+                    Address = Faker.Address.Country()+" "+ Faker.Address.City()+ Faker.Address.StreetName(),
+                    FirstName = Faker.Name.First(),
+                    LastName = Faker.Name.Last(),
+                    DateOfBirth = dateOfBirth,
+                    Gender = (genderNumber==0) ? "M" : "F",
+                    PassportID = Faker.Lorem.Words(7),
+                    EmploymentDate = employmentDate,
                 });
             }
             this.dataSetObj.Add(_tableName, _obj);
