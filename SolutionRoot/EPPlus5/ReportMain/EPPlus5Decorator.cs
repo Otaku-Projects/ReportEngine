@@ -122,6 +122,7 @@ namespace CoreReport.EPPlus5Report
             // clone template sheet to sheet1
             //ExcelWorksheet clonedSheet = _excelPackage.Workbook.Worksheets.Copy("Template", "Sheet1");
             _excelPackage.Workbook.Worksheets.Copy("Template", "Sheet1");
+            sheet1 = _excelPackage.Workbook.Worksheets["Sheet1"];
             //_excelPackage.Workbook.Worksheets["Template"].View.TabSelected = false;
 
             // backup the data grid 
