@@ -49,6 +49,11 @@ namespace CoreSystemConsole.ProgramEntity
             //HitRateReportDecorator hitRateRptDecorator2 = null;
             //hitRateRptDecorator2 = new HitRateReportDecorator(hitRateReport5);
             //hitRateRptDecorator2.RenderTemplateAndSaveAsPdf();
+
+            HitRateReport5 hitRateReport6 = new HitRateReport5(dataSet3);
+            HitRateReportDecorator hitRateRptDecorator2 = null;
+            hitRateRptDecorator2 = new HitRateReportDecorator(hitRateReport6);
+            hitRateRptDecorator2.RenderTemplateAndSaveAsPdf();
         }
     }
 }

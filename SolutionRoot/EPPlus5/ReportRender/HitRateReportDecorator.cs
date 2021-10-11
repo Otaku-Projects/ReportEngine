@@ -35,7 +35,9 @@ namespace CoreReport.EPPlus5Report
             DataSet _dataSet = this.reportEntity.GetDataSet();
             IDictionary<string, object> _dataSetObj = this.reportEntity.GetDataSetObj();
             //ExcelWorksheet worksheet = _excelPackage.Workbook.Worksheets[0];
-            ExcelWorksheet activeSheet = _excelPackage.Workbook.Worksheets.FirstOrDefault(f => f.View.TabSelected);
+            //ExcelWorksheet activeSheet = _excelPackage.Workbook.Worksheets.FirstOrDefault(f => f.View.TabSelected);
+
+            ExcelWorksheet activeSheet = _excelPackage.Workbook.Worksheets.First(worksheet => worksheet.Name == "Sheet1");
 
             //foreach (dynamic tupleList in (List<object>)_dataSetObj["GeneralView"])
             //{
@@ -156,7 +158,9 @@ namespace CoreReport.EPPlus5Report
 
             string excelRange = string.Empty;
             string _indicator = string.Empty;
-            ExcelWorksheet activeSheet = _excelPackage.Workbook.Worksheets.FirstOrDefault(f => f.View.TabSelected);
+            //ExcelWorksheet templateSheet = _excelPackage.Workbook.Worksheets.FirstOrDefault(f => f.View.TabSelected);
+            //ExcelWorksheet templateSheet = _excelPackage.Workbook.Worksheets.First(worksheet => worksheet.Name == "Template");
+            ExcelWorksheet templateSheet = _excelPackage.Workbook.Worksheets.First(worksheet => worksheet.Name == "Template");
 
             // update indicator for all dataGridList
             List<ExcelDataGrid> _excelDataGridList = this.reportEntity.GetDataGrid();
@@ -166,21 +170,21 @@ namespace CoreReport.EPPlus5Report
                 excelRange = excelDataGrid.GetHeaderRange().GetTemplateRange();
                 if (string.IsNullOrEmpty(excelRange)) continue;
 
-                _indicator = activeSheet.Cells["A" + excelDataGrid.GetHeaderRange().TemplateFromRow].GetValue<string>();
+                _indicator = templateSheet.Cells["A" + excelDataGrid.GetHeaderRange().TemplateFromRow].GetValue<string>();
                 excelDataGrid.GetHeaderRange().Indicator = _indicator;
 
                 // update body indicator
                 excelRange = excelDataGrid.GetBodyRange().GetTemplateRange();
                 if (string.IsNullOrEmpty(excelRange)) continue;
 
-                _indicator = activeSheet.Cells["A" + excelDataGrid.GetBodyRange().TemplateFromRow].GetValue<string>();
+                _indicator = templateSheet.Cells["A" + excelDataGrid.GetBodyRange().TemplateFromRow].GetValue<string>();
                 excelDataGrid.GetBodyRange().Indicator = _indicator;
                  
                 // update footer indicator
                 excelRange = excelDataGrid.GetFooterRange().GetTemplateRange();
                 if (string.IsNullOrEmpty(excelRange)) continue;
 
-                _indicator = activeSheet.Cells["A" + excelDataGrid.GetFooterRange().TemplateFromRow].GetValue<string>();
+                _indicator = templateSheet.Cells["A" + excelDataGrid.GetFooterRange().TemplateFromRow].GetValue<string>();
                 excelDataGrid.GetFooterRange().Indicator = _indicator;
             }
 
@@ -234,7 +238,8 @@ namespace CoreReport.EPPlus5Report
         {
             if (string.IsNullOrEmpty(_fileName))
             {
-                _fileName = this.filename;
+                Guid obj = Guid.NewGuid();
+                _fileName = obj.ToString();
             }
             string xlsxFilePath = Path.Combine(
                 this.epplusReportRenderFolder,
@@ -248,6 +253,9 @@ namespace CoreReport.EPPlus5Report
                 using (ExcelPackage _excelPackage = this.StartRenderDataAndMergeToTemplate())
                 {
                     this.RenderDataAndMergeToTemplate(_excelPackage);
+                    //this.RemoveTemplateRowsForPdf(_excelPackage);
+                    this.RemoveTemplateRows(_excelPackage);
+
                     // SaveAs Method2
                     //Instead of converting to bytes, you could also use FileInfo
                     FileInfo fi = new FileInfo(xlsxFilePath);
@@ -262,7 +270,8 @@ namespace CoreReport.EPPlus5Report
                     "OfficeToPDF-1.9.0.2.exe");
                 ProcessStartInfo startInfo = new ProcessStartInfo();
                 startInfo.FileName = exePath;
-                startInfo.Arguments = $"/hidden /readonly /excel_active_sheet {xlsxFilePath} {pdfFilePath}";
+                //startInfo.Arguments = $"/hidden /readonly /excel_active_sheet {xlsxFilePath} {pdfFilePath}";
+                startInfo.Arguments = $"/hidden /readonly /excel_worksheet 1 {xlsxFilePath} {pdfFilePath}";
                 // convert xlsx to pdf
                 using (Process exeProcess = Process.Start(startInfo))
                 {
@@ -279,7 +288,8 @@ namespace CoreReport.EPPlus5Report
         {
             if (string.IsNullOrEmpty(_fileName))
             {
-                _fileName = this.filename;
+                Guid obj = Guid.NewGuid();
+                _fileName = obj.ToString();
             }
             string filePath = Path.Combine(
                 this.epplusReportRenderFolder,
@@ -291,6 +301,8 @@ namespace CoreReport.EPPlus5Report
                 using (ExcelPackage _excelPackage = this.StartRenderDataAndMergeToTemplate())
                 {
                     this.RenderDataAndMergeToTemplate(_excelPackage);
+                    //this.RemoveTemplateRowsForXlsx(_excelPackage);
+                    this.RemoveTemplateRows(_excelPackage);
                     /*
                     // SaveAs Method1
                     //convert the excel package to a byte array

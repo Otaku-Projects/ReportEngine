@@ -157,7 +157,7 @@ namespace CoreSystemConsole.ReportDataModel
             officeName = Faker.Address.Country();
 
             // generate records count
-            int maxLimit = 3;
+            int maxLimit = 10;
 
             // create datatable
             DataTable _table = new DataTable(_tableName);

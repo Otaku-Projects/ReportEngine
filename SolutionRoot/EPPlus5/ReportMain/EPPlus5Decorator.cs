@@ -112,21 +112,26 @@ namespace CoreReport.EPPlus5Report
             ExcelPackage _excelPackage = this.GetXlsxTemplateInstance();
 
             // if sheet1 exists, delete it
-            ExcelWorksheet sheet1 = _excelPackage.Workbook.Worksheets.FirstOrDefault(worksheet => worksheet.Name == "Sheet1");
+            //ExcelWorksheet sheet1 = _excelPackage.Workbook.Worksheets.First(worksheet => worksheet.Name == "Sheet1");
+            ExcelWorksheet sheet1 = _excelPackage.Workbook.Worksheets["Sheet1"];
             if (sheet1 != null)
             {
                 _excelPackage.Workbook.Worksheets.Delete("Sheet1");
             }
 
             // clone template sheet to sheet1
-            ExcelWorksheet clonedSheet = _excelPackage.Workbook.Worksheets.Copy("Template", "Sheet1");
+            //ExcelWorksheet clonedSheet = _excelPackage.Workbook.Worksheets.Copy("Template", "Sheet1");
+            _excelPackage.Workbook.Worksheets.Copy("Template", "Sheet1");
+            //_excelPackage.Workbook.Worksheets["Template"].View.TabSelected = false;
 
             // backup the data grid 
             this.reportEntity.BackupDataGridSetting();
 
-            // select sheet1 as the default sheet
-            //clonedSheet.Select();
+            // move sheet1 to start
             _excelPackage.Workbook.Worksheets.MoveToStart("Sheet1");
+
+            // select sheet1 as the default sheet
+            sheet1.View.SetTabSelected();
 
             this.excelPackage = _excelPackage;
             return _excelPackage;
@@ -460,7 +465,7 @@ namespace CoreReport.EPPlus5Report
                 ExcelDataGridSection _bodySection = dataGrid.GetBodyRange();
                 ExcelDataGridSection _footerSection = dataGrid.GetFooterRange();
                 if (!string.IsNullOrEmpty(_headerSection.Indicator)
-                        && _headerSection.AppendFromRow > mostBottomAppendPosition)
+                        && _headerSection.AppendFromRow > mostBottomAppendPosition) 
                 {
                     mostBottomAppendPosition = _headerSection.AppendFromRow;
                 }
@@ -528,17 +533,18 @@ namespace CoreReport.EPPlus5Report
                 int rowCountForAppendRange = (dataGridTemplate.AppendToRow - dataGridTemplate.AppendFromRow) + 1;
 
                 // remove the old appendToRange
-                _worksheet.DeleteRow(dataGridTemplate.AppendFromRow, rowCountForAppendRange, true);
+                _worksheet.DeleteRow(dataGridTemplate.AppendFromRow, rowCountForAppendRange);
                 mostBottomInsertPosition -= (rowCountForAppendRange);
                 // remove the old templateRanageRows
-                _worksheet.DeleteRow(dataGridTemplate.TemplateFromRow, rowCountForTemplateRange, true);
+                _worksheet.DeleteRow(dataGridTemplate.TemplateFromRow, rowCountForTemplateRange);
                 mostBottomInsertPosition -= (rowCountForTemplateRange);
             }
 
             // 5.0 insert templateRange, appendToRange to the bottom row (mostBottomInsertPosition)
             int totalShiftedTemplateRow = 0;
             int totalShiftedAppendRow = 0;
-            ExcelWorksheet templateSheet = this.excelPackage.Workbook.Worksheets.FirstOrDefault(worksheet => worksheet.Name == "Template");
+            //ExcelWorksheet templateSheet = this.excelPackage.Workbook.Worksheets.First(worksheet => worksheet.Name == "Template");
+            ExcelWorksheet templateSheet = this.excelPackage.Workbook.Worksheets["Template"];
             targetToCloneGridList.Sort();
             foreach (ExcelDataGridSection dataGridTemplate in targetToCloneGridList)
             {
@@ -682,6 +688,120 @@ namespace CoreReport.EPPlus5Report
                 }
             }
             */
+        }
+
+
+        public virtual void RemoveTemplateRows(ExcelPackage _excelPackage)
+        {
+            List<ExcelDataGridSection> allDataGridSectionList = new List<ExcelDataGridSection>();
+            // find all data grid section
+            List<ExcelDataGrid> _excelDataGridList = this.reportEntity.GetDataGrid();
+            foreach (ExcelDataGrid dataGrid in _excelDataGridList)
+            {
+                List<ExcelDataGridSection> rangeList = dataGrid.GetRangeList();
+                foreach (ExcelDataGridSection gridSection in rangeList)
+                {
+                    allDataGridSectionList.Add(gridSection);
+                }
+            }
+            allDataGridSectionList.Sort();
+
+            // remove appendRange, templateRange from bottom to top
+            //ExcelWorksheet template = this.excelPackage.Workbook.Worksheets.First(worksheet => worksheet.Name == "Template");
+            //ExcelWorksheet sheet1 = this.excelPackage.Workbook.Worksheets.First(worksheet => worksheet.Name == "Sheet1");
+            ExcelWorksheet template = this.excelPackage.Workbook.Worksheets["Template"];
+            ExcelWorksheet sheet1 = this.excelPackage.Workbook.Worksheets["Sheet1"];
+            foreach (ExcelDataGridSection dataGridSection in allDataGridSectionList.Reverse<ExcelDataGridSection>())
+            {
+                int deleteAppendRange = dataGridSection.AppendToRow - dataGridSection.AppendFromRow + 1;
+                int deleteTemplateRange = dataGridSection.TemplateToRow - dataGridSection.TemplateFromRow + 1;
+                sheet1.DeleteRow(dataGridSection.AppendFromRow, deleteAppendRange);
+                sheet1.DeleteRow(dataGridSection.TemplateFromRow, deleteTemplateRange);
+            }
+
+            // set sheet1 as default
+            //sheet1.View.SetTabSelected();
+
+            // remove template sheet
+            //_excelPackage.Workbook.Worksheets.Delete(template);
+
+            // remove column A in sheet1
+            //sheet1.DeleteColumn(1);
+            // hide column A
+            sheet1.Column(1).Hidden = true;
+        }
+
+        public virtual void RemoveTemplateRowsForXlsx(ExcelPackage _excelPackage)
+        {
+            List<ExcelDataGridSection> allDataGridSectionList = new List<ExcelDataGridSection>();
+            // find all data grid section
+            List<ExcelDataGrid> _excelDataGridList = this.reportEntity.GetDataGrid();
+            foreach (ExcelDataGrid dataGrid in _excelDataGridList)
+            {
+                List<ExcelDataGridSection> rangeList = dataGrid.GetRangeList();
+                foreach (ExcelDataGridSection gridSection in rangeList)
+                {
+                    allDataGridSectionList.Add(gridSection);
+                }
+            }
+            allDataGridSectionList.Sort();
+
+            // remove appendRange, templateRange from bottom to top
+            //ExcelWorksheet template = this.excelPackage.Workbook.Worksheets.First(worksheet => worksheet.Name == "Template");
+            //ExcelWorksheet sheet1 = this.excelPackage.Workbook.Worksheets.First(worksheet => worksheet.Name == "Sheet1");
+            ExcelWorksheet template = this.excelPackage.Workbook.Worksheets["Template"];
+            ExcelWorksheet sheet1 = this.excelPackage.Workbook.Worksheets["Sheet1"];
+            foreach (ExcelDataGridSection dataGridSection in allDataGridSectionList.Reverse<ExcelDataGridSection>())
+            {
+                int deleteAppendRange = dataGridSection.AppendToRow - dataGridSection.AppendFromRow + 1;
+                int deleteTemplateRange = dataGridSection.TemplateToRow - dataGridSection.TemplateFromRow + 1;
+                sheet1.DeleteRow(dataGridSection.AppendFromRow, deleteAppendRange);
+                sheet1.DeleteRow(dataGridSection.TemplateFromRow, deleteTemplateRange);
+            }
+
+            //_excelPackage.Workbook.Worksheets.Delete(template);
+
+            // remove column A
+            sheet1.DeleteColumn(1);
+            //sheet1.Column(1).Hidden = true;
+        }
+
+        public virtual void RemoveTemplateRowsForPdf(ExcelPackage _excelPackage)
+        {
+            List<ExcelDataGridSection> allDataGridSectionList = new List<ExcelDataGridSection>();
+            // find all data grid section
+            List<ExcelDataGrid> _excelDataGridList = this.reportEntity.GetDataGrid();
+            foreach (ExcelDataGrid dataGrid in _excelDataGridList)
+            {
+                List<ExcelDataGridSection> rangeList = dataGrid.GetRangeList();
+                foreach (ExcelDataGridSection gridSection in rangeList)
+                {
+                    allDataGridSectionList.Add(gridSection);
+                }
+            }
+            allDataGridSectionList.Sort();
+
+            // remove appendRange, templateRange from bottom to top
+            //ExcelWorksheet template = this.excelPackage.Workbook.Worksheets.First(worksheet => worksheet.Name == "Template");
+            //ExcelWorksheet sheet1 = this.excelPackage.Workbook.Worksheets.First(worksheet => worksheet.Name == "Sheet1");
+            ExcelWorksheet template = this.excelPackage.Workbook.Worksheets["Template"];
+            ExcelWorksheet sheet1 = this.excelPackage.Workbook.Worksheets["Sheet1"];
+            foreach (ExcelDataGridSection dataGridSection in allDataGridSectionList.Reverse<ExcelDataGridSection>())
+            {
+                int deleteAppendRange = dataGridSection.AppendToRow - dataGridSection.AppendFromRow + 1;
+                int deleteTemplateRange = dataGridSection.TemplateToRow - dataGridSection.TemplateFromRow + 1;
+                sheet1.DeleteRow(dataGridSection.AppendFromRow, deleteAppendRange);
+                sheet1.DeleteRow(dataGridSection.TemplateFromRow, deleteTemplateRange);
+            }
+
+            template.View.TabSelected = false;
+            //sheet1.View.SetTabSelected();
+
+            //_excelPackage.Workbook.Worksheets.Delete(template);
+
+            // remove column A
+            //sheet1.DeleteColumn(1);
+            sheet1.Column(1).Hidden = true;
         }
 
         public override void SaveAndDownloadAsBase64()
