@@ -29,6 +29,8 @@ namespace CoreReport.EPPlus5Report
         protected IDictionary<string, object> dataSetObj;
         protected string epplusReportRenderFolder;
 
+        protected ExcelPackage excelPackage;
+
         public EPPlus5Decorator()
         {
             this.epplusReportRenderFolder = this.tempRenderFolder;
@@ -48,6 +50,7 @@ namespace CoreReport.EPPlus5Report
                 _filename = obj.ToString();
             }
 
+            this.dataSet = _reportEntity.GetDataSet();
             this.dataSetObj = _reportEntity.GetDataSetObj();
             this.epplusReportRenderFolder = this.tempRenderFolder;
 
@@ -100,19 +103,59 @@ namespace CoreReport.EPPlus5Report
             // you should not call into here, please inherit the decorator and override this function
             throw new NotImplementedException();
         }
-        public virtual ExcelPackage RenderDataAndMergeToTemplate()
+        public virtual ExcelPackage RenderDataAndMergeToTemplate(ExcelPackage _excelPackage)
         {
             return this.GetXlsxTemplateInstance();
         }
-        protected virtual void MergeDataRows(ExcelWorksheet _worksheet, string _indicator, List<Object> _tupleList)
+        protected virtual ExcelPackage StartRenderDataAndMergeToTemplate()
         {
-            foreach (Object _tuple in _tupleList)
+            ExcelPackage _excelPackage = this.GetXlsxTemplateInstance();
+
+            // if sheet1 exists, delete it
+            ExcelWorksheet sheet1 = _excelPackage.Workbook.Worksheets.FirstOrDefault(worksheet => worksheet.Name == "Sheet1");
+            if (sheet1 != null)
             {
-                this.MergeDataRow(_worksheet, _indicator, _tuple);
+                _excelPackage.Workbook.Worksheets.Delete("Sheet1");
+            }
+
+            // clone template sheet to sheet1
+            ExcelWorksheet clonedSheet = _excelPackage.Workbook.Worksheets.Copy("Template", "Sheet1");
+
+            // backup the data grid 
+            this.reportEntity.BackupDataGridSetting();
+
+            // select sheet1 as the default sheet
+            //clonedSheet.Select();
+            _excelPackage.Workbook.Worksheets.MoveToStart("Sheet1");
+
+            this.excelPackage = _excelPackage;
+            return _excelPackage;
+        }
+        protected virtual void MergeDataRows(ExcelWorksheet _worksheet, string _indicator, DataTable _dt)
+        {
+            int i = 1;
+            foreach (DataRow _dtRow in _dt.Rows)
+            {
+                i++;
+                this.MergeDataRow(_worksheet, _indicator, _dtRow);
+                //if(i==3)
+                //break;
             }
         }
 
-        protected virtual void MergeDataRow(ExcelWorksheet _worksheet, string _indicator, Object _tuple)
+        protected virtual void MergeDataRow(ExcelWorksheet _worksheet, string _indicator, DataRow _dataRow)
+        {
+            var expObj = new ExpandoObject() as IDictionary<string, Object>;
+
+            foreach (DataColumn dc in _dataRow.Table.Columns)
+            {
+                expObj.Add(dc.ColumnName, _dataRow[dc]);
+            }
+
+            this.MergeDataRow(_worksheet, _indicator, expObj);
+        }
+
+        protected virtual void MergeDataRow(ExcelWorksheet _worksheet, string _indicator, IDictionary<string, Object> _tuple)
         {
             List<ExcelDataGrid> excelDataGridList = this.reportEntity.GetDataGrid();
 
@@ -198,56 +241,58 @@ namespace CoreReport.EPPlus5Report
             // 3.4 copy row data validation
             // 3.5 copy row conditional formatting
 
-            // 4.1 update the new append to Range(newAppendToRange) to DataGridSection
-            // no need to update the current data grid section
-            /*
-                e.g. new ExcelDataGridSection("T1B", "17:19", "20:20")
-                3 rows 17,18,19 will insert at row 20
-                the new rows are 20, 21, 22
-                and the append to row 20 will shifted to 23
-             */
-            // the excel will get a lot of empty rows if update the appendToRange
-            affectSection.SetAppendToRange(newAppendToRange);
-            // but need to update other data grid section which lower that it
+            // 4.0 update the new append to Range in DataGridSection
+            // 4.1
+            // for others data grid section, update the template range, and append range if its place lower then the inserted position
             /*
                 e.g. new ExcelDataGridSection("T1B", "17:19", "20:20")
                 e.g. new ExcelDataGridSection("T1F", "21:21", "22:22")
                 
-                when render T1B, the T1F will shifted down, need to update the address
+                if inserted three new rows at 20th for repeating T1B
+                then the T1F template, append range should be shifted lower
              */
             foreach (ExcelDataGrid dataGrid in excelDataGridList)
             {
                 ExcelDataGridSection _headerSection = dataGrid.GetHeaderRange();
                 ExcelDataGridSection _bodySection = dataGrid.GetBodyRange();
                 ExcelDataGridSection _footerSection = dataGrid.GetFooterRange();
-                // skip appending section
-                if (_headerSection.Indicator != affectSection.Indicator)
-                {
 
+                string updateTemplateToRange = string.Empty;
+                string updateAppendToRange = string.Empty;
+                if (!affectSection.Equals(_headerSection)
+                    && _headerSection.AppendFromRow > affectSection.AppendFromRow)
+                {
+                    updateTemplateToRange = _headerSection.TemplateFromCol + (_headerSection.TemplateFromRow + dataGridRowCount) + ":" + _headerSection.TemplateToCol + (_headerSection.TemplateToRow + dataGridRowCount);
+                    updateAppendToRange = _headerSection.AppendFromCol + (_headerSection.AppendFromRow + dataGridRowCount) + ":" + _headerSection.AppendToCol + (_headerSection.AppendToRow + dataGridRowCount);
+                    _headerSection.SetTemplateRange(updateTemplateToRange);
+                    _headerSection.SetAppendToRange(updateAppendToRange);
                 }
-                if (_bodySection.Indicator != affectSection.Indicator)
+                if (!affectSection.Equals(_bodySection)
+                    && _bodySection.AppendFromRow > affectSection.AppendFromRow)
                 {
-
+                    updateTemplateToRange = _bodySection.TemplateFromCol + (_bodySection.TemplateFromRow + dataGridRowCount) + ":" + _bodySection.TemplateToCol + (_bodySection.TemplateToRow + dataGridRowCount);
+                    updateAppendToRange = _bodySection.AppendFromCol + (_bodySection.AppendFromRow + dataGridRowCount) + ":" + _bodySection.AppendToCol + (_bodySection.AppendToRow + dataGridRowCount);
+                    _bodySection.SetTemplateRange(updateTemplateToRange);
+                    _bodySection.SetAppendToRange(updateAppendToRange);
                 }
-                if (_footerSection.Indicator != affectSection.Indicator)
+                if (!affectSection.Equals(_footerSection)
+                    && _footerSection.AppendFromRow > affectSection.AppendFromRow)
                 {
-
+                    updateTemplateToRange = _footerSection.TemplateFromCol + (_footerSection.TemplateFromRow + dataGridRowCount) + ":" + _footerSection.TemplateToCol + (_footerSection.TemplateToRow + dataGridRowCount);
+                    updateAppendToRange = _footerSection.AppendFromCol + (_footerSection.AppendFromRow + dataGridRowCount) + ":" + _footerSection.AppendToCol + (_footerSection.AppendToRow + dataGridRowCount);
+                    _footerSection.SetTemplateRange(updateTemplateToRange);
+                    _footerSection.SetAppendToRange(updateAppendToRange);
                 }
             }
-
-                /*
-                // 10.1 insert and copy value, style
-                for (int start = templateStartRowIndex; start < templateEndRowIndex; start++)
-                {
-                    _worksheet.InsertRow(appendStartRowIndex + (start - templateStartRowIndex), 1, start);
-                    fromRange = templateStartColLetter + start + ":" + templateEndColLetter + start;
-                    destinationRange = affectSection.GetAppendRange();
-                    _worksheet.Cells[fromRange].Copy(_worksheet.Cells[destinationRange]);
-
-                    newAppendToRange = templateStartColLetter + (appendEndRowIndex + 1) + ":" + templateEndColLetter + (appendEndRowIndex + 1);
-                    affectSection.SetAppendToRange(newAppendToRange);
-                }
-                */
+            // 4.2
+            // for current data grid section, update the append to row range
+            /*
+                e.g. new ExcelDataGridSection("T1B", "17:19", "20:20")
+                3 rows 17,18,19 will insert at row 20
+                the new rows are 20, 21, 22
+                and the append to row 20 will shifted to 23
+             */
+            affectSection.SetAppendToRange(newAppendToRange);
 
             // 20.1 merge value into newly inserted rows
             string colLetterStart = string.Empty;
@@ -275,14 +320,14 @@ namespace CoreReport.EPPlus5Report
             // column B => cell B1, B2, B3
             for (int colIndex = colIndexStart; colIndex < colIndexEnd; colIndex++)
             {
-                for (int rowIndex = appendStartRowIndex; rowIndex <= (appendStartRowIndex+ dataGridRowCount-1); rowIndex++)
+                for (int rowIndex = appendStartRowIndex; rowIndex <= (appendStartRowIndex + dataGridRowCount - 1); rowIndex++)
                 {
                     this.DefaultMergeCellExpression(_worksheet, OfficeOpenXml.ExcelCellAddress.GetColumnLetter(colIndex) + rowIndex, _tuple);
                     this.CustomPostMergeCellExpression(_worksheet, OfficeOpenXml.ExcelCellAddress.GetColumnLetter(colIndex) + rowIndex, _tuple);
                 }
             }
         }
-        protected virtual void DefaultMergeCellExpression(ExcelWorksheet _worksheet, string cellAddress, Object _tuple)
+        protected virtual void DefaultMergeCellExpression(ExcelWorksheet _worksheet, string cellAddress, IDictionary<string, Object> _tuple)
         {
             ExcelRange _cell = _worksheet.Cells[cellAddress];
 
@@ -295,18 +340,29 @@ namespace CoreReport.EPPlus5Report
             Boolean isMerge = false;
             string matchExpression = string.Empty;
             string mergedValue = cellVal;
-            foreach (PropertyInfo propertyInfo in _tuple.GetType().GetProperties())
+            //foreach (PropertyInfo propertyInfo in _tuple.GetType().GetProperties())
+            //{
+            //    matchExpression = "{{" + propertyInfo.Name + "}}";
+            //    if (cellVal.IndexOf(matchExpression) > -1)
+            //    {
+            //        isMerge = true;
+            //        mergedValue = mergedValue.Replace(matchExpression, propertyInfo.GetValue(_tuple).ToString());
+            //    }
+
+            //    // do stuff here
+            //    //propertyInfo.GetValue(_tuple, null)
+            //}
+
+            foreach (KeyValuePair<string, object> kvp in _tuple)
             {
-                matchExpression = "{{" + propertyInfo.Name + "}}";
+                matchExpression = "{{" + kvp.Key + "}}";
                 if (cellVal.IndexOf(matchExpression) > -1)
                 {
                     isMerge = true;
-                    mergedValue = mergedValue.Replace(matchExpression, propertyInfo.GetValue(_tuple).ToString());
+                    mergedValue = mergedValue.Replace(matchExpression, kvp.Value.ToString());
                 }
-
-                // do stuff here
-                //propertyInfo.GetValue(_tuple, null)
             }
+
             // 2.2 
             if (isMerge)
             {
@@ -331,9 +387,301 @@ namespace CoreReport.EPPlus5Report
             }
         }
 
-        protected virtual void CustomPostMergeCellExpression(ExcelWorksheet _worksheet, string cellAddress, Object _tuple)
+        protected virtual void CustomPostMergeCellExpression(ExcelWorksheet _worksheet, string cellAddress, IDictionary<string, Object> _tuple)
         {
             throw new NotImplementedException();
+        }
+
+        protected virtual void PrintSectionSeparateLine(ExcelWorksheet _worksheet, params string[] _indicators)
+        {
+            // 1. check indicators array, is all are valid (exists in the template)
+            List<string> indicatorArray = new List<string>();
+            List<ExcelDataGrid> allExcelDataGridList = this.reportEntity.GetDataGrid();
+            List<ExcelDataGrid> affectingDataGridList = new List<ExcelDataGrid>();
+            List<ExcelDataGridSection> affectingDataGridSectionList = new List<ExcelDataGridSection>();
+            foreach (string _indicator in _indicators) {
+                foreach (ExcelDataGrid dataGrid in allExcelDataGridList)
+                {
+                    ExcelDataGridSection _headerSection = dataGrid.GetHeaderRange();
+                    ExcelDataGridSection _bodySection = dataGrid.GetBodyRange();
+                    ExcelDataGridSection _footerSection = dataGrid.GetFooterRange();
+                    ExcelDataGridSection updateDataGridSheet1 = null;
+                    if (!string.IsNullOrEmpty(_headerSection.Indicator)
+                        && _headerSection.Indicator == _indicator)
+                    {
+                        indicatorArray.Add(_indicator);
+
+                        if(!affectingDataGridList.Contains(dataGrid)) affectingDataGridList.Add(dataGrid);
+                        //continue;
+
+                        updateDataGridSheet1 = _headerSection;
+                    }
+                    else if (!string.IsNullOrEmpty(_bodySection.Indicator)
+                        && _bodySection.Indicator == _indicator)
+                    {
+                        indicatorArray.Add(_indicator);
+                        if (!affectingDataGridList.Contains(dataGrid)) affectingDataGridList.Add(dataGrid);
+                        //continue;
+
+                        updateDataGridSheet1 = _bodySection;
+                    }
+                    else if (!string.IsNullOrEmpty(_footerSection.Indicator)
+                        && _footerSection.Indicator == _indicator)
+                    {
+                        indicatorArray.Add(_indicator);
+                        if (!affectingDataGridList.Contains(dataGrid)) affectingDataGridList.Add(dataGrid);
+                        //continue;
+
+                        updateDataGridSheet1 = _footerSection;
+                    }
+
+                    if(updateDataGridSheet1!= null)
+                    {
+                        affectingDataGridSectionList.Add(updateDataGridSheet1);
+                    }
+                    //List<ExcelDataGridSection> rangeList = dataGrid.GetRangeList();
+                    //foreach (ExcelDataGridSection gridSection in rangeList)
+                    //{
+                    //    if (_indicators.Contains(gridSection.Indicator))
+                    //    {
+                    //        affectingDataGridSectionList.Add(gridSection);
+                    //    }
+                    //}
+                }
+            }
+
+            // 2. locate the proper posiition for insert all section appendToRange
+            // 2.1 find the most bottom appendToRange
+            int mostBottomAppendPosition = -1;
+            int mostBottomInsertPosition = -1;
+            foreach (ExcelDataGrid dataGrid in affectingDataGridList)
+            {
+                ExcelDataGridSection _headerSection = dataGrid.GetHeaderRange();
+                ExcelDataGridSection _bodySection = dataGrid.GetBodyRange();
+                ExcelDataGridSection _footerSection = dataGrid.GetFooterRange();
+                if (!string.IsNullOrEmpty(_headerSection.Indicator)
+                        && _headerSection.AppendFromRow > mostBottomAppendPosition)
+                {
+                    mostBottomAppendPosition = _headerSection.AppendFromRow;
+                }
+                if (!string.IsNullOrEmpty(_bodySection.Indicator)
+                        && _bodySection.AppendFromRow > mostBottomAppendPosition)
+                {
+                    mostBottomAppendPosition = _bodySection.AppendFromRow;
+                }
+                if (!string.IsNullOrEmpty(_footerSection.Indicator)
+                        && _footerSection.AppendFromRow > mostBottomAppendPosition)
+                {
+                    mostBottomAppendPosition = _footerSection.AppendFromRow;
+                }
+            }
+
+            //// 2.2 find how many appendTo rows need to be insert
+            //int countAppendToRows = 0;
+            //foreach (ExcelDataGrid dataGrid in affectingDataGridList)
+            //{
+            //    ExcelDataGridSection _headerSection = dataGrid.GetHeaderRange();
+            //    ExcelDataGridSection _bodySection = dataGrid.GetBodyRange();
+            //    ExcelDataGridSection _footerSection = dataGrid.GetFooterRange();
+
+            //    if (!string.IsNullOrEmpty(_headerSection.Indicator))
+            //    {
+            //        countAppendToRows += (_headerSection.AppendToRow - _headerSection.AppendFromRow + 1);
+            //    }
+            //    if (!string.IsNullOrEmpty(_bodySection.Indicator)
+            //            && _bodySection.AppendFromRow > mostBottomInsertPosition)
+            //    {
+            //        countAppendToRows += (_bodySection.AppendToRow - _bodySection.AppendFromRow + 1);
+            //    }
+            //    if (!string.IsNullOrEmpty(_footerSection.Indicator)
+            //            && _footerSection.AppendFromRow > mostBottomInsertPosition)
+            //    {
+            //        countAppendToRows += (_footerSection.AppendToRow - _footerSection.AppendFromRow + 1);
+            //    }
+            //}
+
+            // 3.0 copy data grid section from Template sheet
+            // 3.1 copy after the most bottom appendTo position (mostBottomInsertPosition)
+            mostBottomInsertPosition = mostBottomAppendPosition + 1;
+            // 3.2 find the section from template
+            List<ExcelDataGrid> templateDataGridList = this.reportEntity.GetBackupTemplateDataGrid();
+            List<ExcelDataGridSection> targetToCloneGridList = new List<ExcelDataGridSection>();
+            foreach (ExcelDataGrid dataGrid in templateDataGridList)
+            {
+                List<ExcelDataGridSection> rangeList = dataGrid.GetRangeList();
+                foreach(ExcelDataGridSection gridSection in rangeList)
+                {
+                    if (_indicators.Contains(gridSection.Indicator))
+                    {
+                        targetToCloneGridList.Add(gridSection);
+                    }
+                }
+            }
+            // 3.3 order the copy sequence
+            //targetToCloneGridList.Sort();
+
+            // 4.0 delete old templateRange, appendToRange from the Sheet1
+            // 4.1 delete grids from bottom to top
+            //targetToCloneGridList.Reverse();
+            foreach (ExcelDataGridSection dataGridTemplate in affectingDataGridSectionList.Reverse<ExcelDataGridSection>()) {
+                int rowCountForTemplateRange = (dataGridTemplate.TemplateToRow - dataGridTemplate.TemplateFromRow) + 1;
+                int rowCountForAppendRange = (dataGridTemplate.AppendToRow - dataGridTemplate.AppendFromRow) + 1;
+
+                // remove the old appendToRange
+                _worksheet.DeleteRow(dataGridTemplate.AppendFromRow, rowCountForAppendRange, true);
+                mostBottomInsertPosition -= (rowCountForAppendRange);
+                // remove the old templateRanageRows
+                _worksheet.DeleteRow(dataGridTemplate.TemplateFromRow, rowCountForTemplateRange, true);
+                mostBottomInsertPosition -= (rowCountForTemplateRange);
+            }
+
+            // 5.0 insert templateRange, appendToRange to the bottom row (mostBottomInsertPosition)
+            int totalShiftedTemplateRow = 0;
+            int totalShiftedAppendRow = 0;
+            ExcelWorksheet templateSheet = this.excelPackage.Workbook.Worksheets.FirstOrDefault(worksheet => worksheet.Name == "Template");
+            targetToCloneGridList.Sort();
+            foreach (ExcelDataGridSection dataGridTemplate in targetToCloneGridList)
+            {
+                // insert new rows
+                int rowCountForTemplateRange = (dataGridTemplate.TemplateToRow - dataGridTemplate.TemplateFromRow) + 1;
+                int rowCountForAppendRange = (dataGridTemplate.AppendToRow - dataGridTemplate.AppendFromRow) + 1;
+
+                // copy templateRange from template sheet
+                string copyTemplateDestinationRange = dataGridTemplate.TemplateFromCol + (mostBottomInsertPosition) + ":" + dataGridTemplate.TemplateToCol + (mostBottomInsertPosition + rowCountForTemplateRange - 1);
+                _worksheet.InsertRow(mostBottomInsertPosition, rowCountForTemplateRange);
+                templateSheet.Cells[dataGridTemplate.GetTemplateRange()].Copy(_worksheet.Cells[copyTemplateDestinationRange]);
+
+                // copy templateRange row height from template sheet
+                for (int start = dataGridTemplate.TemplateFromRow; start <= dataGridTemplate.TemplateToRow; start++)
+                {
+                    _worksheet.Row(mostBottomInsertPosition + (start - dataGridTemplate.TemplateFromRow)).Height = templateSheet.Row(start).Height;
+                }
+                mostBottomInsertPosition += rowCountForTemplateRange;
+
+                // copy appendtoRange from template sheet
+                string copyAppendToDestinationRange = dataGridTemplate.AppendFromCol + (mostBottomInsertPosition) + ":" + dataGridTemplate.AppendToCol + (mostBottomInsertPosition + rowCountForAppendRange - 1);
+                _worksheet.InsertRow(mostBottomInsertPosition, rowCountForAppendRange);
+                templateSheet.Cells[dataGridTemplate.GetAppendRange()].Copy(_worksheet.Cells[copyAppendToDestinationRange]);
+                // copy appendtoRange row height from template sheet
+                for (int start = dataGridTemplate.AppendFromRow; start <= dataGridTemplate.AppendToRow; start++)
+                {
+                    _worksheet.Row(mostBottomInsertPosition + (start - dataGridTemplate.AppendFromRow)).Height = templateSheet.Row(start).Height;
+                }
+                mostBottomInsertPosition += rowCountForAppendRange;
+
+                foreach(ExcelDataGridSection updateDataGridSheet1 in affectingDataGridSectionList)
+                {
+                    if (dataGridTemplate.Indicator != updateDataGridSheet1.Indicator)
+                    {
+                        continue;
+                    }
+                    // update templateRange, appendToRange new position
+                    updateDataGridSheet1.SetTemplateRange(copyTemplateDestinationRange);
+                    updateDataGridSheet1.SetAppendToRange(copyAppendToDestinationRange);
+
+                }
+
+                /*
+                foreach (ExcelDataGrid dataGridSheet1 in affectingDataGridList)
+                {
+                    ExcelDataGridSection hSection = dataGridSheet1.GetHeaderRange();
+                    ExcelDataGridSection bSection = dataGridSheet1.GetBodyRange();
+                    ExcelDataGridSection fSection = dataGridSheet1.GetFooterRange();
+                    ExcelDataGridSection updateDataGridSheet1 = null;
+                    if (dataGridTemplate.Indicator == hSection.Indicator)
+                    {
+                        updateDataGridSheet1 = hSection;
+                    }
+                    else if (dataGridTemplate.Indicator == bSection.Indicator)
+                    {
+                        updateDataGridSheet1 = bSection;
+                    }
+                    else if (dataGridTemplate.Indicator == fSection.Indicator)
+                    {
+                        updateDataGridSheet1 = fSection;
+                    }
+                    if (updateDataGridSheet1 == null) continue;
+
+                    // update templateRange, appendToRange new position
+                    updateDataGridSheet1.SetTemplateRange(copyTemplateDestinationRange);
+                    updateDataGridSheet1.SetAppendToRange(copyAppendToDestinationRange);
+                }
+                */
+
+            }
+
+            // 5.0 insert templateRange, appendToRange to the bottom row (mostBottomInsertPosition)
+            /*
+            int totalShiftedTemplateRow = 0;
+            int totalShiftedAppendRow = 0;
+            ExcelWorksheet templateSheet = this.excelPackage.Workbook.Worksheets.FirstOrDefault(worksheet => worksheet.Name == "Template");
+            targetToCloneGridList.Sort();
+            foreach (ExcelDataGridSection dataGridTemplate in targetToCloneGridList)
+            {
+                // insert new rows
+                int rowCountForTemplateRange = (dataGridTemplate.TemplateToRow - dataGridTemplate.TemplateFromRow) + 1;
+                int rowCountForAppendRange = (dataGridTemplate.AppendToRow - dataGridTemplate.AppendFromRow) + 1;
+
+                // copy templateRange from template sheet
+                string copyTemplateDestinationRange = dataGridTemplate.TemplateFromCol + (mostBottomInsertPosition) + ":" + dataGridTemplate.TemplateToCol + (mostBottomInsertPosition + rowCountForTemplateRange - 1);
+                _worksheet.InsertRow(mostBottomInsertPosition, rowCountForTemplateRange);
+                templateSheet.Cells[dataGridTemplate.GetTemplateRange()].Copy(_worksheet.Cells[copyTemplateDestinationRange]);
+                mostBottomInsertPosition += rowCountForTemplateRange;
+
+                // copy appendtoRange from template sheet
+                string copyAppendToDestinationRange = dataGridTemplate.AppendFromCol + (mostBottomInsertPosition) + ":" + dataGridTemplate.AppendToCol + (mostBottomInsertPosition + rowCountForAppendRange - 1);
+                _worksheet.InsertRow(mostBottomInsertPosition, rowCountForAppendRange);
+                templateSheet.Cells[dataGridTemplate.GetAppendRange()].Copy(_worksheet.Cells[copyAppendToDestinationRange]);
+                mostBottomInsertPosition += rowCountForAppendRange;
+
+                // find the old range located in Sheet1, and remove it
+                foreach (ExcelDataGrid dataGridSheet1 in affectingDataGridList)
+                {
+                    ExcelDataGridSection hSection = dataGridSheet1.GetHeaderRange();
+                    ExcelDataGridSection bSection = dataGridSheet1.GetBodyRange();
+                    ExcelDataGridSection fSection = dataGridSheet1.GetFooterRange();
+                    ExcelDataGridSection updateDataGridSheet1 = null;
+                    if (dataGridTemplate.Indicator == hSection.Indicator)
+                    {
+                        updateDataGridSheet1 = hSection;
+                    }
+                    else if (dataGridTemplate.Indicator == bSection.Indicator)
+                    {
+                        updateDataGridSheet1 = bSection;
+                    }
+                    else if (dataGridTemplate.Indicator == fSection.Indicator)
+                    {
+                        updateDataGridSheet1 = fSection;
+                    }
+                    if (updateDataGridSheet1 == null) continue;
+
+                    // remove the old appendToRange
+                    _worksheet.DeleteRow(updateDataGridSheet1.AppendFromRow - totalShiftedAppendRow - totalShiftedTemplateRow, rowCountForAppendRange);
+                    mostBottomInsertPosition -= (rowCountForAppendRange);
+                    // remove the old templateRanageRows
+                    _worksheet.DeleteRow(updateDataGridSheet1.TemplateFromRow - totalShiftedAppendRow - totalShiftedTemplateRow - rowCountForAppendRange, rowCountForTemplateRange);
+                    mostBottomInsertPosition -= (rowCountForTemplateRange);
+
+                    string copiedTemplateDestinationRanage = string.Empty;
+                    string copiedAppendDestinationRanage = string.Empty;
+
+                    int newTemplateFromRow = (mostBottomInsertPosition - rowCountForTemplateRange - rowCountForAppendRange);
+                    int newTemplateToRow = newTemplateFromRow + rowCountForTemplateRange - 1;
+                    int newAppendFromRow = newTemplateToRow + 1;
+                    int newAppendToRow = newAppendFromRow + rowCountForAppendRange - 1;
+
+                    copiedTemplateDestinationRanage = updateDataGridSheet1.TemplateFromCol + newTemplateFromRow + ":" + updateDataGridSheet1.TemplateToCol + newTemplateToRow;
+                    copiedAppendDestinationRanage = updateDataGridSheet1.AppendFromCol + newAppendFromRow + ":" + updateDataGridSheet1.AppendToCol + newAppendToRow;
+
+                    // update templateRange, appendToRange new position
+                    updateDataGridSheet1.SetTemplateRange(copiedTemplateDestinationRanage);
+                    updateDataGridSheet1.SetAppendToRange(copiedAppendDestinationRanage);
+
+                    totalShiftedTemplateRow += rowCountForTemplateRange;
+                    totalShiftedAppendRow += rowCountForAppendRange;
+                }
+            }
+            */
         }
 
         public override void SaveAndDownloadAsBase64()
@@ -344,7 +692,6 @@ namespace CoreReport.EPPlus5Report
         public override void SaveFile()
         {
             this.RefreshPrintDate();
-
         }
 
         public virtual void SaveExcel(string _fileName = "")
@@ -379,6 +726,7 @@ namespace CoreReport.EPPlus5Report
             string filePath = _fileName + ".xlsx";
 
             IDictionary<string, object> _dataSetObj = this.reportEntity.GetDataSetObj();
+            DataSet _dataSet = this.reportEntity.GetDataSet();
             string _xlsxTemplateFilePath = this.reportEntity.GetXlsxTemplateFilePath();
 
             try
@@ -386,53 +734,54 @@ namespace CoreReport.EPPlus5Report
                 List<ExpandoObject> tupleExpandoObjectList = new List<ExpandoObject>();
                 ExpandoObject expandoObject = new ExpandoObject();
 
-                //List<Object> tupleObjList = (List<Object>)_dataSetObj["GeneralView"];
-                //foreach (object tuple in tupleObjList)
-                //{
-                //    expandoObject = new ExpandoObject();
-                //    foreach (var property in tuple.GetType().GetProperties())
-                //    {
-                //        ((IDictionary<string, object>)expandoObject).Add(property.Name, property.GetValue(tuple));
-                //    }
-                //    tupleExpandoObjectList.Add(expandoObject);
-                //}
-
-                //FileInfo fi = new FileInfo(filePath);
-                //_excelPackage.SaveAs(fi);
-
                 using (var package = new ExcelPackage(FileOutputUtil.GetFileInfo(_xlsxTemplateFilePath)))
                 {
-                    foreach (KeyValuePair<string, Object> _dataView in _dataSetObj)
+                    string tableName = string.Empty;
+                    if (_dataSet != null)
                     {
-                        string tableName = _dataView.Key;
-                        if (tableName.ToLower().IndexOf("view") == -1) continue;
-
-                        tupleExpandoObjectList = new List<ExpandoObject>();
-                        foreach (object tuple in (List<object>)_dataView.Value)
+                        foreach (DataTable _dataTable in _dataSet.Tables)
                         {
-                            expandoObject = new ExpandoObject();
-                            foreach (var property in tuple.GetType().GetProperties())
-                            {
-                                ((IDictionary<string, object>)expandoObject).Add(property.Name, property.GetValue(tuple));
-                            }
-                            tupleExpandoObjectList.Add(expandoObject);
+                            tableName = _dataTable.TableName;
+                            if(tableName.ToLower().IndexOf("view") == -1) continue;
+
+                            var sheet = package.Workbook.Worksheets.Add(tableName);
+                            sheet.Cells["A1"].LoadFromDataTable(_dataTable, true, TableStyles.Medium9);
                         }
-
-                        var sheet = package.Workbook.Worksheets.Add(tableName);
-                        sheet.Cells["A1"].LoadFromDictionaries(tupleExpandoObjectList, c =>
+                    }
+                    else if (_dataSetObj != null)
+                    {
+                        foreach (KeyValuePair<string, Object> _dataView in _dataSetObj)
                         {
-                            // Print headers using the property names
-                            c.PrintHeaders = true;
-                            // insert a space before each capital letter in the header
-                            c.HeaderParsingType = HeaderParsingTypes.CamelCaseToSpace;
-                            // when TableStyle is not TableStyles.None the data will be loaded into a table with the 
-                            // selected style.
-                            c.TableStyle = TableStyles.Medium6;
+                            tableName = _dataView.Key;
+                            if (tableName.ToLower().IndexOf("view") == -1) continue;
 
-                            // SetKeys takes a params string[] - you can add any number of
-                            // keys as arguments to this function.
-                            //c.SetKeys("name", "price");
-                        });
+                            tupleExpandoObjectList = new List<ExpandoObject>();
+                            foreach (object tuple in (List<object>)_dataView.Value)
+                            {
+                                expandoObject = new ExpandoObject();
+                                foreach (var property in tuple.GetType().GetProperties())
+                                {
+                                    ((IDictionary<string, object>)expandoObject).Add(property.Name, property.GetValue(tuple));
+                                }
+                                tupleExpandoObjectList.Add(expandoObject);
+                            }
+
+                            var sheet = package.Workbook.Worksheets.Add(tableName);
+                            sheet.Cells["A1"].LoadFromDictionaries(tupleExpandoObjectList, c =>
+                            {
+                                // Print headers using the property names
+                                c.PrintHeaders = true;
+                                // insert a space before each capital letter in the header
+                                c.HeaderParsingType = HeaderParsingTypes.CamelCaseToSpace;
+                                // when TableStyle is not TableStyles.None the data will be loaded into a table with the 
+                                // selected style.
+                                c.TableStyle = TableStyles.Medium6;
+
+                                // SetKeys takes a params string[] - you can add any number of
+                                // keys as arguments to this function.
+                                //c.SetKeys("name", "price");
+                            });
+                        }
                     }
 
                     // SaveAs Method1
@@ -467,38 +816,50 @@ namespace CoreReport.EPPlus5Report
             string filePath = _fileName + ".xlsx";
 
             IDictionary<string, object> _dataSetObj = this.reportEntity.GetDataSetObj();
+            DataSet _dataSet = this.reportEntity.GetDataSet();
             string _xlsxTemplateFilePath = this.reportEntity.GetXlsxTemplateFilePath();
 
             try
             {
                 List<ExpandoObject> tupleExpandoObjectList = new List<ExpandoObject>();
-
-                List<Object> tupleObjList = (List<Object>)_dataSetObj["GeneralView"];
-
                 ExpandoObject expandoObject = new ExpandoObject();
 
                 using (var package = new ExcelPackage(FileOutputUtil.GetFileInfo(_xlsxTemplateFilePath)))
                 {
-                    foreach (KeyValuePair<string, Object> _dataView in _dataSetObj)
+                    string tableName = string.Empty;
+                    if (_dataSet != null)
                     {
-                        string tableName = _dataView.Key;
-                        if (tableName.ToLower().IndexOf("view") == -1) continue;
-
-                        tupleExpandoObjectList = new List<ExpandoObject>();
-                        //tupleObjList = (List<Object>)_dataSetObj["GeneralView"];
-                        foreach (object tuple in (List<object>)_dataView.Value)
+                        foreach (DataTable _dataTable in _dataSet.Tables)
                         {
-                            expandoObject = new ExpandoObject();
-                            foreach (var property in tuple.GetType().GetProperties())
-                            {
-                                ((IDictionary<string, object>)expandoObject).Add(property.Name, property.GetValue(tuple));
-                            }
-                            tupleExpandoObjectList.Add(expandoObject);
+                            tableName = _dataTable.TableName;
+                            if (tableName.ToLower().IndexOf("view") == -1) continue;
+
+                            var sheet = package.Workbook.Worksheets.Add(tableName);
+                            sheet.Cells["A1"].LoadFromDataTable(_dataTable, true, TableStyles.Medium9);
                         }
-
-                        var sheet = package.Workbook.Worksheets.Add(tableName);
-                        sheet.Cells["A1"].LoadFromDictionaries(tupleExpandoObjectList, c =>
+                    }
+                    else if (_dataSetObj != null)
+                    {
+                        foreach (KeyValuePair<string, Object> _dataView in _dataSetObj)
                         {
+                            tableName = _dataView.Key;
+                            if (tableName.ToLower().IndexOf("view") == -1) continue;
+
+                            tupleExpandoObjectList = new List<ExpandoObject>();
+                            //tupleObjList = (List<Object>)_dataSetObj["GeneralView"];
+                            foreach (object tuple in (List<object>)_dataView.Value)
+                            {
+                                expandoObject = new ExpandoObject();
+                                foreach (var property in tuple.GetType().GetProperties())
+                                {
+                                    ((IDictionary<string, object>)expandoObject).Add(property.Name, property.GetValue(tuple));
+                                }
+                                tupleExpandoObjectList.Add(expandoObject);
+                            }
+
+                            var sheet = package.Workbook.Worksheets.Add(tableName);
+                            sheet.Cells["A1"].LoadFromDictionaries(tupleExpandoObjectList, c =>
+                            {
                             // Print headers using the property names
                             c.PrintHeaders = true;
                             // insert a space before each capital letter in the header
@@ -511,6 +872,7 @@ namespace CoreReport.EPPlus5Report
                             // keys as arguments to this function.
                             //c.SetKeys("name", "price");
                         });
+                        }
                     }
 
                     // SaveAs Method1

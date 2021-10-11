@@ -15,7 +15,12 @@ namespace EPPlus5Report.ReportEntity
 {
     public class HitRateReport5 : BaseReportEntity
     {
-        public HitRateReport5(DataSet _dataSet) { }
+        public HitRateReport5(DataSet _dataSet)
+        {
+            Console.WriteLine("Said \"Hello World!\" from HitRateReport5");
+            //this.dataSet = _dataSet;
+            this.dataSet = _dataSet;
+        }
 
         public HitRateReport5(IDictionary<string, object> _dataSetObj)
         {
@@ -42,8 +47,20 @@ namespace EPPlus5Report.ReportEntity
             // define the page setup - header
             // define the page setup - footer
 
-
             // define the sheet - rows to repeat at top
+            ExcelDataGrid _dataGrid = null;
+            _dataGrid = new ExcelDataGrid("Sheet1");
+            _dataGrid.SetHeaderRange(new ExcelDataGridSection("", "", ""));
+            _dataGrid.SetBodyRange(new ExcelDataGridSection("T1B", "17:19", "20:20"));
+            _dataGrid.SetFooterRange(new ExcelDataGridSection("T1F", "21:21", "22:22"));
+            this.AddDataGrid(_dataGrid);
+
+            _dataGrid = new ExcelDataGrid("Sheet1");
+            _dataGrid.SetHeaderRange(new ExcelDataGridSection("", "", ""));
+            _dataGrid.SetBodyRange(new ExcelDataGridSection("", "21:21", "22:22"));
+            _dataGrid.SetFooterRange(new ExcelDataGridSection("", "", ""));
+            //this.AddDataGrid(_dataGrid);
+
             // define the sheet - rows to column at left
         }
 
@@ -54,20 +71,6 @@ namespace EPPlus5Report.ReportEntity
             string _headerFilePath = string.Empty;
             string _footerFilePath = string.Empty;
             string _headerFooterFilePath = string.Empty;
-
-            ExcelDataGrid _dataGrid = null;
-
-            _dataGrid = new ExcelDataGrid("Sheet1");
-            _dataGrid.SetHeaderRange(new ExcelDataGridSection("", "", ""));
-            _dataGrid.SetBodyRange(new ExcelDataGridSection("T1B", "17:19", "20:20"));
-            _dataGrid.SetFooterRange(new ExcelDataGridSection("T1F", "22:23", ""));
-            this.AddDataGrid(_dataGrid);
-
-            _dataGrid = new ExcelDataGrid("Sheet1");
-            _dataGrid.SetHeaderRange(new ExcelDataGridSection("", "", ""));
-            _dataGrid.SetBodyRange(new ExcelDataGridSection("", "21:21", "22:22"));
-            _dataGrid.SetFooterRange(new ExcelDataGridSection("", "", ""));
-            this.AddDataGrid(_dataGrid);
 
             if (File.Exists(Path.Combine(_templateDirectory, @"header.html")))
             {
@@ -112,5 +115,6 @@ namespace EPPlus5Report.ReportEntity
 
             this.AddPageFooter(_pageHeaderFooter);
         }
+
     }
 }

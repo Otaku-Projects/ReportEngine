@@ -32,27 +32,30 @@ namespace CoreSystemConsole.ReportDataModel
             this.dataSetObj = new ExpandoObject() as IDictionary<string, object>;
         }
 
-        public DataTable AddRowToHitRateDataTable(DataTable _dataTable, int _count)
+        public DataTable AddRowToHitRateDataTable(DataTable _dataTable, int _maxLimit)
         {
             DataRow _dRow = _dataTable.NewRow();
 
-            for (int i = 0; i < _count; i++)
+            List<string> randomStrings = Enumerable.Range(1, Convert.ToInt32(Math.Round(_maxLimit / 2.0m)))
+                       .Select(_ => Faker.Company.Name())
+                       .ToList();
+            for (int i = 0; i < _maxLimit; i++)
             {
                 _dRow = _dataTable.NewRow();
                 _dRow[0] = i;
-                _dRow[1] = Faker.Company.Name();
+                _dRow[1] = randomStrings[Convert.ToInt32(i % Math.Round(_maxLimit / 2.0m))];
                 _dRow[2] = Faker.Company.Name();
-                _dRow[3] = Faker.Address.City();
-                _dRow[4] = Faker.RandomNumber.Next(1, 5);
-                _dRow[5] = Faker.RandomNumber.Next(1, 30);
-                _dRow[6] = Faker.RandomNumber.Next((long)0, (long)1);
-                _dRow[7] = Faker.RandomNumber.Next(1, 5);
-                _dRow[8] = Faker.RandomNumber.Next(50, 10000);
-                _dRow[9] = Faker.RandomNumber.Next((long)0, (long)1);
+                _dRow[3] = Faker.Internet.DomainWord();
+                _dRow[4] = Faker.Address.City();
+                _dRow[5] = Faker.RandomNumber.Next(1, 100);
+                _dRow[6] = Faker.RandomNumber.Next(0, 100);
+                _dRow[7] = Faker.RandomNumber.Next((long)0, (long)1);
+                _dRow[8] = Faker.RandomNumber.Next(1, 5);
+                _dRow[9] = Faker.RandomNumber.Next(50, 1000);
+                _dRow[10] = Faker.RandomNumber.Next((long)0, (long)1);
 
                 _dataTable.Rows.Add(_dRow);
             }
-
 
             return _dataTable;
         }
@@ -62,7 +65,7 @@ namespace CoreSystemConsole.ReportDataModel
             List<DataColumn> _dataColumnList = new List<DataColumn>();
             DataColumn _dataColumn1;
 
-            var dataModelInstance = new HitRateDataModel();
+            var dataModelInstance = new HitRateDataModel2();
             foreach (PropertyInfo propertyInfo in dataModelInstance.GetType().GetProperties())
             {
                 _dataColumn1 = this.CreateDataColumn(propertyInfo.Name, propertyInfo.PropertyType);
@@ -150,11 +153,41 @@ namespace CoreSystemConsole.ReportDataModel
         {
             List<dynamic> _obj = new List<dynamic>();
             string _tableName = "GeneralView";
-            for (int i = 0; i < 3; i++)
+            string officeName = string.Empty;
+            officeName = Faker.Address.Country();
+
+            // generate records count
+            int maxLimit = 3;
+
+            // create datatable
+            DataTable _table = new DataTable(_tableName);
+            this.AddDataColumnToDataTable(_table);
+            this.AddRowToHitRateDataTable(_table, maxLimit);
+            this.dataSet.Tables.Add(_table);
+
+            // create datasetObj
+            List<string> randomStrings = Enumerable.Range(1, maxLimit)
+                       .Select(_ => Faker.Company.Name())
+                       .ToList();
+            for (int i = 0; i < maxLimit; i++)
             {
+                //_obj.Add(new
+                //{
+                //    OfficeName = officeName,
+                //    Department = Faker.Company.Name(),
+                //    ProductTeam = Faker.Internet.DomainWord(),
+                //    City = Faker.Address.City(),
+                //    NumOfDesign = Faker.RandomNumber.Next(1, 100),
+                //    NumOfDesignContracted = Faker.RandomNumber.Next(0, 100),
+                //    DesignHitRate = Faker.RandomNumber.Next(0, 100),
+                //    NumOfColorways = Faker.RandomNumber.Next(1, 100),
+                //    NumOfItem = Faker.RandomNumber.Next(0, 100),
+                //    ColorwayHitRate = Faker.RandomNumber.Next(0, 100),
+                //});
+
                 _obj.Add(new
                 {
-                    OfficeName = Faker.Address.Country(),
+                    OfficeName = randomStrings[Convert.ToInt32(i % Math.Round(maxLimit / 2.0m))],
                     Department = Faker.Company.Name(),
                     ProductTeam = Faker.Internet.DomainWord(),
                     City = Faker.Address.City(),
@@ -162,7 +195,7 @@ namespace CoreSystemConsole.ReportDataModel
                     NumOfDesignContracted = Faker.RandomNumber.Next(0, 100),
                     DesignHitRate = Faker.RandomNumber.Next(0, 100),
                     NumOfColorways = Faker.RandomNumber.Next(1, 100),
-                    NumOfItem = Faker.RandomNumber.Next(0, 100),
+                    NumOfItems = Faker.RandomNumber.Next(0, 100),
                     ColorwayHitRate = Faker.RandomNumber.Next(0, 100),
                 });
             }

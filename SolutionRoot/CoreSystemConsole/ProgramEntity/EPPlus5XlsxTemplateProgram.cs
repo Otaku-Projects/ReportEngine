@@ -33,20 +33,22 @@ namespace CoreSystemConsole.ProgramEntity
             IDictionary<string, object> dataSetObj2 = hitRateDataView2.GetDataSetObj();
             hitRateDataView3.CreateDummyData3();
             IDictionary<string, object> dataSetObj3 = hitRateDataView3.GetDataSetObj();
+            DataSet dataSet3 = hitRateDataView3.GetDataSet();
 
             EPPlus5Decorator epplus5Decorator = null;
             HitRateReportDecorator hitRateRptDecorator = null;
 
-            HitRateReport4 hitRateReport4 = new HitRateReport4(dataSetObj2);
-            epplus5Decorator = new EPPlus5Decorator(hitRateReport4);
-            epplus5Decorator.SaveXlsxInMasterDataList();
+            //HitRateReport4 hitRateReport4 = new HitRateReport4(dataSetObj2);
+            //epplus5Decorator = new EPPlus5Decorator(hitRateReport4);
+            //epplus5Decorator.SaveXlsxInMasterDataList();
 
-            HitRateReport5 hitRateReport5 = new HitRateReport5(dataSetObj3);
+            HitRateReport5 hitRateReport5 = new HitRateReport5(dataSet3);
             hitRateRptDecorator = new HitRateReportDecorator(hitRateReport5);
             hitRateRptDecorator.RenderTemplateAndSaveAsXlsx();
 
-            hitRateRptDecorator.RenderTemplateAndSaveAsPdf();
-            //epplus5Decorator.SaveTemplateAsXlsx(_excelPackage);
+            //HitRateReportDecorator hitRateRptDecorator2 = null;
+            //hitRateRptDecorator2 = new HitRateReportDecorator(hitRateReport5);
+            //hitRateRptDecorator2.RenderTemplateAndSaveAsPdf();
         }
     }
 }

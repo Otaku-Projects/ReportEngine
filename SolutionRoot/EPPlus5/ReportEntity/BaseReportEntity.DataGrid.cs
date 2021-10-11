@@ -12,11 +12,12 @@ using System.Threading.Tasks;
 
 namespace EPPlus5Report.ReportEntity
 {
-    public class ExcelDataGridSection
+    public class ExcelDataGridSection : Object, IEquatable<ExcelDataGridSection>, IComparable<ExcelDataGridSection>
     {
         private string indicator;
         private string templateRange;
         private string appendToRange;
+
         private int templateFromRow;
         private string templateFromCol;
         private int templateToRow;
@@ -38,7 +39,8 @@ namespace EPPlus5Report.ReportEntity
         public int AppendToRow { get => appendToRow; set => appendToRow = value; }
         public string AppendToCol { get => appendToCol; set => appendToCol = value; }
 
-        //public string TemplateRange { get => templateRange; set => templateRange = value; }
+        protected List<ExcelDataGridSection> historicalCoordinate;
+        public List<ExcelDataGridSection> HistoricalCoordinate { get => historicalCoordinate; }
 
         public ExcelDataGridSection()
         {
@@ -59,11 +61,11 @@ namespace EPPlus5Report.ReportEntity
             this.AppendToCol = string.Empty;
         }
 
-        public ExcelDataGridSection(string _indicator, string startColLetter, int startRowIndex, string endColLetter, int endRowIndex) : this()
-        {
-            this.indicator = _indicator;
-            this.SetTemplateRange(startColLetter + startRowIndex + ":" + endColLetter + endRowIndex);
-        }
+        //public ExcelDataGridSection(string _indicator, string startColLetter, int startRowIndex, string endColLetter, int endRowIndex) : this()
+        //{
+        //    this.indicator = _indicator;
+        //    this.SetTemplateRange(startColLetter + startRowIndex + ":" + endColLetter + endRowIndex);
+        //}
         
         public ExcelDataGridSection(string _indicator, string _templateRange, string _appendToRange) : this()
         {
@@ -178,13 +180,71 @@ namespace EPPlus5Report.ReportEntity
         {
             return this.appendToRange;
         }
+        public void CopyTemplateRangeToNewLocation(string toRange)
+        {
+
+        }
+        public void CopyAppendRangeToNewLocation(string toRange)
+        {
+
+        }
+
+        // Default comparer for Part type.
+        public int CompareTo(ExcelDataGridSection compareSection)
+        {
+            // A null value means that this object is greater.
+            if (compareSection == null)
+                return 1;
+
+            else
+                return this.templateFromRow.CompareTo(compareSection.templateFromRow);
+        }
+
+        public bool Equals(ExcelDataGridSection other)
+        {
+            return other != null &&
+                other.Indicator == this.Indicator &&
+                other.GetTemplateRange() == this.GetTemplateRange() &&
+                other.GetAppendRange() == this.GetAppendRange();
+        }
+
+        //public object Clone()
+        //{
+        //    ExcelDataGridSection _clonedSection = new ExcelDataGridSection(
+        //        this.indicator, this.templateRange, this.appendToRange
+        //        );
+
+        //    return _clonedSection;
+        //}
+
+        public virtual Boolean Empty()
+        {
+            return this == null
+                || string.IsNullOrEmpty(this.indicator)
+                || string.IsNullOrEmpty(this.templateRange)
+                || string.IsNullOrEmpty(this.appendToRange);
+        }
+
+        public virtual ExcelDataGridSection Clone()
+        {
+            ExcelDataGridSection _clonedSection = new ExcelDataGridSection(
+                this.indicator, this.templateRange, this.appendToRange
+                );
+
+            return _clonedSection;
+        }
     }
-    public class ExcelDataGrid {
+    public class ExcelDataGrid : Object, IEquatable<ExcelDataGrid>
+    {
         private string spreadsheetName;
 
+        private string coordinateLeftTop;
+        private string coordinateRightBottom;
         private ExcelDataGridSection headerRange;
         private ExcelDataGridSection bodyRange;
         private ExcelDataGridSection footerRange;
+
+        private List<ExcelDataGridSection> rangeList;
         public string SpreadsheetName { get => spreadsheetName; set => spreadsheetName = value; }
 
         public ExcelDataGrid()
@@ -194,6 +254,20 @@ namespace EPPlus5Report.ReportEntity
             this.headerRange = new ExcelDataGridSection();
             this.bodyRange = new ExcelDataGridSection();
             this.footerRange = new ExcelDataGridSection();
+            this.rangeList = new List<ExcelDataGridSection>();
+
+            this.coordinateLeftTop = string.Empty;
+            this.coordinateRightBottom = string.Empty;
+        }
+        public ExcelDataGrid(ExcelDataGrid _grid)
+        {
+            this.spreadsheetName = _grid.spreadsheetName;
+
+            this.headerRange = _grid.GetHeaderRange().Clone();
+            this.bodyRange = _grid.GetBodyRange().Clone();
+            this.footerRange = _grid.GetFooterRange().Clone();
+
+            this.RefreshRangeSequence();
         }
         public ExcelDataGrid(string _spreadSheetName)
         {
@@ -202,6 +276,15 @@ namespace EPPlus5Report.ReportEntity
             this.headerRange = new ExcelDataGridSection();
             this.bodyRange = new ExcelDataGridSection();
             this.footerRange = new ExcelDataGridSection();
+        }
+
+
+        public virtual void RefreshRangeSequence()
+        {
+            this.rangeList = new List<ExcelDataGridSection>();
+            if (!this.headerRange.Empty()) this.rangeList.Add(this.headerRange);
+            if (!this.bodyRange.Empty()) this.rangeList.Add(this.bodyRange);
+            if (!this.footerRange.Empty()) this.rangeList.Add(this.footerRange);
         }
 
         public virtual void SetRange(ExcelDataGridSection _headerRange, ExcelDataGridSection _bodyRange, ExcelDataGridSection _footerRange)
@@ -233,16 +316,22 @@ namespace EPPlus5Report.ReportEntity
         {
             _headerRange.ExcelDataGrid = this;
             this.headerRange = _headerRange;
+
+            this.RefreshRangeSequence();
         }
         public void SetBodyRange(ExcelDataGridSection _bodyRange)
         {
             _bodyRange.ExcelDataGrid = this;
             this.bodyRange = _bodyRange;
+
+            this.RefreshRangeSequence();
         }
         public void SetFooterRange(ExcelDataGridSection _footerRange)
         {
             _footerRange.ExcelDataGrid = this;
             this.footerRange = _footerRange;
+
+            this.RefreshRangeSequence();
         }
 
         public ExcelDataGridSection GetHeaderRange()
@@ -256,6 +345,29 @@ namespace EPPlus5Report.ReportEntity
         public ExcelDataGridSection GetFooterRange()
         {
             return this.footerRange;
+        }
+        public List<ExcelDataGridSection> GetRangeList()
+        {
+            return this.rangeList;
+        }
+        public bool Equals(ExcelDataGrid other)
+        {
+            return other != null &&
+                other.GetHeaderRange().Equals(this.GetHeaderRange()) &&
+                other.GetBodyRange().Equals(this.GetBodyRange()) &&
+                other.GetFooterRange().Equals(this.GetFooterRange());
+        }
+
+        public virtual ExcelDataGrid Clone()
+        {
+            ExcelDataGrid _clonedGrid = new ExcelDataGrid();
+            _clonedGrid.SetHeaderRange(this.headerRange);
+            _clonedGrid.SetBodyRange(this.bodyRange);
+            _clonedGrid.SetFooterRange(this.footerRange);
+
+            _clonedGrid.spreadsheetName = this.spreadsheetName;
+
+            return _clonedGrid;
         }
 
         public enum TupleAppendDirection

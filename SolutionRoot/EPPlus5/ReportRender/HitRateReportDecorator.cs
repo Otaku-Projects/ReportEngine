@@ -32,10 +32,10 @@ namespace CoreReport.EPPlus5Report
 
         protected virtual ExcelPackage RenderBodyAndMergeToTemplate(ExcelPackage _excelPackage)
         {
+            DataSet _dataSet = this.reportEntity.GetDataSet();
             IDictionary<string, object> _dataSetObj = this.reportEntity.GetDataSetObj();
             //ExcelWorksheet worksheet = _excelPackage.Workbook.Worksheets[0];
             ExcelWorksheet activeSheet = _excelPackage.Workbook.Worksheets.FirstOrDefault(f => f.View.TabSelected);
-
 
             //foreach (dynamic tupleList in (List<object>)_dataSetObj["GeneralView"])
             //{
@@ -43,19 +43,52 @@ namespace CoreReport.EPPlus5Report
             //    //this.MergeDataRows(activeSheet, "G", tupleList);
             //    Console.WriteLine(tupleList);
             //}
-            this.MergeDataRows(activeSheet, "T1B", (List<Object>)_dataSetObj["GeneralView"]);
-            // refresh and re-calculate the formula result, e.g. sum(...) 
-            activeSheet.Calculate();
+            //this.MergeDataRows(activeSheet, "T1B", (List<Object>)_dataSetObj["GeneralView"]);
+            // refresh and re-calculate the formula result, e.g. sum(...)
 
-            //foreach (List<ExpandoObject> tupleList in (List<object>)_dataSetObj["GeneralView"])
+            DataView dataView = _dataSet.Tables["GeneralView"].DefaultView;
+            dataView.Sort = "OfficeName";
+            DataTable sortedDataTable = dataView.ToTable();
+
+            string officeName = "";
+            var officeNameList = (from DataRow dr in sortedDataTable.Rows
+                              select (string)dr["OfficeName"]).Distinct();
+
+            foreach (string _officeName in officeNameList)
+            {
+                //DataRow distinctOfficeName = sortedDataTable.Select($"OfficeName = '{_officeName}'");
+                var distinctOfficeName = from DataRow row in sortedDataTable.Rows
+                                         where row["OfficeName"] == _officeName
+                                         select row;
+
+                DataRow officeRow = null;
+                foreach(DataRow ofDepartmentRow in distinctOfficeName)
+                {
+                    officeRow = sortedDataTable.NewRow();
+                    officeRow.ItemArray = ofDepartmentRow.ItemArray.Clone() as object[];
+                    this.MergeDataRow(activeSheet, "T1B", ofDepartmentRow);
+                }
+                this.MergeDataRow(activeSheet, "T1F", officeRow);
+                this.PrintSectionSeparateLine(activeSheet, "T1B", "T1F");
+            }
+
+            //foreach (DataRow dRow in sortedDataTable.Rows)
             //{
-            //    //this.MergeDataRow(activeSheet, "G", tuple);
-            //    this.MergeDataRows(activeSheet, "G", tupleList);
+            //    if (!string.IsNullOrEmpty(officeName) && officeName != dRow["OfficeName"].ToString())
+            //    {
+            //        this.MergeDataRow(activeSheet, "T1F", dRow);
+            //        this.PrintSectionSeparateLine(activeSheet, "T1B", "T1F");
+            //        break;
+            //    }
+            //        this.MergeDataRow(activeSheet, "T1B", dRow);
+            //    officeName = dRow["OfficeName"].ToString();
             //}
+
+            activeSheet.Calculate();
 
             return _excelPackage;
         }
-        protected override void CustomPostMergeCellExpression(ExcelWorksheet _worksheet, string cellAddress, Object _tuple)
+        protected override void CustomPostMergeCellExpression(ExcelWorksheet _worksheet, string cellAddress, IDictionary<string, Object> _tuple)
         {
             ExcelRange _cell = _worksheet.Cells[cellAddress];
 
@@ -90,9 +123,11 @@ namespace CoreReport.EPPlus5Report
             if (cellVal.IndexOf("{{QRCode}}") > -1)
             {
                 string qrCodeText = string.Empty;
-                //qrCodeText = _tuple.GetType().GetProperty("ProductTeam").GetValue(_tuple, null).ToString();
-                PropertyInfo prop = _tuple.GetType().GetProperty("Department");
-                qrCodeText = prop.GetValue(_tuple, null).ToString();
+                //PropertyInfo prop = _tuple.GetType().GetProperty("Department");
+                //qrCodeText = prop.GetValue(_tuple, null).ToString();
+
+                qrCodeText = _tuple["Department"].ToString();
+
                 QRCodeGenerator qrGenerator = new QRCodeGenerator();
                 QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrCodeText, QRCodeGenerator.ECCLevel.Q);
                 QRCode qrCode = new QRCode(qrCodeData);
@@ -115,13 +150,13 @@ namespace CoreReport.EPPlus5Report
 
             return _excelPackage;
         }
-        public override ExcelPackage RenderDataAndMergeToTemplate()
+        public override ExcelPackage RenderDataAndMergeToTemplate(ExcelPackage _excelPackage)
         {
-            ExcelPackage _excelPackage = this.GetXlsxTemplateInstance();
+            //ExcelPackage _excelPackage = this.GetXlsxTemplateInstance();
 
             string excelRange = string.Empty;
-            string _indicator = string.Empty; 
-             ExcelWorksheet activeSheet = _excelPackage.Workbook.Worksheets.FirstOrDefault(f => f.View.TabSelected);
+            string _indicator = string.Empty;
+            ExcelWorksheet activeSheet = _excelPackage.Workbook.Worksheets.FirstOrDefault(f => f.View.TabSelected);
 
             // update indicator for all dataGridList
             List<ExcelDataGrid> _excelDataGridList = this.reportEntity.GetDataGrid();
@@ -210,8 +245,9 @@ namespace CoreReport.EPPlus5Report
 
             try
             {
-                using (ExcelPackage _excelPackage = this.RenderDataAndMergeToTemplate())
+                using (ExcelPackage _excelPackage = this.StartRenderDataAndMergeToTemplate())
                 {
+                    this.RenderDataAndMergeToTemplate(_excelPackage);
                     // SaveAs Method2
                     //Instead of converting to bytes, you could also use FileInfo
                     FileInfo fi = new FileInfo(xlsxFilePath);
@@ -252,8 +288,9 @@ namespace CoreReport.EPPlus5Report
 
             try
             {
-                using (ExcelPackage _excelPackage = this.RenderDataAndMergeToTemplate())
+                using (ExcelPackage _excelPackage = this.StartRenderDataAndMergeToTemplate())
                 {
+                    this.RenderDataAndMergeToTemplate(_excelPackage);
                     /*
                     // SaveAs Method1
                     //convert the excel package to a byte array

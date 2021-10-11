@@ -122,6 +122,7 @@ namespace EPPlus5Report.ReportEntity
         protected HeaderFooterOptions headerFooterOption;
 
         private List<ExcelDataGrid> dataGridList;
+        private List<ExcelDataGrid> dataGridTemplateBackupList;
 
         public BaseReportEntity()
         {
@@ -133,6 +134,7 @@ namespace EPPlus5Report.ReportEntity
             this.xlsxTemplateFileName = string.Empty;
 
             this.dataGridList = new List<ExcelDataGrid>();
+            this.dataGridTemplateBackupList = new List<ExcelDataGrid>();
 
             this.Initializate();
         }
@@ -161,6 +163,19 @@ namespace EPPlus5Report.ReportEntity
         public virtual void SetDataGrid(List<ExcelDataGrid> _dataGridList)
         {
             this.dataGridList = _dataGridList;
+        }
+
+        public virtual void BackupDataGridSetting()
+        {
+            this.dataGridTemplateBackupList = new List<ExcelDataGrid>();
+            this.dataGridList.ForEach((item) =>
+            {
+                this.dataGridTemplateBackupList.Add(new ExcelDataGrid(item));
+            });
+        }
+        public virtual List<ExcelDataGrid> GetBackupTemplateDataGrid()
+        {
+            return this.dataGridTemplateBackupList;
         }
 
         protected virtual void AddPageContent(PageComponent _pageComponent)
@@ -268,6 +283,10 @@ namespace EPPlus5Report.ReportEntity
 
         public IDictionary<string, object> GetDataSetObj()
         {
+            if (this.dataSetObj == null)
+            {
+                return this.dataSetObj;
+            }
             // renew date, time on each get
             string _tableName = "ReportMetaData";
             this.dataSetObj.Remove(_tableName);
