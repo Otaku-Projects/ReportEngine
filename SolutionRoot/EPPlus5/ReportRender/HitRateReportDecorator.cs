@@ -112,12 +112,12 @@ namespace CoreReport.EPPlus5Report
             {
                 Image img = Image.FromFile(@"D:\Documents\ReportEngine\SolutionRoot\EPPlus5\ReportTemplate\HitRateReport5\man-4367499_480.png");
                 ExcelPicture pic = _worksheet.Drawings.AddPicture(imgID, img);
-                pic.SetPosition(_cell.Start.Row-1, 0, _cell.Start.Column-1, 0);
+                pic.SetPosition(_cell.Start.Row-1, 10, _cell.Start.Column-1, 10);
                 //pic.SetPosition(PixelTop, PixelLeft);  
                 pic.SetSize(Height, Width);
                 //pic.SetSize(40);
                 //pic.EditAs = eEditAs.TwoCell;
-                pic.ChangeCellAnchor(eEditAs.TwoCell);
+                //pic.ChangeCellAnchor(eEditAs.TwoCell);
 
                 _cell.Clear();
             }
@@ -136,9 +136,9 @@ namespace CoreReport.EPPlus5Report
                 Bitmap qrCodeImage = qrCode.GetGraphic(20);
 
                 ExcelPicture pic2 = _worksheet.Drawings.AddPicture(imgID+"2", qrCodeImage);
-                pic2.SetPosition(_cell.Start.Row - 1, 0, _cell.Start.Column - 1, 0);
+                pic2.SetPosition(_cell.Start.Row - 1, 10, _cell.Start.Column - 1, 10);
                 pic2.SetSize(96, 96);
-                pic2.ChangeCellAnchor(eEditAs.TwoCell);
+                //pic2.ChangeCellAnchor(eEditAs.TwoCell);
 
                 _cell.Clear();
             }

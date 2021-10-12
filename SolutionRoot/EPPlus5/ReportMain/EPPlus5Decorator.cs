@@ -730,6 +730,9 @@ namespace CoreReport.EPPlus5Report
             //sheet1.DeleteColumn(1);
             // hide column A
             sheet1.Column(1).Hidden = true;
+
+            // auto fid the columns
+            //sheet1.Cells.AutoFitColumns();
         }
 
         public virtual void RemoveTemplateRowsForXlsx(ExcelPackage _excelPackage)
