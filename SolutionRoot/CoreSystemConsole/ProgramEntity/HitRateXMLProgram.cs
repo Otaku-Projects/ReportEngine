@@ -32,14 +32,6 @@ namespace CoreSystemConsole.ProgramEntity
 
             JasperReportDecorator jasperReportDecorator = null;
 
-            //HitRateReport1 hitRateReport1 = new HitRateReport1(dataSetObj1);
-            //jasperReportEntity = new JasperReportDecorator(hitRateReport1);
-            //jasperReportEntity.SaveXlsxByHTML();
-
-            //HitRateReport2 hitRateReport2 = new HitRateReport2(dataSetObj2);
-            //jasperReportEntity = new JasperReportDecorator(hitRateReport2);
-            //jasperReportEntity.SaveXlsxByHTML();
-
             HitRateReport3 hitRateReport3 = new HitRateReport3(dataSetObj2);
             jasperReportDecorator = new JasperReportDecorator(hitRateReport3);
             jasperReportDecorator.SaveXlsx();

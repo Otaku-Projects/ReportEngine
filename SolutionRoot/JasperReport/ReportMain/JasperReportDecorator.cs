@@ -181,9 +181,6 @@ namespace CoreReport.JasperReport
 
             try
             {
-                //DataSet _dataSet = this.dataSet;
-                //object _reportData = this.ConvertDataSetToObject(_dataSet);
-
                 RenderRequest _renderRequest = this.CreatePdfRenderRequest();
 
                 var report = rs.RenderAsync(_renderRequest).Result;
@@ -202,7 +199,6 @@ namespace CoreReport.JasperReport
         protected RenderRequest CreateEmptyRenderRequest(string _templateFile = "")
         {
             RenderRequest _renderRequest = new RenderRequest();
-            //string _fileContent = File.ReadAllText(_templateFile);
             _renderRequest.Template = new Template()
             {
                 Content = "",
@@ -329,9 +325,6 @@ namespace CoreReport.JasperReport
 
             string _headerFilePath = string.Empty;
             string _footerFilePath = string.Empty;
-
-            //_headerFilePath = this.reportEntity.GetTemplateHeaderPath();
-            //_footerFilePath = this.reportEntity.GetTemplateFooterPath();
 
             _headerFilePath = this.reportEntity.GetPageComponent(PageNature.Header).GetHtmlFilePath();
             _footerFilePath = this.reportEntity.GetPageComponent(PageNature.Footer).GetHtmlFilePath();

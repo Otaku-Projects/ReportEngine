@@ -28,7 +28,7 @@ namespace CoreSystemConsole.ReportDataModel
         public string Product { get => _product; set => _product = value; }
         public string City { get => _city; set => _city = value; }
         public int NumOfDesign { get => _numOfDesign; set => _numOfDesign = value; }
-        public int NumOfContracted { get => _numOfContracted; set => _numOfContracted = value; }
+        public int NumOfDesignContracted { get => _numOfContracted; set => _numOfContracted = value; }
         public decimal DesignHitRate { get => _designHitRate; set => _designHitRate = value; }
         public int NumOfColorways { get => _numOfColorWays; set => _numOfColorWays = value; }
         public int NumOfItems { get => _numOfItems; set => _numOfItems = value; }

@@ -110,9 +110,6 @@ namespace JasperReport.ReportEntity
 
         protected string templateBaseDirectory;
         protected string templateReportFileDirectory;
-        //protected string templateReportFileLocation;
-        //protected string templateReportHeaderLocation;
-        //protected string templateReportFooterLocation;
 
         protected Dictionary<PageNature, PageComponent> pageComponents;
 

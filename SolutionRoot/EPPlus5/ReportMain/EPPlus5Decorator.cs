@@ -324,7 +324,7 @@ namespace CoreReport.EPPlus5Report
             // the render sequence should be
             // column A => cell A1, A2, A3
             // column B => cell B1, B2, B3
-            for (int colIndex = colIndexStart; colIndex < colIndexEnd; colIndex++)
+            for (int colIndex = colIndexStart; colIndex <= colIndexEnd; colIndex++)
             {
                 for (int rowIndex = appendStartRowIndex; rowIndex <= (appendStartRowIndex + dataGridRowCount - 1); rowIndex++)
                 {
@@ -346,18 +346,6 @@ namespace CoreReport.EPPlus5Report
             Boolean isMerge = false;
             string matchExpression = string.Empty;
             string mergedValue = cellVal;
-            //foreach (PropertyInfo propertyInfo in _tuple.GetType().GetProperties())
-            //{
-            //    matchExpression = "{{" + propertyInfo.Name + "}}";
-            //    if (cellVal.IndexOf(matchExpression) > -1)
-            //    {
-            //        isMerge = true;
-            //        mergedValue = mergedValue.Replace(matchExpression, propertyInfo.GetValue(_tuple).ToString());
-            //    }
-
-            //    // do stuff here
-            //    //propertyInfo.GetValue(_tuple, null)
-            //}
 
             foreach (KeyValuePair<string, object> kvp in _tuple)
             {
@@ -374,6 +362,8 @@ namespace CoreReport.EPPlus5Report
             {
                 ExcelStyle cellStyle = _cell.Style;
                 string _cellFormat = _cell.Style.Numberformat.Format;
+                // format reference
+                // https://stackoverflow.com/questions/40209636/epplus-number-format/40214134
                 if (_cellFormat.IndexOfAny("%".ToCharArray()) > -1)
                 {
                     _cell.Value = Convert.ToDecimal(mergedValue);
@@ -416,10 +406,7 @@ namespace CoreReport.EPPlus5Report
                         && _headerSection.Indicator == _indicator)
                     {
                         indicatorArray.Add(_indicator);
-
                         if(!affectingDataGridList.Contains(dataGrid)) affectingDataGridList.Add(dataGrid);
-                        //continue;
-
                         updateDataGridSheet1 = _headerSection;
                     }
                     else if (!string.IsNullOrEmpty(_bodySection.Indicator)
@@ -427,8 +414,6 @@ namespace CoreReport.EPPlus5Report
                     {
                         indicatorArray.Add(_indicator);
                         if (!affectingDataGridList.Contains(dataGrid)) affectingDataGridList.Add(dataGrid);
-                        //continue;
-
                         updateDataGridSheet1 = _bodySection;
                     }
                     else if (!string.IsNullOrEmpty(_footerSection.Indicator)
@@ -436,8 +421,6 @@ namespace CoreReport.EPPlus5Report
                     {
                         indicatorArray.Add(_indicator);
                         if (!affectingDataGridList.Contains(dataGrid)) affectingDataGridList.Add(dataGrid);
-                        //continue;
-
                         updateDataGridSheet1 = _footerSection;
                     }
 
@@ -445,14 +428,6 @@ namespace CoreReport.EPPlus5Report
                     {
                         affectingDataGridSectionList.Add(updateDataGridSheet1);
                     }
-                    //List<ExcelDataGridSection> rangeList = dataGrid.GetRangeList();
-                    //foreach (ExcelDataGridSection gridSection in rangeList)
-                    //{
-                    //    if (_indicators.Contains(gridSection.Indicator))
-                    //    {
-                    //        affectingDataGridSectionList.Add(gridSection);
-                    //    }
-                    //}
                 }
             }
 
@@ -481,30 +456,6 @@ namespace CoreReport.EPPlus5Report
                     mostBottomAppendPosition = _footerSection.AppendFromRow;
                 }
             }
-
-            //// 2.2 find how many appendTo rows need to be insert
-            //int countAppendToRows = 0;
-            //foreach (ExcelDataGrid dataGrid in affectingDataGridList)
-            //{
-            //    ExcelDataGridSection _headerSection = dataGrid.GetHeaderRange();
-            //    ExcelDataGridSection _bodySection = dataGrid.GetBodyRange();
-            //    ExcelDataGridSection _footerSection = dataGrid.GetFooterRange();
-
-            //    if (!string.IsNullOrEmpty(_headerSection.Indicator))
-            //    {
-            //        countAppendToRows += (_headerSection.AppendToRow - _headerSection.AppendFromRow + 1);
-            //    }
-            //    if (!string.IsNullOrEmpty(_bodySection.Indicator)
-            //            && _bodySection.AppendFromRow > mostBottomInsertPosition)
-            //    {
-            //        countAppendToRows += (_bodySection.AppendToRow - _bodySection.AppendFromRow + 1);
-            //    }
-            //    if (!string.IsNullOrEmpty(_footerSection.Indicator)
-            //            && _footerSection.AppendFromRow > mostBottomInsertPosition)
-            //    {
-            //        countAppendToRows += (_footerSection.AppendToRow - _footerSection.AppendFromRow + 1);
-            //    }
-            //}
 
             // 3.0 copy data grid section from Template sheet
             // 3.1 copy after the most bottom appendTo position (mostBottomInsertPosition)
@@ -588,107 +539,8 @@ namespace CoreReport.EPPlus5Report
 
                 }
 
-                /*
-                foreach (ExcelDataGrid dataGridSheet1 in affectingDataGridList)
-                {
-                    ExcelDataGridSection hSection = dataGridSheet1.GetHeaderRange();
-                    ExcelDataGridSection bSection = dataGridSheet1.GetBodyRange();
-                    ExcelDataGridSection fSection = dataGridSheet1.GetFooterRange();
-                    ExcelDataGridSection updateDataGridSheet1 = null;
-                    if (dataGridTemplate.Indicator == hSection.Indicator)
-                    {
-                        updateDataGridSheet1 = hSection;
-                    }
-                    else if (dataGridTemplate.Indicator == bSection.Indicator)
-                    {
-                        updateDataGridSheet1 = bSection;
-                    }
-                    else if (dataGridTemplate.Indicator == fSection.Indicator)
-                    {
-                        updateDataGridSheet1 = fSection;
-                    }
-                    if (updateDataGridSheet1 == null) continue;
-
-                    // update templateRange, appendToRange new position
-                    updateDataGridSheet1.SetTemplateRange(copyTemplateDestinationRange);
-                    updateDataGridSheet1.SetAppendToRange(copyAppendToDestinationRange);
-                }
-                */
-
             }
 
-            // 5.0 insert templateRange, appendToRange to the bottom row (mostBottomInsertPosition)
-            /*
-            int totalShiftedTemplateRow = 0;
-            int totalShiftedAppendRow = 0;
-            ExcelWorksheet templateSheet = this.excelPackage.Workbook.Worksheets.FirstOrDefault(worksheet => worksheet.Name == "Template");
-            targetToCloneGridList.Sort();
-            foreach (ExcelDataGridSection dataGridTemplate in targetToCloneGridList)
-            {
-                // insert new rows
-                int rowCountForTemplateRange = (dataGridTemplate.TemplateToRow - dataGridTemplate.TemplateFromRow) + 1;
-                int rowCountForAppendRange = (dataGridTemplate.AppendToRow - dataGridTemplate.AppendFromRow) + 1;
-
-                // copy templateRange from template sheet
-                string copyTemplateDestinationRange = dataGridTemplate.TemplateFromCol + (mostBottomInsertPosition) + ":" + dataGridTemplate.TemplateToCol + (mostBottomInsertPosition + rowCountForTemplateRange - 1);
-                _worksheet.InsertRow(mostBottomInsertPosition, rowCountForTemplateRange);
-                templateSheet.Cells[dataGridTemplate.GetTemplateRange()].Copy(_worksheet.Cells[copyTemplateDestinationRange]);
-                mostBottomInsertPosition += rowCountForTemplateRange;
-
-                // copy appendtoRange from template sheet
-                string copyAppendToDestinationRange = dataGridTemplate.AppendFromCol + (mostBottomInsertPosition) + ":" + dataGridTemplate.AppendToCol + (mostBottomInsertPosition + rowCountForAppendRange - 1);
-                _worksheet.InsertRow(mostBottomInsertPosition, rowCountForAppendRange);
-                templateSheet.Cells[dataGridTemplate.GetAppendRange()].Copy(_worksheet.Cells[copyAppendToDestinationRange]);
-                mostBottomInsertPosition += rowCountForAppendRange;
-
-                // find the old range located in Sheet1, and remove it
-                foreach (ExcelDataGrid dataGridSheet1 in affectingDataGridList)
-                {
-                    ExcelDataGridSection hSection = dataGridSheet1.GetHeaderRange();
-                    ExcelDataGridSection bSection = dataGridSheet1.GetBodyRange();
-                    ExcelDataGridSection fSection = dataGridSheet1.GetFooterRange();
-                    ExcelDataGridSection updateDataGridSheet1 = null;
-                    if (dataGridTemplate.Indicator == hSection.Indicator)
-                    {
-                        updateDataGridSheet1 = hSection;
-                    }
-                    else if (dataGridTemplate.Indicator == bSection.Indicator)
-                    {
-                        updateDataGridSheet1 = bSection;
-                    }
-                    else if (dataGridTemplate.Indicator == fSection.Indicator)
-                    {
-                        updateDataGridSheet1 = fSection;
-                    }
-                    if (updateDataGridSheet1 == null) continue;
-
-                    // remove the old appendToRange
-                    _worksheet.DeleteRow(updateDataGridSheet1.AppendFromRow - totalShiftedAppendRow - totalShiftedTemplateRow, rowCountForAppendRange);
-                    mostBottomInsertPosition -= (rowCountForAppendRange);
-                    // remove the old templateRanageRows
-                    _worksheet.DeleteRow(updateDataGridSheet1.TemplateFromRow - totalShiftedAppendRow - totalShiftedTemplateRow - rowCountForAppendRange, rowCountForTemplateRange);
-                    mostBottomInsertPosition -= (rowCountForTemplateRange);
-
-                    string copiedTemplateDestinationRanage = string.Empty;
-                    string copiedAppendDestinationRanage = string.Empty;
-
-                    int newTemplateFromRow = (mostBottomInsertPosition - rowCountForTemplateRange - rowCountForAppendRange);
-                    int newTemplateToRow = newTemplateFromRow + rowCountForTemplateRange - 1;
-                    int newAppendFromRow = newTemplateToRow + 1;
-                    int newAppendToRow = newAppendFromRow + rowCountForAppendRange - 1;
-
-                    copiedTemplateDestinationRanage = updateDataGridSheet1.TemplateFromCol + newTemplateFromRow + ":" + updateDataGridSheet1.TemplateToCol + newTemplateToRow;
-                    copiedAppendDestinationRanage = updateDataGridSheet1.AppendFromCol + newAppendFromRow + ":" + updateDataGridSheet1.AppendToCol + newAppendToRow;
-
-                    // update templateRange, appendToRange new position
-                    updateDataGridSheet1.SetTemplateRange(copiedTemplateDestinationRanage);
-                    updateDataGridSheet1.SetAppendToRange(copiedAppendDestinationRanage);
-
-                    totalShiftedTemplateRow += rowCountForTemplateRange;
-                    totalShiftedAppendRow += rowCountForAppendRange;
-                }
-            }
-            */
         }
 
 

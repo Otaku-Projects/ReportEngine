@@ -32,10 +32,12 @@ namespace CoreSystemConsole.ProgramEntity
 
             JasperReportDecorator jasperReportDecorator = null;
 
+            // using header.js, footer.js
             InvoiceReport1 hitRateReport1 = new InvoiceReport1(dataSetObj1);
             jasperReportDecorator = new JasperReportDecorator(hitRateReport1);
             jasperReportDecorator.SavePdf();
 
+            // using header-footer.js
             InvoiceReport2 hitRateReport2 = new InvoiceReport2(dataSetObj2);
             jasperReportDecorator = new JasperReportDecorator(hitRateReport2);
             jasperReportDecorator.SavePdf();

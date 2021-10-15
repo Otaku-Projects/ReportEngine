@@ -63,7 +63,6 @@ namespace JasperReport.ReportEntity
 
             string _headerFilePath = string.Empty;
             string _footerFilePath = string.Empty;
-            string _headerFooterFilePath = string.Empty;
 
             if (File.Exists(Path.Combine(_templateDirectory, @"header.html")))
             {
@@ -82,15 +81,6 @@ namespace JasperReport.ReportEntity
                 _footerFilePath = Path.Combine(_templateDirectory, @"footer.htm");
             }
 
-            if (File.Exists(Path.Combine(_templateDirectory, @"header-footer.html")))
-            {
-                _headerFooterFilePath = Path.Combine(_templateDirectory, @"header-footer.html");
-            }
-            else if (File.Exists(Path.Combine(_templateDirectory, @"header-footer.htm")))
-            {
-                _headerFooterFilePath = Path.Combine(_templateDirectory, @"header-footer.htm");
-            }
-
             PageComponent _pageHeader = new PageComponent();
             _pageHeader.SetDirectory(_templateDirectory);
             _pageHeader.SetHtmlPath(_headerFilePath);
@@ -101,14 +91,8 @@ namespace JasperReport.ReportEntity
             _pageFooter.SetHtmlPath(_footerFilePath);
             _pageFooter.SetScriptPath(Path.Combine(_templateDirectory, @"footer.js"));
 
-            PageComponent _pageHeaderFooter = new PageComponent();
-            _pageHeaderFooter.SetDirectory(_templateDirectory);
-            _pageHeaderFooter.SetHtmlPath(_headerFooterFilePath);
-            _pageHeaderFooter.SetScriptPath(Path.Combine(_templateDirectory, @"header-footer.js"));
-
             this.AddPageHeader(_pageHeader);
             this.AddPageFooter(_pageFooter);
-            //this.AddPageFooter(_pageHeaderFooter);
         }
 
     }

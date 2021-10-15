@@ -38,22 +38,19 @@ namespace CoreSystemConsole.ProgramEntity
             EPPlus5Decorator epplus5Decorator = null;
             HitRateReportDecorator hitRateRptDecorator = null;
 
-            //HitRateReport4 hitRateReport4 = new HitRateReport4(dataSetObj2);
-            //epplus5Decorator = new EPPlus5Decorator(hitRateReport4);
-            //epplus5Decorator.SaveXlsxInMasterDataList();
-
             HitRateReport5 hitRateReport5 = new HitRateReport5(dataSet3);
             hitRateRptDecorator = new HitRateReportDecorator(hitRateReport5);
             hitRateRptDecorator.RenderTemplateAndSaveAsXlsx();
 
-            //HitRateReportDecorator hitRateRptDecorator2 = null;
-            //hitRateRptDecorator2 = new HitRateReportDecorator(hitRateReport5);
-            //hitRateRptDecorator2.RenderTemplateAndSaveAsPdf();
-
-            HitRateReport5 hitRateReport6 = new HitRateReport5(dataSet3);
+            HitRateReport5 hitRateReport5pdf = new HitRateReport5(dataSet3);
             HitRateReportDecorator hitRateRptDecorator2 = null;
-            hitRateRptDecorator2 = new HitRateReportDecorator(hitRateReport6);
+            hitRateRptDecorator2 = new HitRateReportDecorator(hitRateReport5pdf);
             hitRateRptDecorator2.RenderTemplateAndSaveAsPdf();
+
+            //HitRateReport6 hitRateReport6 = new HitRateReport6(dataSet3);
+            //HitRateReportDecorator hitRateRptDecorator3 = null;
+            //hitRateRptDecorator3 = new HitRateReportDecorator(hitRateReport6);
+            //hitRateRptDecorator3.RenderTemplateAndSaveAsXlsx();
         }
     }
 }
