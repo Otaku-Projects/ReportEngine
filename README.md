@@ -2,8 +2,8 @@
 Try and error for study how to implmenet report(xlsx, pdf) generation in C# .net framework and/or .net Core5
 
 - Crystal Report (Tested)
-- Jasper Report (Testing)
-- EPPlus (Planed to test)
+- Jasper Report (Tested)
+- EPPlus (Testing)
 
 ## Configuation
 open SolutionRoot\CoreReport\VisualizationEntity.cs
