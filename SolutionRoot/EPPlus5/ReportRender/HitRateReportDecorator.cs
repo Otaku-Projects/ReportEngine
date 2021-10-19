@@ -17,6 +17,7 @@ using OfficeOpenXml.Style;
 using System.Drawing;
 using QRCoder;
 using System.Diagnostics;
+using System.Net;
 
 namespace CoreReport.EPPlus5Report
 {
@@ -99,9 +100,17 @@ namespace CoreReport.EPPlus5Report
             if (cellVal.IndexOf("{{Image}}") > -1)
             {
                 Image img = Image.FromFile(@"D:\Documents\ReportEngine\SolutionRoot\EPPlus5\ReportTemplate\HitRateReport5\man-4367499_480.png");
+
+                // download the image in MemoryStream if image is a URL storing in cloud service
+                //WebClient wc = new WebClient();
+                //byte[] bytes = wc.DownloadData("https://d3llg6fhv32z1.cloudfront.net/2mb.jpg");
+                //MemoryStream ms = new MemoryStream(bytes);
+                //Image img = Image.FromStream(ms);
+                //ms.Dispose();
+
                 ExcelPicture pic = _worksheet.Drawings.AddPicture(imgID, img, new Uri("https://ibb.co/GkxXDY9", UriKind.Absolute));
                 pic.SetPosition(_cell.Start.Row-1, 10, _cell.Start.Column-1, 10);
-                //pic.SetPosition(PixelTop, PixelLeft);  
+                //pic.SetPosition(PixelTop, PixelLeft);
                 pic.SetSize(Height, Width);
                 //pic.SetSize(40);
                 //pic.EditAs = eEditAs.TwoCell;

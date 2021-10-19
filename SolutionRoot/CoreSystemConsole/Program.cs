@@ -14,11 +14,11 @@ namespace CoreSystemConsole
             // Tick-off the Report Entity Program
             //InvoiceProgram invoiceProgram = new InvoiceProgram();
 
-            HitRateHTMLProgram hitRateHTMLProgram = new HitRateHTMLProgram();
+            //HitRateHTMLProgram hitRateHTMLProgram = new HitRateHTMLProgram();
 
             //HitRateXMLProgram hitRateXMLProgram = new HitRateXMLProgram();
 
-            //EPPlus5XlsxTemplateProgram ePPlus5XlsxTemplateProgram = new EPPlus5XlsxTemplateProgram();
+            EPPlus5XlsxTemplateProgram ePPlus5XlsxTemplateProgram = new EPPlus5XlsxTemplateProgram();
         }
     }
 }
