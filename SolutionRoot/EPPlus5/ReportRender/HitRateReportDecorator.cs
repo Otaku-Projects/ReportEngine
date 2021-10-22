@@ -270,10 +270,27 @@ namespace CoreReport.EPPlus5Report
                 //startInfo.Arguments = $"/hidden /readonly /excel_active_sheet {xlsxFilePath} {pdfFilePath}";
                 startInfo.Arguments = $"/hidden /readonly /excel_worksheet 1 {xlsxFilePath} {pdfFilePath}";
                 // convert xlsx to pdf
-                using (Process exeProcess = Process.Start(startInfo))
-                {
+                Process exeProcess = Process.Start(startInfo);
 
-                }
+                //Set a time-out value.
+                int timeOut = 15000;
+
+                // wait until it's done or time out.
+                exeProcess.WaitForExit(timeOut);
+
+                // Alternatively, if it's an application with a UI that you are waiting to enter into a message loop
+                //exeProcess.WaitForInputIdle();
+
+                //Check to see if the process is still running.
+                if (exeProcess.HasExited == false)
+                    //Process is still running.
+                    //Test to see if the process is hung up.
+                    if (exeProcess.Responding)
+                        //Process was responding; close the main window.
+                        exeProcess.CloseMainWindow();
+                    else
+                        //Process was not responding; force the process to close.
+                        exeProcess.Kill();
             }
             catch (Exception ex)
             {
