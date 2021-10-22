@@ -35,7 +35,7 @@ https://www.dofactory.com/net/decorator-design-pattern#realworld
 
 ## Crystal Report
 ### Pre-installation
-Crystal Reports, Developer for Visual Studio Downloads
+Before run, please install Crystal Reports, Developer for Visual Studio Downloads
 https://wiki.scn.sap.com/wiki/display/BOBJ/Crystal+Reports%2C+Developer+for+Visual+Studio+Downloads
 
 ### Documentation
@@ -48,7 +48,7 @@ https://help.sap.com/viewer/0d6684e153174710b8b2eb114bb7f843/SP21/en-US/45c50fec
 
 ## Jasper Reports
 ### Pre-installation
-install .NET jsreport sdk(jsreport binary, jsreport local) by nuget
+Before run, please install .NET jsreport sdk(jsreport binary, jsreport local) by nuget
 https://jsreport.net/learn/dotnet
 
 ### Documentation
@@ -83,3 +83,27 @@ https://playground.jsreport.net/w/admin/kMI4FBmw
 Merge with render for every page enabled
 
 https://playground.jsreport.net/w/admin/1A7l_UG_
+
+## EPPlus5
+EPPlus5 is open source, but you are required to purchase license for commercial use
+
+The library(ies) were installed under the project through Package Manager Console
+
+[EPPlus]:https://www.nuget.org/packages/EPPlus
+
+```
+Install-Package EPPlus -Version 5.8.0
+```
+
+## iText Group
+Some products of iText 7 Suite is open source, but you are required to purchase license for commercial use
+
+The library(ies) were installed under the project through Package Manager Console
+
+[itext7]:https://github.com/itext/itext7-dotnet
+[itext7.pdfhtml]:https://github.com/itext/i7n-pdfhtml
+
+```
+Install-Package itext7 -Version 7.1.16
+Install-Package itext7.pdfhtml -Version 3.0.5
+```
