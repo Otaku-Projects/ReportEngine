@@ -1,0 +1,43 @@
+body {
+	margin: 0em;
+	padding: 0em;
+	border: 0px;
+	color: #000;
+	background-color: #fff;
+}
+
+body {
+  background-image: none !important;
+}
+body * {
+	overflow-wrap: break-word;
+}
+hr.pagebreak_separator {
+	margin:0px;
+	padding:0px;
+	border:0px;
+	height: 0px;
+	width: 100%;
+	display: block;
+	page-break-after: always;
+}
+
+@page {
+	margin: 27mm 16mm 27mm 16mm;
+    width: 210mm;
+    height: 297mm;
+	
+    @bottom-right {
+        content: "Page " counter(page) " of " counter(pages);
+    }
+}
+@media print {
+  html, body {
+    width: 210mm;
+    height: 297mm;
+  }
+	body * {
+		overflow-wrap: break-word;
+	}
+  /* ... the rest of the rules ... */
+}

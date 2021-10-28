@@ -18,7 +18,9 @@ namespace CoreSystemConsole
 
             //HitRateXMLProgram hitRateXMLProgram = new HitRateXMLProgram();
 
-            EPPlus5XlsxTemplateProgram ePPlus5XlsxTemplateProgram = new EPPlus5XlsxTemplateProgram();
+            //EPPlus5XlsxTemplateProgram ePPlus5XlsxTemplateProgram = new EPPlus5XlsxTemplateProgram();
+
+            ITextGroupIPdfTemplateProgram iTextGroupIText5PdfTemplateProgram = new ITextGroupIPdfTemplateProgram();
         }
     }
 }

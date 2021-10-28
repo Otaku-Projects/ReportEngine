@@ -13,6 +13,7 @@
     <ProjectReference Include="..\CoreReport\CoreReport.csproj" />
     <ProjectReference Include="..\CrystalReport\CrystalReport.csproj" />
     <ProjectReference Include="..\EPPlus5\EPPlus5.csproj" />
+    <ProjectReference Include="..\ITextGroupNV\ITextGroupNV.csproj" />
     <ProjectReference Include="..\JasperReport\JasperReport.csproj" />
   </ItemGroup>
 

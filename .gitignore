@@ -355,3 +355,9 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 SolutionRoot/EPPlus5/ReportTemplate/HitRateReport5/HitRateReport5Template.20211008.xlsx
+SolutionRoot/ITextGroupNV/ReportTemplate/PocFileList/index.20211025.html
+SolutionRoot/ITextGroupNV/ReportTemplate/PocFileList/index.20211025.not.work.html
+SolutionRoot/ITextGroupNV/ReportTemplate/PocFileList/index.20211025.without.baseURL.html
+SolutionRoot/ITextGroupNV/ReportTemplate/PocFileList/index.20211027.fonts.html
+SolutionRoot/ITextGroupNV/ReportTemplate/General/import_general_css.html.liquid
+SolutionRoot/ITextGroupNV/ReportTemplate/PocFileList/test_import_general_css.html

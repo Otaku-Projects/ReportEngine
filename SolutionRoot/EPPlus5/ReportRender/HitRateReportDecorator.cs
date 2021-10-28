@@ -189,46 +189,6 @@ namespace CoreReport.EPPlus5Report
             this.RenderHeaderAndMergeToTemplate(_excelPackage);
             this.RenderFooterAndMergeToTemplate(_excelPackage);
 
-            List<ExpandoObject> tupleExpandoObjectList = new List<ExpandoObject>();
-            ExpandoObject expandoObject = new ExpandoObject();
-
-            //var a = _dataSetObj["GeneralView"].Select(i=>i.Value).;
-
-            /*
-            foreach (KeyValuePair<string, Object> _dataView in _dataSetObj)
-            {
-                string tableName = _dataView.Key;
-                if (tableName.ToLower().IndexOf("view") == -1) continue;
-
-                tupleExpandoObjectList = new List<ExpandoObject>();
-                foreach (object tuple in (List<object>)_dataView.Value)
-                {
-                    expandoObject = new ExpandoObject();
-                    foreach (var property in tuple.GetType().GetProperties())
-                    {
-                        ((IDictionary<string, object>)expandoObject).Add(property.Name, property.GetValue(tuple));
-                    }
-                    tupleExpandoObjectList.Add(expandoObject);
-                }
-
-                var sheet = _excelPackage.Workbook.Worksheets.Add(tableName);
-                sheet.Cells["A1"].LoadFromDictionaries(tupleExpandoObjectList, c =>
-                {
-                    // Print headers using the property names
-                    c.PrintHeaders = true;
-                    // insert a space before each capital letter in the header
-                    c.HeaderParsingType = HeaderParsingTypes.CamelCaseToSpace;
-                    // when TableStyle is not TableStyles.None the data will be loaded into a table with the 
-                    // selected style.
-                    c.TableStyle = TableStyles.Medium6;
-
-                    // SetKeys takes a params string[] - you can add any number of
-                    // keys as arguments to this function.
-                    //c.SetKeys("name", "price");
-                });
-            }
-            */
-
             return _excelPackage;
         }
         public override void RenderTemplateAndSaveAsPdf(string _fileName = "")
