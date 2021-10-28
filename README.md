@@ -1,37 +1,75 @@
-# ReportEngine
-Try and error for study how to implmenet report(xlsx, pdf) generation in C# .net framework and/or .net Core5
+# Objective
+This repository contains several report engines, mainly for explorer and try as a playground to test those report engines.
 
-- Crystal Report (Tested)
-- Jasper Report (Tested)
-- EPPlus (Testing)
+How is the functionality, what is reuqired on install and setup to work with .Net Core.
 
-## Configuation
-open SolutionRoot\CoreReport\VisualizationEntity.cs
+## Background
+A new project is launch, to develop a ERP(Enterprise Resource Planning)/CMS (Content Management System) like system.
 
-update the value
+The front end will be Angular web application, the back end system will be separated as a standalone part to provide web service (web API)
+
+We decided to build the back end by .Net Core with the "Entity Framework", "Code First Approach"
+
+Therefore I need to exploe and test how the back end system satisfy the report generation functionality.
+
+# Scope
+Try and error for study how to implmenet report(xlsx, pdf) generation in C# .net Core5
+
+- Crystal Report (Implemented)
+- Jasper Report (Implemented)
+- EPPlus (Implemented)
+- iText (Testing)
+
+# Demo
+***Before you run (F5) on Visual Studio, make sure you read the preparation and completed the configuration***
+
+If want to test the Crystal Report, change the startup project to "CoreSystemConsoleInNet"
+
+- Crystal Report
+
+If want to test others report program, change the startup project to "CoreSystemConsole"
+
+- For Jasper Report
+- EPPlus5
+- iText7
+
+After updated the startup project
+
+Then, run (press F5) and wait its finish, the report should be generated and placed at the directory `tempRenderFolder`
+
+# Preparation
+Before run the solution, please install the report engines and complete the configuration setup
+
+The installation steps details are described below
+
+for example, if you want to test the JasperReport, please install JasperReport and complete the config before you run (F5) the program
+
+## Configuration
+
+1. Control which reports you would like to test, comment and uncomment the lines in
+
+> `SolutionRoot\CoreSystemConsole\Program.cs`
+
+```
+// Tick-off the Report Entity Program
+//InvoiceProgram invoiceProgram = new InvoiceProgram();
+
+//HitRateHTMLProgram hitRateHTMLProgram = new HitRateHTMLProgram();
+
+//HitRateXMLProgram hitRateXMLProgram = new HitRateXMLProgram();
+
+//EPPlus5XlsxTemplateProgram ePPlus5XlsxTemplateProgram = new EPPlus5XlsxTemplateProgram();
+
+ITextGroupIPdfTemplateProgram iTextGroupIText5PdfTemplateProgram = new ITextGroupIPdfTemplateProgram();
+```
+
+2. Control the report generate folder, open and edit
+
+> `SolutionRoot\CoreReport\VisualizationEntity.cs`
+
 ```
 protected string tempRenderFolder = @"D:\\Temp"; // report will be generated in this directory
 ```
-
-## Demo
-- Crystal Report
-Change the startup project to "CoreSystemConsoleInNet"
-
-- Jasper Report
-Change the startup project to "CoreSystemConsole"
-
-## Program Structure
-I use "Design Pattern - Decorator" to separate the coding files by reporting enginer.
->Let's said a system contains many functions, a report function represented by a menu item in navigation menu.
->
->In general, a report function provides the selection criteria, user select the criteria 
->
->Then, click "Export Xlsx" or "Export Pdf" button to generate report file in xlsx, pdf as they want.
-
-"Decorator" Design Pattern gives a report program easy to switch the report enginer, also allows different reports use various engines in a single system
-
-https://www.dofactory.com/net/decorator-design-pattern#realworld
-
 
 ## Crystal Report
 ### Pre-installation
@@ -107,3 +145,16 @@ The library(ies) were installed under the project through Package Manager Consol
 Install-Package itext7 -Version 7.1.16
 Install-Package itext7.pdfhtml -Version 3.0.5
 ```
+
+
+## Program Structure
+I use "Design Pattern - Decorator" to separate the coding files by reporting enginer.
+>Let's said a system contains many functions, a report function represented by a menu item in navigation menu.
+>
+>In general, a report function provides the selection criteria, user select the criteria 
+>
+>Then, click "Export Xlsx" or "Export Pdf" button to generate report file in xlsx, pdf as they want.
+
+"Decorator" Design Pattern gives a report program easy to switch the report enginer, also allows different reports use various engines in a single system
+
+https://www.dofactory.com/net/decorator-design-pattern#realworld
