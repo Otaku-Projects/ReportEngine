@@ -14,7 +14,7 @@ using jsreport.Types;
 
 namespace JasperReport.ReportEntity
 {
-    public class HitRateReport3 : BaseReportEntity
+    public class HitRateReport3 : JasperReportEntity
     {
         public HitRateReport3(DataSet _dataSet) { }
 

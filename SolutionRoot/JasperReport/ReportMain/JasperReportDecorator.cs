@@ -12,7 +12,7 @@ using jsreport.Binary;
 using jsreport.Local;
 using jsreport.Shared;
 using jsreport.Types;
-using static JasperReport.ReportEntity.BaseReportEntity;
+using static JasperReport.ReportEntity.JasperReportEntity;
 
 namespace CoreReport.JasperReport
 {
@@ -23,7 +23,7 @@ namespace CoreReport.JasperReport
         private DateTime printedDate;
         private string filename;
 
-        private BaseReportEntity reportEntity;
+        private JasperReportEntity reportEntity;
         private IRenderService rs;
 
         private DataSet dataSet;
@@ -34,7 +34,7 @@ namespace CoreReport.JasperReport
         {
             this.jasperReportRenderFolder = this.tempRenderFolder;
         }
-        public JasperReportDecorator(BaseReportEntity _reportEntity, string _filename = "")
+        public JasperReportDecorator(JasperReportEntity _reportEntity, string _filename = "")
         {
             if (string.IsNullOrEmpty(_filename))
             {

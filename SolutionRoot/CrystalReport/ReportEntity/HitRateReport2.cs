@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace CrystalReport.ReportEntity
 {
-    public class HitRateReport2 : BaseReportEntity
+    public class HitRateReport2 : CrystalReportEntity
     {
 
         public HitRateReport2(DataSet _dataSet)

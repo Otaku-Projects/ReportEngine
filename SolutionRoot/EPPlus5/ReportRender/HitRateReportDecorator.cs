@@ -27,7 +27,7 @@ namespace CoreReport.EPPlus5Report
         public HitRateReportDecorator() : base()
         {
         }
-        public HitRateReportDecorator(BaseReportEntity _reportEntity, string _filename = "") : base(_reportEntity, _filename = "")
+        public HitRateReportDecorator(EPPlus5ReportEntity _reportEntity, string _filename = "") : base(_reportEntity, _filename = "")
         {
         }
 

@@ -22,7 +22,7 @@ namespace CoreReport.ITextGroupNV
         public FileListReportDecorator() : base()
         {
         }
-        public FileListReportDecorator(BaseReportEntity _reportEntity, string _filename = "") : base(_reportEntity, _filename = "")
+        public FileListReportDecorator(ITextReportEntity _reportEntity, string _filename = "") : base(_reportEntity, _filename = "")
         {
         }
 

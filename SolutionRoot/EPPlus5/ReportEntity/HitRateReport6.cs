@@ -13,7 +13,7 @@ using OfficeOpenXml;
 
 namespace EPPlus5Report.ReportEntity
 {
-    public class HitRateReport6 : BaseReportEntity
+    public class HitRateReport6 : EPPlus5ReportEntity
     {
         public HitRateReport6(DataSet _dataSet)
         {

@@ -11,93 +11,7 @@ using System.Threading.Tasks;
 
 namespace EPPlus5Report.ReportEntity
 {
-    public class PageComponent {
-        private string htmlPath;
-        private string scriptPath;
-        private string cssPath;
-        private string directory;
-        public PageComponent()
-        {
-            this.directory = string.Empty;
-            this.htmlPath = string.Empty;
-            this.scriptPath = string.Empty;
-            this.cssPath = string.Empty;
-        }
-        public PageComponent(string _directory, string _htmlFileName, string _scriptFileName)
-        {
-            this.directory = string.Empty;
-
-            this.htmlPath = string.Empty;
-            this.scriptPath = string.Empty;
-            this.cssPath = string.Empty;
-
-            if (this.SetDirectory(_directory))
-            {
-                this.SetHtmlFileName(_htmlFileName);
-                this.SetScriptFileName(_scriptFileName);
-            }
-
-        }
-        public string GetHtmlFilePath()
-        {
-            return this.htmlPath;
-        }
-        public string GetScriptFilePath()
-        {
-            return this.scriptPath;
-        }
-        public string GetHtmlFileName()
-        {
-            return Path.GetFileName(this.htmlPath);
-        }
-        public string GetScriptFileName()
-        {
-            return Path.GetFileName(this.scriptPath);
-        }
-
-        public Boolean SetDirectory(string _directory)
-        {
-            if (Directory.Exists(_directory))
-            {
-                this.directory = _directory;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-            return false;
-        }
-        public void SetHtmlPath(string _htmlPath)
-        {
-            if (Path.IsPathRooted(_htmlPath) && File.Exists(_htmlPath))
-            {
-                this.htmlPath = _htmlPath;
-            }
-        }
-
-        public void SetScriptPath(string _scriptPath)
-        {
-            if (Path.IsPathRooted(_scriptPath) && File.Exists(_scriptPath))
-            {
-                this.scriptPath = _scriptPath;
-            }
-        }
-
-        public void SetHtmlFileName(string _htmlFileName)
-        {
-            string _directory = this.directory;
-            this.htmlPath = Path.Combine(_directory, _htmlFileName);
-        }
-
-        public void SetScriptFileName(string _scriptFileName)
-        {
-            string _directory = this.directory;
-            this.scriptPath = Path.Combine(_directory, _scriptFileName);
-        }
-    }
-
-    public abstract class BaseReportEntity
+    public abstract class EPPlus5ReportEntity
     {
         protected DataSet dataSet;
         protected IDictionary<string, object> dataSetObj;
@@ -124,10 +38,16 @@ namespace EPPlus5Report.ReportEntity
         private List<ExcelDataGrid> dataGridList;
         private List<ExcelDataGrid> dataGridTemplateBackupList;
 
-        public BaseReportEntity()
+        public EPPlus5ReportEntity()
         {
             this.templateBaseDirectory = @"D:\Documents\ReportEngine\SolutionRoot\JasperReport\ReportTemplate";
+            // this return the start up project directory
+            // e.g: "D:\\Documents\\CoreSystem\\WebApi\\" + \ReportTemplate
             this.templateBaseDirectory = Path.Combine(Directory.GetCurrentDirectory(), "ReportTemplate");
+            // this return the program running directory
+            // e.g: "D:\\Documents\\CoreSystem\\WebApi\\bin\\Debug\\net5.0" + \ReportTemplate
+            this.templateBaseDirectory = Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "ReportTemplate");
+
 
             this.pageComponents = new Dictionary<PageNature, PageComponent>();
 

@@ -14,7 +14,7 @@ using jsreport.Types;
 
 namespace JasperReport.ReportEntity
 {
-    public class InvoiceReport2 : BaseReportEntity
+    public class InvoiceReport2 : JasperReportEntity
     {
         public InvoiceReport2(DataSet _dataSet) { }
 

@@ -48,7 +48,6 @@ namespace ITextGroupNV.ReportEntity
             this.appendToRange = string.Empty;
             this.excelDataGrid = null;
 
-
             this.TemplateFromRow = -1;
             this.TemplateFromCol = string.Empty;
             this.TemplateToRow = -1;

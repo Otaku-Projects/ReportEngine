@@ -11,13 +11,13 @@
 </head>
 <body>
 <h1>iText - html2pdf</h1>
-First Name: {{Firstname}}, Last Name: {{Lastname}}
 						<div>use absolute path:</div>
 							<img src="file:///D:/Documents/ReportEngine/SolutionRoot/ITextGroupNV/ReportTemplate/PocFileList/content.png" style="width:100%; max-width:300px;">
 						<div>use relative path:</div>
 							<img src="content.png" style="width:100%; max-width:300px;">
 							<img src="/content.png" style="width:100%; max-width:300px;">
 							<img src="./content.png" style="width:100%; max-width:300px;">
+							<img src="../General/company_logo.png" style="width:100%; max-width:300px;">
 						<div>use relative path with ReportInstance_Folder:</div>
 							<img src="{{ReportInstance_Folder}}/content.png" style="width:100%; max-width:300px;">
 						<div>use base64 data url:</div>

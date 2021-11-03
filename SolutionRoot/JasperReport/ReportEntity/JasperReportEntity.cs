@@ -100,7 +100,7 @@ namespace JasperReport.ReportEntity
         }
     }
 
-    public abstract class BaseReportEntity
+    public abstract class JasperReportEntity
     {
         protected IRenderService rs;
         protected DataSet dataSet;
@@ -121,7 +121,7 @@ namespace JasperReport.ReportEntity
 
         protected HeaderFooterOptions headerFooterOption;
 
-        public BaseReportEntity()
+        public JasperReportEntity()
         {
             this.templateBaseDirectory = @"D:\Documents\ReportEngine\SolutionRoot\JasperReport\ReportTemplate";
             this.templateBaseDirectory = Path.Combine(Directory.GetCurrentDirectory(), "ReportTemplate");

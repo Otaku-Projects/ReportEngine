@@ -35,7 +35,7 @@ namespace CoreReport.ITextGroupNV
         protected DateTime printedDate;
         protected string filename;
 
-        protected BaseReportEntity reportEntity;
+        protected ITextReportEntity reportEntity;
 
         protected DataSet dataSet;
         protected IDictionary<string, object> dataSetObj;
@@ -52,12 +52,9 @@ namespace CoreReport.ITextGroupNV
         {
             this.iTextReportRenderFolder = this.tempRenderFolder;
 
-            FileOutputUtil.OutputDir = new DirectoryInfo(@"D:\Temp");
-            FileOutputUtil fileOutputUtil = new FileOutputUtil();
-
             this.Initialize();
         }
-        public IText7Decorator(BaseReportEntity _reportEntity, string _filename = "")
+        public IText7Decorator(ITextReportEntity _reportEntity, string _filename = "")
         {
             if (string.IsNullOrEmpty(_filename))
             {
@@ -75,9 +72,6 @@ namespace CoreReport.ITextGroupNV
 
             this.createdBy = "CoreSystem";
             this.createdDate = new DateTime();
-
-            FileOutputUtil.OutputDir = new DirectoryInfo(this.iTextReportRenderFolder);
-            FileOutputUtil fileOutputUtil = new FileOutputUtil();
 
             this.Initialize();
         }
@@ -141,7 +135,7 @@ namespace CoreReport.ITextGroupNV
             // you should not call into here, please inherit the decorator and override this function
             throw new NotImplementedException();
         }
-        public virtual void RenderTemplateAndSaveAsPdf(string _fileName = "")
+        public virtual FileStream RenderTemplateAndSaveAsPdf(string _fileName = "")
         {
             if (string.IsNullOrEmpty(_fileName))
             {
@@ -163,7 +157,6 @@ namespace CoreReport.ITextGroupNV
                 //using (ConverterProperties _converterProperties = this.StartRenderDataAndMergeToTemplate())
                 //{
                 ConverterProperties _converterProperties = this.StartRenderDataAndMergeToTemplate();
-
 
                 IDictionary<string, object> _dataSetObj = this.reportEntity.GetDataSetObj();
                 var newDict = new Dictionary<string, object>(_dataSetObj);
@@ -233,7 +226,7 @@ namespace CoreReport.ITextGroupNV
                 using (FileStream pdfDest = File.Open(pdfFilePath, FileMode.Create))
                 {
                     _converterProperties.SetBaseUri(eoDynamic.ReportInstance_Folder);
-                    MediaDeviceDescription mediaDeviceDescription = new MediaDeviceDescription(MediaType.PRINT);
+                    MediaDeviceDescription mediaDeviceDescription = new MediaDeviceDescription(MediaType.SCREEN);
                     _converterProperties.SetMediaDeviceDescription(mediaDeviceDescription);
                     HtmlConverter.ConvertToPdf(htmlRenderResult, pdfDest, _converterProperties);
 
@@ -269,6 +262,9 @@ namespace CoreReport.ITextGroupNV
             {
                 Console.WriteLine(ex.ToString());
             }
+
+            FileStream _fileStream = new FileStream(pdfFilePath, FileMode.Open, FileAccess.Read, FileShare.None);
+            return _fileStream;
         }
         public virtual string RenderDataByFluid(string htmlTemplateSource, TemplateContext _content)
         {

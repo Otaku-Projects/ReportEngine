@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace CrystalReport.ReportEntity
 {
-    public class BaseReportEntity
+    public class CrystalReportEntity
     {
         protected ReportDocument rptDocument;
         protected string rptFilesFolder;
 
-        public BaseReportEntity()
+        public CrystalReportEntity()
         {
             this.rptFilesFolder = @"D:\Documents\ReportEngine\SolutionRoot\CrystalReport\ReportTemplate";
         }

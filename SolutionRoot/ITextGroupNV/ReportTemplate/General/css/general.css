@@ -32,12 +32,5 @@ hr.pagebreak_separator {
     }
 }
 @media print {
-  html, body {
-    width: 210mm;
-    height: 297mm;
-  }
-	body * {
-		overflow-wrap: break-word;
-	}
   /* ... the rest of the rules ... */
 }

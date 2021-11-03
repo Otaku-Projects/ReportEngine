@@ -23,7 +23,7 @@ namespace CoreReport.EPPlus5Report
         protected DateTime printedDate;
         protected string filename;
 
-        protected BaseReportEntity reportEntity;
+        protected EPPlus5ReportEntity reportEntity;
 
         protected DataSet dataSet;
         protected IDictionary<string, object> dataSetObj;
@@ -42,7 +42,7 @@ namespace CoreReport.EPPlus5Report
             // according to the Polyform Noncommercial license:
             ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
         }
-        public EPPlus5Decorator(BaseReportEntity _reportEntity, string _filename = "")
+        public EPPlus5Decorator(EPPlus5ReportEntity _reportEntity, string _filename = "")
         {
             if (string.IsNullOrEmpty(_filename))
             {

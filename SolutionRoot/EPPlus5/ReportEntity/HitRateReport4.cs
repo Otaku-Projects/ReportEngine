@@ -12,7 +12,7 @@ using System.ComponentModel;
 
 namespace EPPlus5Report.ReportEntity
 {
-    public class HitRateReport4 : BaseReportEntity
+    public class HitRateReport4 : EPPlus5ReportEntity
     {
         public HitRateReport4(DataSet _dataSet) { }
 
