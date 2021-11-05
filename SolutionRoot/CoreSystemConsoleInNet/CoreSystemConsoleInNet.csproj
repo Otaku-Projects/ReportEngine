@@ -59,9 +59,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CoreReport\CoreReport.csproj">
-      <Project>{35a1be25-9a0d-4044-91ad-e321ae1fe938}</Project>
-      <Name>CoreReport</Name>
+    <ProjectReference Include="..\CoreReportDot48\CoreReportDot48.csproj">
+      <Project>{e0c7dfdc-ebe7-42fd-bf2c-273caf710348}</Project>
+      <Name>CoreReportDot48</Name>
     </ProjectReference>
     <ProjectReference Include="..\CrystalReport\CrystalReport.csproj">
       <Project>{ca780e2b-7a23-4a88-ad28-73fd435f2741}</Project>

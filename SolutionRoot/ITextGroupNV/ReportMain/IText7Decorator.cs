@@ -338,7 +338,7 @@ namespace CoreReport.ITextGroupNV
 
         protected object ConvertDataSetToObject(DataSet _dataSet)
         {
-        var _obj = new ExpandoObject() as IDictionary<string, object>;
+            var _obj = new ExpandoObject() as IDictionary<string, object>;
             if (_dataSet == null || _dataSet.Tables.Count == 0) return _obj;
 
             foreach (DataTable _table in _dataSet.Tables)

@@ -66,7 +66,6 @@ namespace ITextGroupNV.ReportEntity
 
         public override void InitializateHeaderFooter()
         {
-            throw new NotImplementedException();
         }
     }
 }

@@ -73,12 +73,6 @@
     <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CoreReport\CoreReport.csproj">
-      <Project>{35a1be25-9a0d-4044-91ad-e321ae1fe938}</Project>
-      <Name>CoreReport</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="ReportTemplate\HitRateTemplateObjCollection.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>HitRateTemplateObjCollection.cs</LastGenOutput>
@@ -100,6 +94,12 @@
     <None Include="ReportTemplate\HitRateData.xss">
       <DependentUpon>HitRateData.xsd</DependentUpon>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CoreReportDot48\CoreReportDot48.csproj">
+      <Project>{e0c7dfdc-ebe7-42fd-bf2c-273caf710348}</Project>
+      <Name>CoreReportDot48</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

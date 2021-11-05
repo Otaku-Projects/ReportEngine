@@ -20,7 +20,9 @@ namespace CoreSystemConsole
 
             //EPPlus5XlsxTemplateProgram ePPlus5XlsxTemplateProgram = new EPPlus5XlsxTemplateProgram();
 
-            ITextGroupIPdfTemplateProgram iTextGroupIText5PdfTemplateProgram = new ITextGroupIPdfTemplateProgram();
+            //ITextGroupIPdfTemplateProgram iTextGroupIText5PdfTemplateProgram = new ITextGroupIPdfTemplateProgram();
+
+            PuppeteerPdfTemplateProgram puppeteerPdfTemplateProgram = new PuppeteerPdfTemplateProgram();
         }
     }
 }

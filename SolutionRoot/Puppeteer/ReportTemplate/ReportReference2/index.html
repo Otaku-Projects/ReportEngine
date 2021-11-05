@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../UI_Framework/Bootstrap/bootstrap-5.1.3-dist-tailor-made/css/bootstrap.css">
+<!--<link rel="stylesheet" href="../UI_Framework/Bootstrap/bootstrap-5.1.3-dist-tailor-made/css/bootstrap-grid.css">
+<link rel="stylesheet" href="../UI_Framework/Bootstrap/bootstrap-5.1.3-dist-tailor-made/css/bootstrap-utilities.css">-->
+<link rel="stylesheet" type="text/css" href="../General/css/general.css">
+<link rel="stylesheet" type="text/css" href="../General/css/layout.a4.portrait.report.css">
+<link rel="stylesheet" type="text/css" href="style.css">
+<style>
+</style>
+
+<script src="../JS_Framework/jQuery/jquery-3.6.0.min.js"></script>
+<script>
+
+$( document ).ready(function() {
+	var dateEleDoms = document.getElementsByClassName("date");
+	var testDivs = Array.prototype.filter.call(dateEleDoms, function(dateElementDom){
+	  //return testElement.nodeName === 'DIV';
+	  console.dir(dateElementDom)
+	  dateElementDom.innerHTML = new Date().toLocaleString();
+	  console.dir(dateElementDom.innerHTML)
+	});
+});
+</script>
+</head>
+<body>
+	<main>
+		<div class="header">
+			<div class="d-flex flex-row justify-content-between align-self-start">
+				<div><img src="./content.png" class="company_logo"></div>
+				<div class="align-self-end">
+					<div style="text-align: right; font-weight: bold; font-size: 1.2rem;">
+					Report reference<br>
+					IS8502717<br>
+					Final result<br>
+					<span style="background-color:olivedrab; padding: 2px;">PASS</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="footer">
+			<div class="d-flex flex-row justify-content-center">
+			<div>(c) 2021 CoreReport</div>
+			</div>
+		</div>
+		<!-- #footer is controled by PuppeteerReport -->
+		<div id="footer" class="d-flex flex-row justify-content-between" style="font-size:12px;">
+			<div>Generated: <span class="date"></span></div>
+			<div>Page: <span class="pageNumber"></span> TotalPage: <span class="totalPages"></span></div>
+		</div>
+		  
+		  <table>
+			<thead><tr><th><div class="t-head">&nbsp;</div></th></tr></thead>
+			<tbody><tr><td>
+				<div class="content">
+				  <div class="page">
+					  <h1>Summary Table</h1>
+						
+						<table class="table table-bordered">
+							<tbody>
+								<tr>
+									<th>#</th>
+									<th>PO</th>
+									<th>SKU</th>
+									<th>Description</th>
+									<th>PO qty</th>
+									<th>Ship qty</th>
+									<th>Packed</th>
+									<th>Finished unpacked</th>
+									<th>Overall result</th>
+								</tr>
+								<tr>
+									<td colspan="1" rowspan="3">4</td>
+									<td>IS8502717</td>
+									<td>749110</td>
+									<td>STELLA OPVL LGREY S</td>
+									<td>99</td>
+									<td>&nbsp;</td>
+									<td>&nbsp;</td>
+									<td>&nbsp;</td>
+									<td colspan="1" rowspan="3"><span style="background-color:olivedrab; padding: 2px;">PASS</span></td>
+								</tr>
+								<tr>
+									<td>IS8502717</td>
+									<td>749110</td>
+									<td>STELLA OPVL LGREY S</td>
+									<td>100</td>
+									<td>&nbsp;</td>
+									<td>&nbsp;</td>
+									<td>&nbsp;</td>
+								</tr>
+								<tr>
+									<td>IS8502717</td>
+									<td>749110</td>
+									<td>STELLA OPVL LGREY S</td>
+									<td>30</td>
+									<td>&nbsp;</td>
+									<td>&nbsp;</td>
+									<td>&nbsp;</td>
+								</tr>
+							</tbody>
+						</table>
+						
+						<p>&nbsp;</p>
+						
+						<table class="table table-bordered">
+							<tbody>
+								<tr>
+									<td>Final result</td>
+									<td>&nbsp;</td>
+								</tr>
+							</tbody>
+						</table>
+				  </div>
+				  <div class="page">
+					  <h2>STELLA OPVL LGREY S / 749110 / IS8502717</h2>
+					  #1
+					  <img src="blank-1886013_1280.png" class="img-thumbnail" width="50%">
+				  </div>
+				  <div class="page">
+					<h2>DEFECTS</h2>
+					<table class="table table-bordered">
+						<tbody>
+							<tr>
+								<th>Lot size</th>
+								<th>Inspection level</th>
+								<th>&nbsp;</th>
+								<th>Sample size</th>
+								<th>AQL</th>
+								<th>Max defects allowed</th>
+								<th>Defects fund</th>
+								<th>AQL result</th>
+							</tr>
+							<tr>
+								<td colspan="1" rowspan="3">229</td>
+								<td colspan="1" rowspan="3">II</td>
+								<td>Critical:</td>
+								<td>32</td>
+								<td>0.01</td>
+								<td>0</td>
+								<td>0</td>
+								<td colspan="1" rowspan="3"><span style="background-color:olivedrab">PASS</span></td>
+							</tr>
+							<tr>
+								<td>Major:</td>
+								<td>32</td>
+								<td>2.5</td>
+								<td>2</td>
+								<td>0</td>
+							</tr>
+							<tr>
+								<td>Minor:</td>
+								<td>32</td>
+								<td>4</td>
+								<td>3</td>
+								<td>0</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<table class="table table-bordered">
+						<tbody>
+							<tr>
+								<td style="width: 60%;"></td>
+								<td>Critical</td>
+								<td>Major</td>
+								<td>Minor</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<table class="table table-bordered">
+						<tbody>
+							<tr>
+								<td style="width: 80%;"></td>
+								<td>Percent</td>
+							</tr>
+						</tbody>
+					</table>
+					
+					<h2>Product information verification</h2>
+					<h3>Carton dimensions & packed parts</h3>
+					
+					<table class="table table-bordered">
+						<tbody>
+							<tr>
+								<td>&nbsp;</td>
+								<td>Packed Parts Description (Fittings MUST be in Box 1)</td>
+								<td>Height CM</td>
+								<td>Width CM</td>
+								<td>Depth CM</td>
+								<td>Gross Weight</td>
+							</tr>
+							<tr>
+								<td>1</td>
+								<td>Box 1 of Double Bed</td>
+								<td>99</td>
+								<td>199.9</td>
+								<td>199.9</td>
+								<td>99.9</td>
+							</tr>
+							<tr>
+								<td>2</td>
+								<td>Box 2 of Double Bed</td>
+								<td>99</td>
+								<td>199.9</td>
+								<td>199.9</td>
+								<td>99.9</td>
+							</tr>
+							<tr>
+								<td>3</td>
+								<td>Box 3 of Double Bed</td>
+								<td>99</td>
+								<td>199.9</td>
+								<td>199.9</td>
+								<td>99.9</td>
+							</tr>
+							<tr>
+								<td>4</td>
+								<td>Box 1 of King Bed</td>
+								<td>99</td>
+								<td>199.9</td>
+								<td>199.9</td>
+								<td>99.9</td>
+							</tr>
+							<tr>
+								<td>5</td>
+								<td>Box 2 of King Bed</td>
+								<td>99</td>
+								<td>199.9</td>
+								<td>199.9</td>
+								<td>99.9</td>
+							</tr>
+							<tr>
+								<td>6</td>
+								<td>Box 3 of King Bed</td>
+								<td>99</td>
+								<td>199.9</td>
+								<td>199.9</td>
+								<td>99.9</td>
+							</tr>
+							<tr>
+								<td>7</td>
+								<td>Box 1 of Super King Bed</td>
+								<td>99</td>
+								<td>199.9</td>
+								<td>199.9</td>
+								<td>99.9</td>
+							</tr>
+							<tr>
+								<td>8</td>
+								<td>Box 2 of Super King Bed</td>
+								<td>99</td>
+								<td>199.9</td>
+								<td>199.9</td>
+								<td>99.9</td>
+							</tr>
+							<tr>
+								<td>9</td>
+								<td>Box 3 of Super King Bed</td>
+								<td>99</td>
+								<td>199.9</td>
+								<td>199.9</td>
+								<td>99.9</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<h3>Checkpoints</h3>
+					
+					<table class="table table-bordered">
+						<tbody>
+							<tr>
+								<td>Ctn Dims / Weight / Packed Parts</td>
+								<td>&nbsp;</td>
+								<td><div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1" checked><label class="form-check-label" for="inlineCheckbox1"></label></div></td>
+								<td>Fittings</td>
+								<td>&nbsp;</td>
+								<td><div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1" checked><label class="form-check-label" for="inlineCheckbox1"></label></div></td>
+								<td>Product Dimension Check</td>
+								<td>&nbsp;</td>
+								<td><div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1" checked><label class="form-check-label" for="inlineCheckbox1"></label></div></td>
+							</tr>
+							<tr>
+								<td>Packaging</td>
+								<td>&nbsp;</td>
+								<td><div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1" checked><label class="form-check-label" for="inlineCheckbox1"></label></div></td>
+								<td>Build Quality / Appearance</td>
+								<td>&nbsp;</td>
+								<td><div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1" checked><label class="form-check-label" for="inlineCheckbox1"></label></div></td>
+								<td>Product Weight</td>
+								<td>&nbsp;</td>
+								<td><div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1" checked><label class="form-check-label" for="inlineCheckbox1"></label></div></td>
+							</tr>
+							<tr>
+								<td>Labelling</td>
+								<td>&nbsp;</td>
+								<td><div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1" checked><label class="form-check-label" for="inlineCheckbox1"></label></div></td>
+								<td>Assembly Instructions (AI)</td>
+								<td>&nbsp;</td>
+								<td><div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1" checked><label class="form-check-label" for="inlineCheckbox1"></label></div></td>
+								<td>Moisture Check</td>
+								<td>&nbsp;</td>
+								<td><div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1" checked><label class="form-check-label" for="inlineCheckbox1"></label></div></td>
+							</tr>
+							<tr>
+								<td>UID Check</td>
+								<td>&nbsp;</td>
+								<td><div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1" checked><label class="form-check-label" for="inlineCheckbox1"></label></div></td>
+								<td>UID Check</td>
+								<td>&nbsp;</td>
+								<td><div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1" checked><label class="form-check-label" for="inlineCheckbox1"></label></div></td>
+								<td>Other</td>
+								<td>&nbsp;</td>
+								<td>&nbsp;</td>
+							</tr>
+							<tr>
+								<td>Packaging Performance Test</td>
+								<td>&nbsp;</td>
+								<td><div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1" checked><label class="form-check-label" for="inlineCheckbox1"></label></div></td>
+								<td>Colour</td>
+								<td>&nbsp;</td>
+								<td><div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1" checked><label class="form-check-label" for="inlineCheckbox1"></label></div></td>
+								<td>Other</td>
+								<td>&nbsp;</td>
+								<td>&nbsp;</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="page">
+					<h2>Photos</h2>
+					<h3>remarks</h3>
+					<h3>QR code</h3>
+					<img src="sample.qrcode.png" class="img-thumbnail" style="width: 50%;">
+					<h3>barcode</h3>
+					<div class="row">
+						<div class="col-6"><img src="./sample.barcode.gif" class="img-thumbnail"></div>
+						<div class="col-6"><img src="./box.01.jpg" class="img-thumbnail"></div>
+					</div>
+					<div class="row">
+						<div class="col-6"><img src="./box.02.jpeg" class="img-thumbnail"></div>
+						<div class="col-6"><img src="./box.03.jpg" class="img-thumbnail"></div>
+					</div>
+					<h3>other photos</h3>
+					<div class="row">
+						<div class="col-4"><img src="./factory.01.jpg" class="img-thumbnail"></div>
+						<div class="col-4"><img src="./factory.02.jpg" class="img-thumbnail"></div>
+						<div class="col-4"><img src="./factory.03.jpg" class="img-thumbnail"></div>
+					</div>
+				  </div>
+				</div>
+			</td></tr></tbody>
+			<tfoot><tr><td><div class="t-foot">&nbsp;</div></td></tr></tfoot>
+		  </table>
+	</main>
+</body>
+</html>

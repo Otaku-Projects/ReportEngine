@@ -1,0 +1,41 @@
+body {
+	margin: 0 auto;
+	padding: 0em;
+	border: 0px;
+	color: #000;
+	background-color: #fff;
+	font-family: "Century Gothic", 'Space Mono', monospace;
+    width: 100%;
+	box-sizing: border-box;
+}
+body * {
+	overflow-wrap: break-word;
+	box-sizing: border-box;
+}
+hr.pagebreak_separator {
+	margin:0px;
+	padding:0px;
+	border:0px;
+	height: 0px;
+	width: 100%;
+	display: block;
+	page-break-after: always;
+}
+
+@page {
+	/* the below counter still in css3 draft, it not work in Nov 2021 */
+	/*
+    counter-increment: page;
+    counter-reset: page 1;
+    @bottom-right {
+        content: "Page " counter(page) " of " counter(pages);
+    }
+	*/
+}
+@media print {
+  /* ... the rest of the rules ... */
+	body * {
+		overflow-wrap: break-word;
+		box-sizing: border-box;
+	}
+}

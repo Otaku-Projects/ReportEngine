@@ -1,6 +1,5 @@
 ﻿using CoreReport.ITextGroupNV;
 using CoreSystemConsole.ReportDataModel;
-using EPPlus5Report.ReportEntity;
 using ITextGroupNV.ReportEntity;
 using jsreport.Binary;
 using jsreport.Local;

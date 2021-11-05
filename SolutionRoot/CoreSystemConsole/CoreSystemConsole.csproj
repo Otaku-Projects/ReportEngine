@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -15,6 +15,7 @@
     <ProjectReference Include="..\EPPlus5\EPPlus5.csproj" />
     <ProjectReference Include="..\ITextGroupNV\ITextGroupNV.csproj" />
     <ProjectReference Include="..\JasperReport\JasperReport.csproj" />
+    <ProjectReference Include="..\Puppeteer\Puppeteer.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,9 +28,12 @@
     <None Update="ReportTemplate\**\*.*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
+    <!--<None Update="$(SolutionDir)PuppeteerReport\**\*.*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>-->
+    <Content Include="$(SolutionDir)PuppeteerReport\**\*.*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Update="..\OfficeToPDF-1.9.0.2\OfficeToPDF.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

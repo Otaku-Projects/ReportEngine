@@ -16,7 +16,7 @@ namespace ITextGroupNV.ReportEntity
         private List<ExcelDataGrid> dataGridList;
         private List<ExcelDataGrid> dataGridTemplateBackupList;
 
-        public ITextReportEntity() : base()
+        public ITextReportEntity()
         {
             this.templateBaseDirectory = @"D:\Documents\ReportEngine\SolutionRoot\JasperReport\ReportTemplate";
             // this return the start up project directory
@@ -26,12 +26,8 @@ namespace ITextGroupNV.ReportEntity
             // e.g: "D:\\Documents\\CoreSystem\\WebApi\\bin\\Debug\\net5.0" + \ReportTemplate
             this.templateBaseDirectory = Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "ReportTemplate");
 
-            this.pdfTemplateFileName = string.Empty;
-
             this.dataGridList = new List<ExcelDataGrid>();
             this.dataGridTemplateBackupList = new List<ExcelDataGrid>();
-
-            this.Initializate();
         }
 
         protected virtual void AddDataGrid(ExcelDataGrid _dataGrid)

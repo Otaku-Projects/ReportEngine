@@ -1,0 +1,88 @@
+:root{
+	--page_width: 210mm;
+	--page_height: 297mm;
+}
+
+body {
+    max-width: var(--page_width,mm);
+    height: var(--page_height,mm);
+}
+main {
+}
+.company_logo {
+	width:100%;
+	max-width:350px;
+}
+ .header, .t-head, .footer, .t-foot {
+	 height: 7.5rem;
+	 max-width: var(--page_width,mm);
+	 width: 100%;
+	 text-align: center;
+	 background: #fff;
+}
+ .footer, .t-foot {
+	 height: 2.5rem;
+}
+ .t-head, .t-foot {
+	 background: #fff;
+}
+ .pr {
+	 position: fixed;
+	 right: 0;
+	 bottom: 10px;
+	 color: #aaa;
+	 letter-spacing: 1px;
+	 font-weight: normal;
+	 text-decoration: none;
+}
+ .header {
+	 position: fixed;
+	 top: 0;
+	 border-bottom: 1px solid #ddd;
+}
+
+ .footer {
+	 position: fixed;
+	 bottom: 0;
+	 border-top: 1px solid #ddd;
+}
+ .footer h3 {
+	 color: #aaa;
+}
+ .content {
+	 /*padding: 10px;*/
+}
+ .content .page {
+	 page-break-after: always;
+	 break-after: always;
+}
+ .content .page img {
+	 display: block;
+	 height: auto;
+	 max-width: 100%;
+	 margin: 0 auto;
+	 border: 1px dashed #ccc;
+}
+ @page {
+	border: 0px;
+	padding: 0px;
+	margin: 13mm 16mm 13mm 16mm;
+	
+    width: var(--page_width,mm);
+    height: var(--page_height,mm);
+}
+@media print {
+	 body {
+		border: 0px;
+		padding: 0px;
+	}
+	 thead {
+		 display: table-header-group;
+	}
+	 tfoot {
+		 display: table-footer-group;
+	}
+	 button {
+		 display: none;
+	}
+}
