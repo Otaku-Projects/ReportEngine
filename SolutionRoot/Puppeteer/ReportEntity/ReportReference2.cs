@@ -29,6 +29,11 @@ namespace Puppeteer.ReportEntity
         }
         public override void InitializateMetaData()
         {
+            string _templateDirectory = string.Empty;
+            _templateDirectory = Path.Combine(this.templateBaseDirectory, @"ReportReference2");
+
+            this.templateReportFileDirectory = _templateDirectory;
+            this.SetPdfTemplateFileName("index.html");
         }
         public override void InitializateMainContent()
         {

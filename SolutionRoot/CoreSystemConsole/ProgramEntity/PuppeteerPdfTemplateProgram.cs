@@ -42,8 +42,8 @@ namespace CoreSystemConsole.ProgramEntity
             fileListReportDecorator = new FileListReportDecorator(pocFileList);
             fileListReportDecorator.RenderTemplateAndSaveAsPdf();
 
-            ReportReference1 reportReference1 = new ReportReference1(dataSetObj3);
-            fileListReportDecorator = new FileListReportDecorator(reportReference1);
+            ReportReference2 reportReference2 = new ReportReference2(dataSetObj3);
+            fileListReportDecorator = new FileListReportDecorator(reportReference2);
             fileListReportDecorator.RenderTemplateAndSaveAsPdf();
 
             //ReportReference1 reportReference1 = new ReportReference1(dataSetObj3);
