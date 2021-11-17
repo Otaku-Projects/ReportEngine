@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Open-XML-SDK" Version="2.9.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CoreReport\CoreReport.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ReportTemplate\" />
+  </ItemGroup>
+
+</Project>

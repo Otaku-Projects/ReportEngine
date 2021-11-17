@@ -22,7 +22,9 @@ namespace CoreSystemConsole
 
             //ITextGroupIPdfTemplateProgram iTextGroupIText5PdfTemplateProgram = new ITextGroupIPdfTemplateProgram();
 
-            PuppeteerPdfTemplateProgram puppeteerPdfTemplateProgram = new PuppeteerPdfTemplateProgram();
+            //PuppeteerPdfTemplateProgram puppeteerPdfTemplateProgram = new PuppeteerPdfTemplateProgram();
+
+            OpenXmlSdkProgram openXmlSdkProgram = new OpenXmlSdkProgram();
         }
     }
 }

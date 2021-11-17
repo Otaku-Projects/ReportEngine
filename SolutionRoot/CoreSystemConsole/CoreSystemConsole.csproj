@@ -15,6 +15,7 @@
     <ProjectReference Include="..\EPPlus5\EPPlus5.csproj" />
     <ProjectReference Include="..\ITextGroupNV\ITextGroupNV.csproj" />
     <ProjectReference Include="..\JasperReport\JasperReport.csproj" />
+    <ProjectReference Include="..\OpenXmlSDK\OpenXmlSDK.csproj" />
     <ProjectReference Include="..\Puppeteer\Puppeteer.csproj" />
   </ItemGroup>
 
