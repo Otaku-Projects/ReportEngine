@@ -15,10 +15,21 @@ Therefore I need to exploe and test how the back end system satisfy the report g
 # Scope
 Try and error for study how to implmenet report(xlsx, pdf) generation in C# .net Core5
 
-- Crystal Report (Implemented)
-- Jasper Report (Implemented)
-- EPPlus (Implemented)
-- iText (Testing)
+## Back end engine/tools
+- Crystal Report (excel, pdf) (Implemented)
+- Jasper Report (excel, pdf) (Implemented)
+- EPPlus (excel) (Implemented)
+- iText (pdf) (Implemented)
+- OpenXmlSDK (excel) (Testing)
+
+## Front end engine/tools
+below are easy to use in pure javascript, officially support NodeJs or having NodeJs version but node is it not necessary in read/write
+
+the examples were not included in this project, becuase this project not focus on read/write in front end 
+
+- parallax/jsPDF (write pdf)
+- mozilla/pdf.js (read pdf)
+- SheetJS (read/write excel)
 
 # Demo
 ***Before you run (F5) on Visual Studio, make sure you read the preparation and completed the configuration***
@@ -26,6 +37,16 @@ Try and error for study how to implmenet report(xlsx, pdf) generation in C# .net
 If want to test the Crystal Report, change the startup project to "CoreSystemConsoleInNet"
 
 - Crystal Report
+> According to this article: https://answers.sap.com/questions/13029137/crystal-reports-for-visual-studio-and-net-core-5-a.html
+> 
+> Because of some low level reasons, Crystal Report must rely on .Net Framework, not planning to move go to support .Net core in future and now
+> 
+> If you must use Crystal Report for your .Net Core application
+> 
+> The offical solution was make your Crystal Report in a .net framework solution as a proxy server (API service)
+> 
+> for the walkthrough: https://medium.com/scrum-and-coke/view-crystal-report-in-pdf-with-angular-and-asp-net-rest-api-1d6c72168e7c
+> solution example: https://github.com/workcontrolgit/CrystalReportWebAPI
 
 If want to test others report program, change the startup project to "CoreSystemConsole"
 
@@ -36,6 +57,47 @@ If want to test others report program, change the startup project to "CoreSystem
 After updated the startup project
 
 Then, run (press F5) and wait its finish, the report should be generated and placed at the directory `tempRenderFolder`
+
+# Conclusion
+In general speaking, declear you need, excel or pdf or both, read or write or both
+
+the generation approach listed below:
+
+For excel
+
+- front end, use javascript to generate xlsx (in xml format), less implement time, hard to do comprehensive layout
+- back end, framework/engine providing a design tool to design and save the layout as a template, allowed to feed the data set(s) to template, to 
+- back end, having a template excel in back end, read and copy the template then fill your data in the cell by row/column
+
+For pdf
+
+- front end/back end, use javascript to call pdf api, create pdf components with coordinate (width, height, x, y), hard to handle comprehensive layout
+- front end, use canvas HTML element to capture the a specific area of screen in browser and print as a pdf
+- front end, use javascript to call browser print function to print your page as a pdf
+- back end, convert a excel to pdf
+- back end, convert html (maybe with limited css) to pdf
+
+## For excel manipulation read/write (xlsx, xls)
+After the test, I rank the tool from 1 to bigger number, 1 is the most perferable.
+1. EPPlus5, api is straight forward, easy to understand and use, implemented excel like behaviors, most advcanced features (chart, pivot table, header, footer, print number, cell validation..etc), support xlsx
+2. Jasper Report, Java based program, officia provide a c# wrapped for call support xlsx, xls
+3. OpenXmlSDK, microsoft provides basic API, required to read dehumanized, complex, extremely long documentation
+4. Crystal Report, support xlsx, xls, bad excel generation because of the design, for details please read below 4 Urls
+> https://archive.sap.com/documents/docs/DOC-39608
+> 
+> https://userapps.support.sap.com/sap/support/knowledge/en/1198296?fbclid=IwAR0_KR9veTxUJG_LituJlLSBYrvG6BZN3_OUm-JEZSiFa9enoZp-Jysa54Q
+> 
+> https://answers.sap.com/questions/424754/how-to-merge-columns-when-exporting-crystal-report.html?fbclid=IwAR0WjV8zsw_6Fd5OG3s-BNCyzbVuYToHD1xCMIgh0O1mNRFIqbEXSCrlcUA
+> 
+> https://stackoverflow.com/questions/28045209/can-grow-proprity-of-a-crystal-report-field-doesnt-push-down-lines-correctly?fbclid=IwAR2KEHM-rtmA-FHfun3NrsS_rDZLdVotuiy-14u_u7ih7vbgcjLsUoGQejA
+
+## For pdf manipulation write
+After the test, I rank the tool from 1 to bigger number, 1 is the most perferable.
+1. puppeteer/puppeteer, PejmanNik/puppeteer-report
+2. Crystal Report
+3. iText7
+4. Jasper Report
+
 
 # Preparation
 Before run the solution, please install the report engines and complete the configuration setup
