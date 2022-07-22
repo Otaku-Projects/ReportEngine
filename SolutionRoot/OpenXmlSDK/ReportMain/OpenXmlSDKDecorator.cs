@@ -32,7 +32,8 @@ namespace CoreReport.OpenXmlSDK
         protected IDictionary<string, object> dataSetObj;
         protected string openXmlSDKRenderFolder;
 
-        protected SpreadsheetDocument spreadsheetDocument;
+        protected SpreadsheetDocument sourceSpreadsheetDocument; // the template spreadsheet
+        protected SpreadsheetDocument targetSpreadsheetDocument; // the copy destination spreadsheet
 
         public List<string> _fonts;
 
@@ -287,7 +288,7 @@ namespace CoreReport.OpenXmlSDK
             // select sheet1 as the default sheet
             //sheet1.View.SetTabSelected();
 
-            this.spreadsheetDocument = _spreadsheetDocument;
+            this.sourceSpreadsheetDocument = _spreadsheetDocument;
             return _spreadsheetDocument;
         }
 
@@ -336,7 +337,7 @@ namespace CoreReport.OpenXmlSDK
         {
             List<ExcelDataGrid> excelDataGridList = this.reportEntity.GetDataGrid();
 
-            WorkbookPart workbookPart = this.spreadsheetDocument.WorkbookPart;
+            WorkbookPart workbookPart = this.sourceSpreadsheetDocument.WorkbookPart;
             WorksheetPart worksheetPart = workbookPart.GetPartById(_worksheet.Id) as WorksheetPart;
             Console.WriteLine(worksheetPart.Worksheet.SheetDimension.Reference);
 
@@ -414,7 +415,7 @@ namespace CoreReport.OpenXmlSDK
             // 3.2 copy template cell value to newly inserted row
             //ExcelRange[int FromRow, int FromCol, int ToRow, int ToCol]
             //_worksheet.Cells[fromRange].Copy(_worksheet.Cells[destinationRange]);
-            this.CopyRange(this.spreadsheetDocument, _worksheet.Name, templateStartRowIndex, templateEndRowIndex, appendStartRowIndex);
+            this.CopyRange(this.sourceSpreadsheetDocument, _worksheet.Name, templateStartRowIndex, templateEndRowIndex, appendStartRowIndex);
             // 3.3 copy row height
             //for (int start = templateStartRowIndex; start <= templateEndRowIndex; start++)
             //{
@@ -504,7 +505,7 @@ namespace CoreReport.OpenXmlSDK
             int columnCount = this.ExcelColumnNameToNumber(alphabetsPart);
 
             WorksheetPart worksheetPart =
-                      this.GetWorksheetPartByName(this.spreadsheetDocument, _worksheet.Name);
+                      this.GetWorksheetPartByName(this.sourceSpreadsheetDocument, _worksheet.Name);
             Cell cell = this.GetCell(worksheetPart.Worksheet, alphabetsPart, rowCount);
 
 
@@ -639,19 +640,21 @@ namespace CoreReport.OpenXmlSDK
 
                 // remove the old appendToRange
                 //_worksheet.DeleteRow(dataGridTemplate.AppendFromRow, rowCountForAppendRange);
-                this.RemoveRow(this.spreadsheetDocument, _worksheet.Name, dataGridTemplate.AppendFromRow, rowCountForAppendRange);
+                this.RemoveRow(this.targetSpreadsheetDocument, _worksheet.Name, dataGridTemplate.AppendFromRow, rowCountForAppendRange);
                 mostBottomInsertPosition -= (rowCountForAppendRange);
                 // remove the old templateRanageRows
                 //_worksheet.DeleteRow(dataGridTemplate.TemplateFromRow, rowCountForTemplateRange);
-                this.RemoveRow(this.spreadsheetDocument, _worksheet.Name, dataGridTemplate.TemplateFromRow, rowCountForTemplateRange);
+                this.RemoveRow(this.targetSpreadsheetDocument, _worksheet.Name, dataGridTemplate.TemplateFromRow, rowCountForTemplateRange);
                 mostBottomInsertPosition -= (rowCountForTemplateRange);
             }
 
             // 5.0 insert templateRange, appendToRange to the bottom row (mostBottomInsertPosition)
             int totalShiftedTemplateRow = 0;
             int totalShiftedAppendRow = 0;
-            //Sheet templateSheet = this.excelPackage.Workbook.Worksheets.First(worksheet => worksheet.Name == "Template");
-            Sheet templateSheet = this.excelPackage.Workbook.Worksheets["Template"];
+
+            //Sheet templateSheet = this.excelPackage.Workbook.Worksheets["Template"];
+            Sheet templateSheet = this.sourceSpreadsheetDocument.WorkbookPart.Workbook.Descendants<Sheet>().FirstOrDefault(s => s.Name == "Template");
+
             targetToCloneGridList.Sort();
             foreach (ExcelDataSection dataGridTemplate in targetToCloneGridList)
             {
@@ -663,25 +666,37 @@ namespace CoreReport.OpenXmlSDK
                 string copyTemplateDestinationRange = dataGridTemplate.TemplateFromCol + (mostBottomInsertPosition) + ":" + dataGridTemplate.TemplateToCol + (mostBottomInsertPosition + rowCountForTemplateRange - 1);
                 //_worksheet.InsertRow(mostBottomInsertPosition, rowCountForTemplateRange);
                 this.InsertRows(_worksheet, mostBottomInsertPosition, rowCountForTemplateRange);
-                templateSheet.Cells[dataGridTemplate.GetTemplateRange()].Copy(_worksheet.Cells[copyTemplateDestinationRange]);
+
+                //templateSheet.Cells[dataGridTemplate.GetTemplateRange()].Copy(_worksheet.Cells[copyTemplateDestinationRange]);
+                WorkbookPart workbookPart = this.targetSpreadsheetDocument.WorkbookPart;
+                WorksheetPart worksheetPart = workbookPart.WorksheetParts.First();
+                SheetData sheetData = worksheetPart.Worksheet.Elements<SheetData>().First();
+
+                this.CopyRange(this.sourceSpreadsheetDocument, "Template", this.targetSpreadsheetDocument, _worksheet.Name, dataGridTemplate.GetTemplateRange(), copyTemplateDestinationRange);
 
                 // copy templateRange row height from template sheet
-                for (int start = dataGridTemplate.TemplateFromRow; start <= dataGridTemplate.TemplateToRow; start++)
-                {
-                    _worksheet.Row(mostBottomInsertPosition + (start - dataGridTemplate.TemplateFromRow)).Height = templateSheet.Row(start).Height;
-                }
+                //for (int start = dataGridTemplate.TemplateFromRow; start <= dataGridTemplate.TemplateToRow; start++)
+                //{
+                //    _worksheet.Row(mostBottomInsertPosition + (start - dataGridTemplate.TemplateFromRow)).Height = templateSheet.Row(start).Height;
+                //}
+
+                // update most bottom insert position
                 mostBottomInsertPosition += rowCountForTemplateRange;
 
                 // copy appendtoRange from template sheet
                 string copyAppendToDestinationRange = dataGridTemplate.AppendFromCol + (mostBottomInsertPosition) + ":" + dataGridTemplate.AppendToCol + (mostBottomInsertPosition + rowCountForAppendRange - 1);
                 //_worksheet.InsertRow(mostBottomInsertPosition, rowCountForAppendRange);
                 this.InsertRows(_worksheet, mostBottomInsertPosition, rowCountForAppendRange);
-                templateSheet.Cells[dataGridTemplate.GetAppendRange()].Copy(_worksheet.Cells[copyAppendToDestinationRange]);
+                //templateSheet.Cells[dataGridTemplate.GetAppendRange()].Copy(_worksheet.Cells[copyAppendToDestinationRange]);
+                this.CopyRange(this.sourceSpreadsheetDocument, "Template", this.targetSpreadsheetDocument, _worksheet.Name, dataGridTemplate.GetAppendRange(), copyAppendToDestinationRange);
+
                 // copy appendtoRange row height from template sheet
-                for (int start = dataGridTemplate.AppendFromRow; start <= dataGridTemplate.AppendToRow; start++)
-                {
-                    _worksheet.Row(mostBottomInsertPosition + (start - dataGridTemplate.AppendFromRow)).Height = templateSheet.Row(start).Height;
-                }
+                //for (int start = dataGridTemplate.AppendFromRow; start <= dataGridTemplate.AppendToRow; start++)
+                //{
+                //    _worksheet.Row(mostBottomInsertPosition + (start - dataGridTemplate.AppendFromRow)).Height = templateSheet.Row(start).Height;
+                //}
+
+                // update most bottom insert position
                 mostBottomInsertPosition += rowCountForAppendRange;
 
                 foreach (ExcelDataSection updateDataGridSheet1 in affectingDataGridSectionList)
@@ -833,99 +848,6 @@ namespace CoreReport.OpenXmlSDK
             {
                 Console.WriteLine(ex.ToString());
             }
-        }
-
-
-        public string GetCellValue(SpreadsheetDocument _spreadsheetDocument, Sheet theSheet, string addressName)
-        {
-            string value = null;
-
-            // Retrieve a reference to the workbook part.
-            WorkbookPart wbPart = _spreadsheetDocument.WorkbookPart;
-
-            // Throw an exception if there is no sheet.
-            if (theSheet == null)
-            {
-                throw new ArgumentException("sheetName");
-            }
-
-            // Retrieve a reference to the worksheet part.
-            WorksheetPart wsPart =
-                (WorksheetPart)(wbPart.GetPartById(theSheet.Id));
-
-            // Use its Worksheet property to get a reference to the cell 
-            // whose address matches the address you supplied.
-            Cell theCell = wsPart.Worksheet.Descendants<Cell>().
-                Where(c => c.CellReference == addressName).FirstOrDefault();
-
-            // If the cell does not exist, return an empty string.
-            if (theCell.InnerText.Length > 0)
-            {
-                value = theCell.InnerText;
-
-                // If the cell represents an integer number, you are done. 
-                // For dates, this code returns the serialized value that 
-                // represents the date. The code handles strings and 
-                // Booleans individually. For shared strings, the code 
-                // looks up the corresponding value in the shared string 
-                // table. For Booleans, the code converts the value into 
-                // the words TRUE or FALSE.
-                if (theCell.DataType != null)
-                {
-                    switch (theCell.DataType.Value)
-                    {
-                        case CellValues.SharedString:
-
-                            // For shared strings, look up the value in the
-                            // shared strings table.
-                            var stringTable =
-                                wbPart.GetPartsOfType<SharedStringTablePart>()
-                                .FirstOrDefault();
-
-                            // If the shared string table is missing, something 
-                            // is wrong. Return the index that is in
-                            // the cell. Otherwise, look up the correct text in 
-                            // the table.
-                            if (stringTable != null)
-                            {
-                                value =
-                                    stringTable.SharedStringTable
-                                    .ElementAt(int.Parse(value)).InnerText;
-                            }
-                            break;
-
-                        case CellValues.Boolean:
-                            switch (value)
-                            {
-                                case "0":
-                                    value = "FALSE";
-                                    break;
-                                default:
-                                    value = "TRUE";
-                                    break;
-                            }
-                            break;
-                    }
-                }
-            }
-            return value;
-        }
-
-        // Retrieve the value of a cell, given a file name, sheet name, 
-        // and address name.
-        public string GetCellValue(SpreadsheetDocument _spreadsheetDocument, string sheetName, string addressName)
-        {
-            string value = null;
-
-            // Retrieve a reference to the workbook part.
-            WorkbookPart wbPart = _spreadsheetDocument.WorkbookPart;
-
-            // Find the sheet with the supplied name, and then use that 
-            // Sheet object to retrieve a reference to the first worksheet.
-            Sheet theSheet = wbPart.Workbook.Descendants<Sheet>().
-                Where(s => s.Name == sheetName).FirstOrDefault();
-
-            return this.GetCellValue(_spreadsheetDocument, theSheet, addressName);
         }
 
         public void InsertText(SpreadsheetDocument _spreadsheetDocument, string docName, string text)
@@ -1110,7 +1032,7 @@ namespace CoreReport.OpenXmlSDK
         public bool InsertRows(SpreadsheetDocument _spreadsheetDocument, string sheetName, int rowIndex, int rowCount)
         {
             bool isRemoved = true;
-            if (rowIndex < 0 || rowCount <=) return false;
+            if (rowIndex < 0 || rowCount <=0) return false;
 
             for (int i = 0; i < rowCount; i++)
             {
@@ -1121,7 +1043,7 @@ namespace CoreReport.OpenXmlSDK
         public bool InsertRows(Sheet sheet, int rowIndex, int rowCount)
         {
             bool isRemoved = true;
-            if (rowIndex<0 || rowCount <=) return false;
+            if (rowIndex<0 || rowCount <=0) return false;
 
             for (int i = 0; i < rowCount; i++)
             {
@@ -1272,8 +1194,7 @@ namespace CoreReport.OpenXmlSDK
 
         }
 
-        public Cell GetCell(Worksheet worksheet,
-                  string columnName, int rowIndex)
+        public Cell GetCell(Worksheet worksheet, string columnName, int rowIndex)
         {
             if (rowIndex <0) return null;
 
@@ -1281,8 +1202,7 @@ namespace CoreReport.OpenXmlSDK
         }
         // Given a worksheet, a column name, and a row index, 
         // gets the cell at the specified column and 
-        public Cell GetCell(Worksheet worksheet,
-                  string columnName, uint rowIndex)
+        public Cell GetCell(Worksheet worksheet, string columnName, uint rowIndex)
         {
             Row row = this.GetRow(worksheet, rowIndex);
 
@@ -1302,6 +1222,135 @@ namespace CoreReport.OpenXmlSDK
              */
         }
 
+        public Cell GetCell(SpreadsheetDocument _spreadsheetDocument, Sheet sheet, string columnName, int rowIndex)
+        {
+            Cell _cell = null;
+            // Retrieve a reference to the workbook part.
+            WorkbookPart wbPart = _spreadsheetDocument.WorkbookPart;
+            // Retrieve a reference to the worksheet part.
+            //WorksheetPart wsPart = (WorksheetPart)(wbPart.GetPartById(sheet.Id));
+            string addressName = columnName + rowIndex;
+
+            if (sheet != null)
+            {
+                // Retrieve a reference to the worksheet part.
+                WorksheetPart wsPart = (WorksheetPart)(wbPart.GetPartById(sheet.Id));
+
+                // Use its Worksheet property to get a reference to the cell 
+                // whose address matches the address you supplied.
+                _cell = wsPart.Worksheet.Descendants<Cell>().Where(c => c.CellReference == addressName).FirstOrDefault();
+            }
+            return _cell;
+        }
+
+        public CellValue GetCellValue(SpreadsheetDocument _spreadsheetDocument, Sheet theSheet, string columnName, int rowIndex)
+        {
+            Cell _cell = this.GetCell(_spreadsheetDocument, theSheet, columnName, rowIndex);
+            if (_cell == null) return null;
+
+            return _cell.CellValue;
+        }
+
+        public string GetCellValue(SpreadsheetDocument _spreadsheetDocument, Sheet theSheet, string addressName)
+        {
+            string value = null;
+
+            // Retrieve a reference to the workbook part.
+            WorkbookPart wbPart = _spreadsheetDocument.WorkbookPart;
+
+            // Throw an exception if there is no sheet.
+            if (theSheet == null)
+            {
+                throw new ArgumentException("sheetName");
+            }
+
+            // Retrieve a reference to the worksheet part.
+            WorksheetPart wsPart =
+                (WorksheetPart)(wbPart.GetPartById(theSheet.Id));
+
+            // Use its Worksheet property to get a reference to the cell 
+            // whose address matches the address you supplied.
+            Cell theCell = wsPart.Worksheet.Descendants<Cell>().
+                Where(c => c.CellReference == addressName).FirstOrDefault();
+
+            // If the cell does not exist, return an empty string.
+            if (theCell.InnerText.Length > 0)
+            {
+                value = theCell.InnerText;
+
+                // If the cell represents an integer number, you are done. 
+                // For dates, this code returns the serialized value that 
+                // represents the date. The code handles strings and 
+                // Booleans individually. For shared strings, the code 
+                // looks up the corresponding value in the shared string 
+                // table. For Booleans, the code converts the value into 
+                // the words TRUE or FALSE.
+                if (theCell.DataType != null)
+                {
+                    switch (theCell.DataType.Value)
+                    {
+                        case CellValues.Boolean:
+                            switch (value)
+                            {
+                                case "0":
+                                    value = "FALSE";
+                                    break;
+                                default:
+                                    value = "TRUE";
+                                    break;
+                            }
+                            break;
+                        case CellValues.Date:
+                            break;
+                        case CellValues.Error:
+                            break;
+                        case CellValues.InlineString:
+                            break;
+                        case CellValues.Number:
+                            break;
+                        case CellValues.SharedString:
+
+                            // For shared strings, look up the value in the
+                            // shared strings table.
+                            var stringTable =
+                                wbPart.GetPartsOfType<SharedStringTablePart>()
+                                .FirstOrDefault();
+
+                            // If the shared string table is missing, something 
+                            // is wrong. Return the index that is in
+                            // the cell. Otherwise, look up the correct text in 
+                            // the table.
+                            if (stringTable != null)
+                            {
+                                value =
+                                    stringTable.SharedStringTable
+                                    .ElementAt(int.Parse(value)).InnerText;
+                            }
+                            break;
+                        case CellValues.String:
+                            break;
+                    }
+                }
+            }
+            return value;
+        }
+
+        // Retrieve the value of a cell, given a file name, sheet name, 
+        // and address name.
+        public string GetCellValue(SpreadsheetDocument _spreadsheetDocument, string sheetName, string addressName)
+        {
+            // Retrieve a reference to the workbook part.
+            WorkbookPart wbPart = _spreadsheetDocument.WorkbookPart;
+
+            // Find the sheet with the supplied name, and then use that 
+            // Sheet object to retrieve a reference to the first worksheet.
+            Sheet theSheet = wbPart.Workbook.Descendants<Sheet>().
+                Where(s => s.Name == sheetName).FirstOrDefault();
+
+            return this.GetCellValue(_spreadsheetDocument, theSheet, addressName);
+        }
+
+
         // Given a worksheet and a row index, return the row.
         public Row GetRow(Worksheet worksheet, uint rowIndex)
         {
@@ -1309,10 +1358,47 @@ namespace CoreReport.OpenXmlSDK
               Elements<Row>().Where(r => r.RowIndex == rowIndex).First();
         }
 
+        public void CopyRange(SpreadsheetDocument sourceDocument, string sourceSheetName, SpreadsheetDocument targetDocument, string targetSheetName, string sourceRange, string targetRange)
+        {
+
+            // Retrieve a reference to the workbook part.
+            WorkbookPart sourceWbPart = sourceDocument.WorkbookPart;
+            WorkbookPart targetWbPart = targetDocument.WorkbookPart;
+
+            // Find the sheet with the supplied name, and then use that 
+            // Sheet object to retrieve a reference to the first worksheet.
+            Sheet sourceSheet = sourceWbPart.Workbook.Descendants<Sheet>().
+              Where(s => s.Name == sourceSheetName).FirstOrDefault();
+            Sheet tagetSheet = targetWbPart.Workbook.Descendants<Sheet>().
+              Where(s => s.Name == targetSheetName).FirstOrDefault();
+
+            // Throw an exception if there is no sheet.
+            if (sourceSheet == null)
+            {
+                throw new ArgumentException("sourceSheetName");
+            }
+            // Throw an exception if there is no sheet.
+            if (tagetSheet == null)
+            {
+                throw new ArgumentException("targetSheetName");
+            }
+
+            // Retrieve a reference to the worksheet part.
+            WorksheetPart sourceWsPart =
+                (WorksheetPart)(sourceWbPart.GetPartById(sourceSheet.Id));
+            WorksheetPart targetWsPart =
+                (WorksheetPart)(targetWbPart.GetPartById(tagetSheet.Id));
+
+
+            // loop source range - in terms of row
+            // insert new row/column at targetRange - in terms of append direction
+            // loop source range - in terms of column
+            // read cell value from source
+            // copy cell value to target
+        }
 
         #region Copy Range
-        public void CopyRange(SpreadsheetDocument document, string sheetName,
-       int srcRowFrom, int srcRowTo, int destRowFrom)
+        public void CopyRange(SpreadsheetDocument document, string sheetName, int srcRowFrom, int srcRowTo, int destRowFrom)
         {
             WorkbookPart workbookPart = document.WorkbookPart;
             if (srcRowTo < srcRowFrom || destRowFrom < srcRowFrom) return;

@@ -204,6 +204,13 @@ namespace CoreReport.Puppeteer
 
                 // Convert html to pdf
                 ProcessStartInfo startInfo = new ProcessStartInfo();
+
+                // Sets NODE_PATH variable to installed node_modules directory
+                // The new process will have RAYPATH variable created with "test" value
+                // All environment variables of the created process are inherited from the
+                // current process
+                startInfo.EnvironmentVariables["NODE_PATH"] = "%AppData%\npm\node_modules";
+
                 startInfo.FileName = "node";
                 //startInfo.Arguments = $"/hidden /readonly /excel_active_sheet {xlsxFilePath} {pdfFilePath}";
                 startInfo.Arguments = $"{nodeFilePath} {htmlFilePath} {pdfFilePath}";

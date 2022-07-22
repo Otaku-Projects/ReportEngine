@@ -8,7 +8,7 @@ namespace CoreReport
 {
     public abstract class VisualizationEntity
     {
-        protected string tempRenderFolder = @"D:\\Temp"; // report will be generated in this directory
+        protected string tempRenderFolder = @"D:\Temp"; // report will be generated in this directory
         private int numCopies;
         public int NumCopies
         {
