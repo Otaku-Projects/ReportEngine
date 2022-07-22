@@ -3,6 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
+	<ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,12 +18,6 @@
     <ProjectReference Include="..\JasperReport\JasperReport.csproj" />
     <ProjectReference Include="..\OpenXmlSDK\OpenXmlSDK.csproj" />
     <ProjectReference Include="..\Puppeteer\Puppeteer.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="OfficeToPDF">
-      <HintPath>..\OfficeToPDF\OfficeToPDF-1.9.0.2.exe</HintPath>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup>
