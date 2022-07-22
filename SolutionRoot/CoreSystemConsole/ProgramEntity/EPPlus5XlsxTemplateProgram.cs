@@ -1,12 +1,6 @@
 ﻿using CoreReport.EPPlus5Report;
-using CoreReport.JasperReport;
 using CoreSystemConsole.ReportDataModel;
 using EPPlus5Report.ReportEntity;
-using jsreport.Binary;
-using jsreport.Local;
-using jsreport.Shared;
-using jsreport.Types;
-using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Data;

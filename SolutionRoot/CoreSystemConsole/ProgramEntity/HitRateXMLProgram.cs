@@ -1,10 +1,6 @@
 ﻿using CoreReport.JasperReport;
 using CoreSystemConsole.ReportDataModel;
 using JasperReport.ReportEntity;
-using jsreport.Binary;
-using jsreport.Local;
-using jsreport.Shared;
-using jsreport.Types;
 using System;
 using System.Collections.Generic;
 using System.Data;

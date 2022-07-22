@@ -1,11 +1,6 @@
 ﻿using CoreReport.ITextGroupNV;
 using CoreSystemConsole.ReportDataModel;
 using ITextGroupNV.ReportEntity;
-using jsreport.Binary;
-using jsreport.Local;
-using jsreport.Shared;
-using jsreport.Types;
-using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Data;
