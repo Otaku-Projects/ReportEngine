@@ -30,9 +30,20 @@
     <Content Include="$(SolutionDir)PuppeteerReport\**\*.*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Update="D:\Documents\ReportEngine\SolutionRoot\PuppeteerReport\web\package-lock.json" Link="package-lock.json" />
+    <Content Update="D:\Documents\ReportEngine\SolutionRoot\PuppeteerReport\web\package.json" Link="package.json" />
     <None Update="..\OfficeToPDF-1.9.0.2\OfficeToPDF.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="deploy.ps1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
+
+	<!-- Macros: $(Configuration), $(ProjectDir), $(TargetPath)... -->
+	<!-- https://docs.microsoft.com/en-us/visualstudio/ide/how-to-specify-build-events-csharp?view=vs-2022 -->
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="if $(ConfigurationName) == Debug powershell -ExecutionPolicy Unrestricted -noexit -command &quot;cd '$(ProjectDir)$(OutDir)'; $(ProjectDir)$(OutDir)\Deploy.ps1&quot;" />
+  </Target>
 
 </Project>
