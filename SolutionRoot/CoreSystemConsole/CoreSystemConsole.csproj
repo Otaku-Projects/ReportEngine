@@ -8,12 +8,14 @@
 
   <ItemGroup>
     <PackageReference Include="Faker.Net" Version="1.5.148" />
+    <PackageReference Include="IronPdf" Version="2022.10.9622" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\CoreReport\CoreReport.csproj" />
     <ProjectReference Include="..\CrystalReport\CrystalReport.csproj" />
     <ProjectReference Include="..\EPPlus5\EPPlus5.csproj" />
+    <ProjectReference Include="..\IronPDF\IronPDFProject.csproj" />
     <ProjectReference Include="..\ITextGroupNV\ITextGroupNV.csproj" />
     <ProjectReference Include="..\JasperReport\JasperReport.csproj" />
     <ProjectReference Include="..\OpenXmlSDK\OpenXmlSDK.csproj" />

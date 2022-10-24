@@ -15,7 +15,7 @@ namespace CoreSystemConsole.ProgramEntity
     {
         public OpenXmlSdkProgram()
         {
-            Console.WriteLine("Said \"Hello World!\" from EPPlus5XlsxTemplateProgram");
+            Console.WriteLine("Said \"Hello World!\" from OpenXmlSdkProgram");
 
             HitRateDataView hitRateDataView2 = new HitRateDataView();
             HitRateDataView hitRateDataView3 = new HitRateDataView();

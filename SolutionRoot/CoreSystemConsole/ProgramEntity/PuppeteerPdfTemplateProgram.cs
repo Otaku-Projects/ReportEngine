@@ -15,7 +15,7 @@ namespace CoreSystemConsole.ProgramEntity
     {
         public PuppeteerPdfTemplateProgram()
         {
-            Console.WriteLine("Said \"Hello World!\" from ITextGroupIText5PdfTemplateProgram");
+            Console.WriteLine("Said \"Hello World!\" from PuppeteerPdfTemplateProgram");
 
             HitRateDataView hitRateDataView1 = new HitRateDataView();
             HitRateDataView hitRateDataView2 = new HitRateDataView();

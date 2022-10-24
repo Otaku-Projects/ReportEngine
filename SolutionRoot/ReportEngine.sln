@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31624.102
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32516.85
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrystalReport", "CrystalReport\CrystalReport.csproj", "{CA780E2B-7A23-4A88-AD28-73FD435F2741}"
 EndProject
@@ -21,7 +21,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreReportDot48", "CoreRepo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreReport", "CoreReport\CoreReport.csproj", "{EFCBC5C1-8920-4201-8CFC-55F1A85B053F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenXmlSDK", "OpenXmlSDK\OpenXmlSDK.csproj", "{DB8BC9F6-CCBA-4286-AEC5-D973F3FA7E49}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenXmlSDK", "OpenXmlSDK\OpenXmlSDK.csproj", "{DB8BC9F6-CCBA-4286-AEC5-D973F3FA7E49}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IronPDFProject", "IronPDF\IronPDFProject.csproj", "{593D3A73-8D2E-4048-8093-9428E94D3AA4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -216,6 +218,24 @@ Global
 		{DB8BC9F6-CCBA-4286-AEC5-D973F3FA7E49}.Release-signed|x64.Build.0 = Release|Any CPU
 		{DB8BC9F6-CCBA-4286-AEC5-D973F3FA7E49}.Release-signed|x86.ActiveCfg = Release|Any CPU
 		{DB8BC9F6-CCBA-4286-AEC5-D973F3FA7E49}.Release-signed|x86.Build.0 = Release|Any CPU
+		{593D3A73-8D2E-4048-8093-9428E94D3AA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{593D3A73-8D2E-4048-8093-9428E94D3AA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{593D3A73-8D2E-4048-8093-9428E94D3AA4}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{593D3A73-8D2E-4048-8093-9428E94D3AA4}.Debug|x64.Build.0 = Debug|Any CPU
+		{593D3A73-8D2E-4048-8093-9428E94D3AA4}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{593D3A73-8D2E-4048-8093-9428E94D3AA4}.Debug|x86.Build.0 = Debug|Any CPU
+		{593D3A73-8D2E-4048-8093-9428E94D3AA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{593D3A73-8D2E-4048-8093-9428E94D3AA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{593D3A73-8D2E-4048-8093-9428E94D3AA4}.Release|x64.ActiveCfg = Release|Any CPU
+		{593D3A73-8D2E-4048-8093-9428E94D3AA4}.Release|x64.Build.0 = Release|Any CPU
+		{593D3A73-8D2E-4048-8093-9428E94D3AA4}.Release|x86.ActiveCfg = Release|Any CPU
+		{593D3A73-8D2E-4048-8093-9428E94D3AA4}.Release|x86.Build.0 = Release|Any CPU
+		{593D3A73-8D2E-4048-8093-9428E94D3AA4}.Release-signed|Any CPU.ActiveCfg = Release|Any CPU
+		{593D3A73-8D2E-4048-8093-9428E94D3AA4}.Release-signed|Any CPU.Build.0 = Release|Any CPU
+		{593D3A73-8D2E-4048-8093-9428E94D3AA4}.Release-signed|x64.ActiveCfg = Release|Any CPU
+		{593D3A73-8D2E-4048-8093-9428E94D3AA4}.Release-signed|x64.Build.0 = Release|Any CPU
+		{593D3A73-8D2E-4048-8093-9428E94D3AA4}.Release-signed|x86.ActiveCfg = Release|Any CPU
+		{593D3A73-8D2E-4048-8093-9428E94D3AA4}.Release-signed|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

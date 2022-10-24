@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="IronPdf" Version="2022.10.9622" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CoreReport\CoreReport.csproj" />
+  </ItemGroup>
+
+</Project>
