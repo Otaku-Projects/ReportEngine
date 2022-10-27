@@ -10,7 +10,7 @@ using CrystalDecisions.Shared;
 
 namespace CoreReport.CrystalReport
 {
-    public class CrystalReportDecorator : VisualizationEntity
+    public class CrystalReportDecorator : VisualizationDecorator
     {
         private string createdBy;
         private DateTime createdDate;

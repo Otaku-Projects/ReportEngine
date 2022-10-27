@@ -12,36 +12,46 @@ namespace IronPDFProject.ReportRender
 {
     public class UrlToPdfReportDecorator : IronPdfDecorator
     {
-        protected ChromePdfRenderer renderer;
-        protected PdfDocument pdfDocument;
-
+        protected List<PdfDocument> PdfDocumentList;
         public UrlToPdfReportDecorator() : base()
         {
-            this.renderer = new ChromePdfRenderer();
         }
-        public UrlToPdfReportDecorator(UrlToPdfReportEntity _reportEntity, string _filename, string urlPath) : base(_reportEntity, _filename = "")
+        public UrlToPdfReportDecorator(UrlToPdfReportEntity _reportEntity, string _filename) : base(_reportEntity, _filename = "")
         {
             // check filename
 
             // check urlPath
 
-            // Instantiate Renderer
-            this.renderer = new ChromePdfRenderer();
-
             // Create a PDF from a URL or local file path
-            this.pdfDocument = this.renderer.RenderUrlAsPdf(urlPath);
+            var urlPathList = _reportEntity.GetUrlPath();
+            foreach(string urlPath in urlPathList)
+            {
+                this.PdfDocumentList.Add(this.renderer.RenderUrlAsPdf(urlPath));
+            }
+        }
+
+        public override void Initialize()
+        {
+            base.Initialize();
+            this.PdfDocumentList = new List<PdfDocument>();
         }
 
 
         public override void SaveFile()
         {
-            string pdfFilePath = Path.Combine(
+            string pdfFilePath = string.Empty;
+
+            // Export to a file or Stream
+            foreach(PdfDocument pdfDocument in PdfDocumentList)
+            {
+                pdfFilePath = Path.Combine(
                 this.ironRenderFolder,
                 this.filename + ".pdf");
 
-            // Export to a file or Stream
-            this.pdfDocument.SaveAs(pdfFilePath);
+                pdfDocument.SaveAs(pdfFilePath);
 
+                this.ReGenFilename();
+            }
         }
     }
 }

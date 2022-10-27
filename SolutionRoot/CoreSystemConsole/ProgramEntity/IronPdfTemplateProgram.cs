@@ -21,7 +21,7 @@ namespace CoreSystemConsole.ProgramEntity
 
             UrlToPdfReportDecorator urlToPdfReportDecorator = null;
             TestUrlToPdfReport testUrlToPdfReport = new TestUrlToPdfReport();
-            urlToPdfReportDecorator = new UrlToPdfReportDecorator(testUrlToPdfReport, "url.pdf", "https://ironpdf.com/");
+            urlToPdfReportDecorator = new UrlToPdfReportDecorator(testUrlToPdfReport, "url.pdf");
             urlToPdfReportDecorator.SaveFile();
         }
     }

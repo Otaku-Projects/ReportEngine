@@ -1,4 +1,5 @@
 ﻿using CoreReport;
+using IronPdf;
 using IronPDFProject.ReportEntity;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,8 @@ namespace IronPDFProject.ReportMain
 {
     public class IronPdfDecorator : VisualizationDecorator
     {
+        protected ChromePdfRenderer renderer;
+        protected PdfDocument pdfDocument;
 
         protected string createdBy;
         protected DateTime createdDate;
@@ -35,8 +38,7 @@ namespace IronPDFProject.ReportMain
         {
             if (string.IsNullOrEmpty(_filename))
             {
-                Guid obj = Guid.NewGuid();
-                _filename = obj.ToString();
+                _filename = this.ReGenFilename();
             }
 
             this.dataSetObj = _reportEntity.GetDataSetObj();
@@ -54,9 +56,20 @@ namespace IronPDFProject.ReportMain
             this.Initialize();
         }
 
-        public void Initialize()
+        public virtual void Initialize()
         {
+            // Instantiate Renderer
+            this.renderer = new ChromePdfRenderer();
+
             this.ironRenderFolder = this.tempRenderFolder;
+        }
+        public string ReGenFilename()
+        {
+            Guid obj = Guid.NewGuid();
+            string _filename = obj.ToString();
+            this.filename = _filename;
+
+            return _filename;
         }
     }
 }
