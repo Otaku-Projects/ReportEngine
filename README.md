@@ -4,16 +4,23 @@ I am in charge to develop the whole report generation module of a new system, I 
 # Scope of this repository
 Try and error for study how to implmenet report(xlsx, pdf) generation in C# .net Core5
 
-## Back end engine/tools
-- Crystal Report (excel, pdf) (Implemented)
-- Jasper Report (excel, pdf) (Implemented)
-- EPPlus (excel) (Implemented)
-- iText (pdf) (Implemented)
-- Puppeteer (pdf) (Implemented)
-- IronPDF for .net (pdf) (Implemented)
-- OpenXmlSDK (excel) (too complicated, I give up)
+|                         | Excel              | PDF                | Status                     |
+|-------------------------|--------------------|--------------------|----------------------------|
+| Back End - Project Name |                    |                    |                            |
+| CrystalReport           | :heavy_check_mark: | :heavy_check_mark: | Implemented                |
+| JasperReport            | :heavy_check_mark: | :heavy_check_mark: | Implemented                |
+| EPPlus5                 | :heavy_check_mark: |                    | Implemented                |
+| ITextGroupNV            |                    | :heavy_check_mark: | Implemented                |
+| Puppeteer               |                    | :heavy_check_mark: | Implemented                |
+| IronPDFProject          |                    | :heavy_check_mark: | Implemented                |
+| OpenXmlSDK              | :heavy_check_mark: |                    | too complicated, I give up |
+| Front End - JS Library  |                    |                    |                            |
+| parallax/jsPDF          |                    | write pdf          |                            |
+| mozilla/pdf.js          |                    | read pdf           |                            |
+| SheetJS                 | :heavy_check_mark: |                    |                            |
 
-## Front end engine/tools
+P.S
+
 The front end JS libraries feature is limited and can't satify my needs compare to the library which is based on c# in my observation.
 If you want a lite and the simplest report read/write function, just check out below listed library, those were not included in this project becuase this project is not focus on the report read/write in front end.
 
