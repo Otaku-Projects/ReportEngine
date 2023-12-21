@@ -130,6 +130,19 @@ Merge with render for every page enabled
 
 [https://playground.jsreport.net/w/admin/1A7l_UG_](https://playground.jsreport.net/w/admin/1A7l_UG_)
 
+## Open XML SDK
+### Open XML SDK 2.5 Productivity Tool
+Import the Excel file to the productivity tool, and click generate to generate a C# code. The c# code could be generate a same excel file.
+if you want a table in it, you should create a simplest Excel with 1 table header and 1 table body, then modify the code for printing table body in a loop.
+
+https://learn.microsoft.com/en-us/answers/questions/466445/where-can-i-download-open-xml-sdk-2-5-productivity
+
+https://web.archive.org/web/20190116000204/https://www.microsoft.com/en-us/download/details.aspx?id=30425
+
+1. install Open XML SDK 2.5 for Microsoft Office
+
+2. install Open XML SDK 2.5 Productivity Tool for Microsoft Office
+
 
 # Conclusion
 In general speaking, declear you need, excel or pdf or both, read or write or both
