@@ -1,7 +1,35 @@
 # Brief of background
-I am in charge to develop the whole report generation module of a new system, I am going to explore, try and test several report (excel/pdf) generation engines.
+In charge of developing the whole report generation module for a new system, going to explore, try, and test several report (excel/pdf) generation engines.
 
-# Scope of this repository
+## User/Functional Requirements
+The preliminary user/functional requirements were rough, so I expanded the required functionality to provide flexibility.
+
+1.1 Common Content and Features
+* Table, border
+* Cell value, cell data type (date/time/numeric/text/image/URL)
+* Font size, font family(font style), alignment
+* Color, background-color
+* Formula, formula function
+* File meta, created by, create datetime, last saved by, last saved datetime
+
+1.2. Advanced features
+* Templating (how to implement something like mail merge/repeating table body, how easy to use) 
+* Print area (page break for printing)
+* Repeat Table header for printing
+* Conditional Style (special color, style on condition)
+* For PDF, embed custom font family file (TTF/OTF/WOFF/WOFF2/SVG) for styling the PDF text content
+
+2. Performance
+* Generate 100000 rows with plain text data
+* Generate 100000 rows with formula(sub total, total) data
+
+4. Security
+* Generate file in memory stream, create file in computer physical storage (disk) is not preferred, alternative, delete the file on daily end
+* Encrypt document (Require open password), if can't, alternative, compress in zip file, encrypt in zip layer
+* Watermark
+* For PDF, access right restriction (deny copy/print...)
+
+# Scope of Reviewed Report Engines/Library
 Try and error for study how to implmenet report(xlsx, pdf) generation in C# .net Core5
 
 |                         | Excel              | PDF                | Status                     |
@@ -21,15 +49,15 @@ Try and error for study how to implmenet report(xlsx, pdf) generation in C# .net
 
 P.S
 
-The front end JS libraries feature is limited and can't satify my needs compare to the library which is based on c# in my observation.
-If you want a lite and the simplest report read/write function, just check out below listed library, those were not included in this project becuase this project is not focus on the report read/write in front end.
+In observation, the front-end JS libraries feature is limited and can't satisfy my needs compared to the library which is based on c#.
+If you want a lite and the simplest report read/write function, just check out the below JavaScript/TypeScript listed library, those were not included in this project because this project is not focusing on the report read/write in front-end.
 
 - parallax/jsPDF (write pdf)
 - mozilla/pdf.js (read pdf)
 - SheetJS (read/write excel)
 
 # Demo
-***Before you run (F5) on Visual Studio, make sure you read the "Installation" and completed the "Configuration"***
+***Before you run (F5) on Visual Studio, make sure you read the "Installation" and complete the "Configuration"***
 <br><br>
 **If you want to test the Crystal Report**
 
