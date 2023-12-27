@@ -13,7 +13,7 @@ Try and error for study how to implmenet report(xlsx, pdf) generation in C# .net
 | ITextGroupNV            |                    | :heavy_check_mark: | Implemented                |
 | Puppeteer               |                    | :heavy_check_mark: | Implemented                |
 | IronPDFProject          |                    | :heavy_check_mark: | Implemented                |
-| OpenXmlSDK              | :heavy_check_mark: |                    | too complicated, I give up |
+| OpenXmlSDK              | :heavy_check_mark: |                    | explored and prepared wiki |
 | Front End - JS Library  |                    |                    |                            |
 | parallax/jsPDF          |                    | write pdf          |                            |
 | mozilla/pdf.js          |                    | read pdf           |                            |
