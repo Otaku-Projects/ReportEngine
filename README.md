@@ -2,7 +2,12 @@
 In charge of developing the whole report generation module for a new system, going to explore, try, and test several report (excel/pdf) generation engines.
 
 ## User/Functional Requirements
-The preliminary user/functional requirements were rough, so I expanded the required functionality to provide flexibility.
+The preliminary user/functional requirements were unclear, so I included many functionalities from basic to advanced that going for testing.
+
+Then try to find the best suitable tools for generate Excel and/or PDF, it is not necessary to have a tool that can generate both Excel and pdf 
+(I think that would be expensive if one contains almost all listed features and able to generate in Excel and PDF). 
+
+A tool for Excel, a tool for PDF would also be accepted.
 
 1.1 Common Content and Features
 * Table, border
