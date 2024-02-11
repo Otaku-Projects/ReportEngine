@@ -104,64 +104,17 @@ protected string tempRenderFolder = @"D:\\Temp"; // report will be generated in 
 
 # Installation
 
-Some engines installation is not required, because those library develop under pure C# and already installed by NuGet Package Manager
+Some engines develop under pure C# and/or libraries, components already installed by NuGet Package Manager
 
-Some report installation is required, because those library rely on the external executable program like JAVA…
+except some of those rely on the external executable program like JAVA…
 
-for examples, JasperReport and Crystal Report need to install
+for examples, JasperReport, Crystal Report, EPPlus, Open XML need to install 3rd party SDK / library to make it work
 
-The installation steps details are described below
+to save the time, just right click on the project on VS Solution Explorer, select unload the project<br>
+For CoreSystemConsole, remove the project under Dependencies > Projects to ignore in build<br>
+For CoreSystemConsoleInNet, remove the project under Reference to ignore in build<br>
 
-## Crystal Report
-### Pre-installation
-Before run, please install Crystal Reports, Developer for Visual Studio Downloads
-https://wiki.scn.sap.com/wiki/display/BOBJ/Crystal+Reports%2C+Developer+for+Visual+Studio+Downloads
-
-### Documentation
-Connecting to Object Collections
-https://help.sap.com/viewer/0d6684e153174710b8b2eb114bb7f843/SP21/en-US/45afd8f46e041014910aba7db0e91070.html
-
-### Example and Tutorial
-Tutorial: Connecting to Object Collections
-https://help.sap.com/viewer/0d6684e153174710b8b2eb114bb7f843/SP21/en-US/45c50fec6e041014910aba7db0e91070.html
-
-## Jasper Reports
-### Pre-installation
-Before run, please install .NET jsreport sdk(jsreport binary, jsreport local) by nuget
-https://jsreport.net/learn/dotnet
-
-### Documentation
-jsreport documentation
-https://jsreport.net/learn
-
-Recipes
-https://jsreport.net/learn/recipes
-
-Templating engines
-https://jsreport.net/learn/templating-engines
-
-.Net local reporting
-https://jsreport.net/learn/dotnet-local
-
-.Net Client
-https://jsreport.net/learn/dotnet-client
-
-### Example and Tutorial
-GitHub jsreport/jsreport-dotnet
-https://github.com/jsreport/jsreport-dotnet
-
-#### Page header, footer, page number
-Merge dynamic header with items
- 
-https://playground.jsreport.net/w/admin/ihh7laK2
-
-Merge header and footer with page numbers
-
-https://playground.jsreport.net/w/admin/kMI4FBmw
-
-Merge with render for every page enabled
-
-[https://playground.jsreport.net/w/admin/1A7l_UG_](https://playground.jsreport.net/w/admin/1A7l_UG_)
+The installation beief are described in Wiki, please read "/Developer Guide/Developer Document.docx" for the details
 
 ## Open XML SDK
 ### Open XML SDK 2.5 Productivity Tool
