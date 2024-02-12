@@ -24,9 +24,9 @@ namespace CoreSystemConsole
 
             //PuppeteerPdfTemplateProgram puppeteerPdfTemplateProgram = new PuppeteerPdfTemplateProgram();
 
-            //OpenXmlSdkProgram openXmlSdkProgram = new OpenXmlSdkProgram();
+            OpenXmlSdkProgram openXmlSdkProgram = new OpenXmlSdkProgram();
 
-            IronPdfTemplateProgram ironPdf = new IronPdfTemplateProgram();
+            //IronPdfTemplateProgram ironPdf = new IronPdfTemplateProgram();
         }
     }
 }
