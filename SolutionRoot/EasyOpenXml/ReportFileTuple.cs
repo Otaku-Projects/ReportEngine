@@ -6,19 +6,15 @@ using System.Threading.Tasks;
 
 namespace EasyOpenXml
 {
-    public class ReportFileTuple
+    public class ReportFileTuple : Tuple<string, Byte[]>
     {
-        public string fileName { get; set; }
-        public Byte[] fileByte { get; set; }
-        public ReportFileTuple()
+        public ReportFileTuple(string one, Byte[] two)
+            : base(one, two)
         {
-            this.fileName = string.Empty;
-            this.fileByte = new Byte[0];
+
         }
-        public ReportFileTuple(string fileName, Byte[] fileByte)
-        {
-            this.fileName = fileName;
-            this.fileByte = fileByte;
-        }
+
+        public string Filename { get { return this.Item1; } }
+        public Byte[] FileByte { get { return this.Item2; } }
     }
 }

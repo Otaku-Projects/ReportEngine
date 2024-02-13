@@ -15,9 +15,9 @@ if(filesList1 != null && filesList1.Count > 0)
     {
         foreach (ReportFileTuple file1 in filesList1)
         {
-            using (var fs = new FileStream(filePath + file1.fileName, FileMode.Create))
+            using (var fs = new FileStream(filePath + file1.Filename, FileMode.Create))
             {
-                fs.Write(file1.fileByte, 0, file1.fileByte.Length);
+                fs.Write(file1.FileByte, 0, file1.FileByte.Length);
             }
         }
     }
