@@ -103,6 +103,9 @@ protected string tempRenderFolder = @"D:\\Temp"; // report will be generated in 
 
 
 # Installation
+<code style="color : red">If you have time before all you start</code>
+
+$${\color{red}Read \space the \space documentation \space in \space "Develop \space Guide" \space Folder}$$
 
 Some engines develop under pure C# and/or libraries, components already installed by NuGet Package Manager
 
@@ -116,56 +119,7 @@ For CoreSystemConsoleInNet, remove the project under Reference to ignore in buil
 
 The installation beief are described in Wiki, please read "/Developer Guide/Developer Document.docx" for the details
 
-## Open XML SDK
-### Open XML SDK 2.5 Productivity Tool
-Import the Excel file to the productivity tool, and click generate to generate a C# code. The c# code could be generate a same excel file.
-if you want a table in it, you should create a simplest Excel with 1 table header and 1 table body, then modify the code for printing table body in a loop.
-
-https://learn.microsoft.com/en-us/answers/questions/466445/where-can-i-download-open-xml-sdk-2-5-productivity
-
-https://web.archive.org/web/20190116000204/https://www.microsoft.com/en-us/download/details.aspx?id=30425
-
-1. install Open XML SDK 2.5 for Microsoft Office
-
-2. install Open XML SDK 2.5 Productivity Tool for Microsoft Office
-
-
 # Conclusion
-In general speaking, declear you need, excel or pdf or both, read or write or both
+Keep this page clear and short, this moved to Wiki
 
-the generation approach listed below:
-
-For excel
-
-- front end, use javascript to generate xlsx (in xml format), less implement time, hard to do comprehensive layout
-- back end, framework/engine providing a design tool to design and save the layout as a template, allowed to feed the data set(s) to template, to 
-- back end, having a template excel in back end, read and copy the template then fill your data in the cell by row/column
-
-For pdf
-
-- front end/back end, use javascript to call pdf api, create pdf components with coordinate (width, height, x, y), hard to handle comprehensive layout
-- front end, use canvas HTML element to capture the a specific area of screen in browser and print as a pdf
-- front end, use javascript to call browser print function to print your page as a pdf
-- back end, convert a excel to pdf
-- back end, convert html (maybe with limited css) to pdf
-
-## For excel manipulation read/write (xlsx, xls)
-After the test, I rank the tool from 1 to bigger number, 1 is the most perferable.
-1. EPPlus5, api is straight forward, easy to understand and use, implemented excel like behaviors, most advcanced features (chart, pivot table, header, footer, print number, cell validation..etc), support xlsx
-2. Jasper Report, Java based program, officia provide a c# wrapped for call support xlsx, xls
-3. OpenXmlSDK, microsoft provides basic API, required to read dehumanized, complex, extremely long documentation
-4. Crystal Report, support xlsx, xls, bad excel generation because of the design, for details please read below 4 Urls
-> https://archive.sap.com/documents/docs/DOC-39608
-> 
-> https://userapps.support.sap.com/sap/support/knowledge/en/1198296?fbclid=IwAR0_KR9veTxUJG_LituJlLSBYrvG6BZN3_OUm-JEZSiFa9enoZp-Jysa54Q
-> 
-> https://answers.sap.com/questions/424754/how-to-merge-columns-when-exporting-crystal-report.html?fbclid=IwAR0WjV8zsw_6Fd5OG3s-BNCyzbVuYToHD1xCMIgh0O1mNRFIqbEXSCrlcUA
-> 
-> https://stackoverflow.com/questions/28045209/can-grow-proprity-of-a-crystal-report-field-doesnt-push-down-lines-correctly?fbclid=IwAR2KEHM-rtmA-FHfun3NrsS_rDZLdVotuiy-14u_u7ih7vbgcjLsUoGQejA
-
-## For pdf manipulation write
-After the test, I rank the tool from 1 to bigger number, 1 is the most perferable.
-1. puppeteer/puppeteer, PejmanNik/puppeteer-report
-2. Crystal Report
-3. iText7
-4. Jasper Report
+https://github.com/Otaku-Projects/ReportEngine/wiki
